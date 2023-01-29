@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="font.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="types.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="text_engine_base.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="richtext.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="layout_builder.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{82ffd224-e213-4c2e-bbe3-da69c71e2f5f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\agge.text\layout.h" />
+    <ClInclude Include="..\..\agge.text\font.h" />
+    <ClInclude Include="..\..\agge.text\shared_ptr.h" />
+    <ClInclude Include="..\..\agge.text\hash_map.h" />
+    <ClInclude Include="..\..\agge.text\text_engine.h" />
+    <ClInclude Include="..\..\agge.text\glyph.h" />
+    <ClInclude Include="..\..\agge.text\richtext.h" />
+    <ClInclude Include="..\..\agge.text\annotated_string.h" />
+    <ClInclude Include="..\..\agge.text\range.h" />
+    <ClInclude Include="..\..\agge.text\types.h" />
+    <ClInclude Include="..\..\agge.text\layout_primitives.h" />
+    <ClInclude Include="..\..\agge.text\font_factory.h" />
+    <ClInclude Include="..\..\agge.text\text_engine_base.h" />
+    <ClInclude Include="..\..\agge.text\tools.h" />
+    <ClInclude Include="..\..\agge.text\limit.h" />
+    <ClInclude Include="..\..\agge.text\layout_builder.h" />
+  </ItemGroup>
+</Project>

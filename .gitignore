@@ -1,0 +1,16 @@
+*.ncb
+*.sdf
+*.opensdf
+*.suo
+*.user
+!*.tests.vcxproj.user
+*.ipch
+_*
+CVS
+/misc/experiments/sandbox.android/AndroidApk/bin
+/misc/experiments/sandbox.android/AndroidApk/gen
+/misc/experiments/sandbox.android/AndroidApk/libs
+.DS_Store
+.vs
+/out
+/JSON

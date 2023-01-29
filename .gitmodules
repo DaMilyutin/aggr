@@ -1,0 +1,12 @@
+[submodule "libraries/utee"]
+	path = libraries/utee
+	url = https://github.com/tyoma/utee.git
+[submodule "libraries/strmd"]
+	path = libraries/strmd
+	url = https://github.com/tyoma/strmd.git
+[submodule "libraries/utfia"]
+	path = libraries/utfia
+	url = https://github.com/tyoma/utfia.git
+[submodule "libraries/polyq"]
+	path = libraries/polyq
+	url = https://github.com/tyoma/polyq.git

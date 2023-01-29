@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{d0569dc8-c0fe-4eb8-9e86-2b32825b0d68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform">
+      <UniqueIdentifier>{1383fb75-4a60-4e18-b314-2df342541680}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\platform">
+      <UniqueIdentifier>{dd2df885-a4ae-4302-bf56-86f6d038f30a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\platform\win32">
+      <UniqueIdentifier>{04d19b1d-2bbd-494f-8851-c45c5b27c6b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\platform\linux">
+      <UniqueIdentifier>{62dfc468-0909-425b-b5f3-66f1e1f2dd0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\platform\apple">
+      <UniqueIdentifier>{9d828ab1-97fd-4f3e-bbb1-1836dc67a08c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\platform\unix">
+      <UniqueIdentifier>{a8ab7650-4d75-403b-9c81-c63347e9a3af}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="vector_rasterizer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="blenders_intel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\win32\bitmap.cpp">
+      <Filter>src\platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="stroke_features.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="math.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="dash.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="stroke.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="parallel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="figures.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="curves.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="hybrid_event.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\win32\semaphore.cpp">
+      <Filter>src\platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\win32\intrinsic.cpp">
+      <Filter>src\platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\linux\semaphore.cpp">
+      <Filter>src\platform\linux</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\unix\intrinsic.cpp">
+      <Filter>src\platform\unix</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\apple\semaphore.cpp">
+      <Filter>src\platform\apple</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\win32\thread.cpp">
+      <Filter>src\platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="platform\unix\thread.cpp">
+      <Filter>src\platform\unix</Filter>
+    </ClCompile>
+    <ClCompile Include="color.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\agge\bitmap.h" />
+    <ClInclude Include="..\..\agge\blenders_simd.h" />
+    <ClInclude Include="..\..\agge\clipper.h" />
+    <ClInclude Include="..\..\agge\config.h" />
+    <ClInclude Include="..\..\agge\dash.h" />
+    <ClInclude Include="..\..\agge\math.h" />
+    <ClInclude Include="..\..\agge\memory.h" />
+    <ClInclude Include="..\..\agge\parallel.h" />
+    <ClInclude Include="..\..\agge\path.h" />
+    <ClInclude Include="..\..\agge\pod_vector.h" />
+    <ClInclude Include="..\..\agge\precise_delta.h" />
+    <ClInclude Include="..\..\agge\rasterizer.h" />
+    <ClInclude Include="..\..\agge\renderer.h" />
+    <ClInclude Include="..\..\agge\renderer_parallel.h" />
+    <ClInclude Include="..\..\agge\scanline.h" />
+    <ClInclude Include="..\..\agge\stroke.h" />
+    <ClInclude Include="..\..\agge\stroke_features.h" />
+    <ClInclude Include="..\..\agge\tools.h" />
+    <ClInclude Include="..\..\agge\types.h" />
+    <ClInclude Include="..\..\agge\vector_rasterizer.h" />
+    <ClInclude Include="..\..\agge\vertex_sequence.h" />
+    <ClInclude Include="..\..\agge\filling_rules.h" />
+    <ClInclude Include="..\..\agge\pixel.h" />
+    <ClInclude Include="..\..\agge\blenders.h" />
+    <ClInclude Include="..\..\agge\blenders_generic.h" />
+    <ClInclude Include="..\..\agge\figures.h" />
+    <ClInclude Include="..\..\agge\curves.h" />
+    <ClInclude Include="handle.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="intrinsic.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\agge\platform\bitmap.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\agge\hybrid_event.h" />
+    <ClInclude Include="..\..\agge\thread.h" />
+    <ClInclude Include="..\..\agge\color.h" />
+    <ClInclude Include="..\..\agge\minmax.h" />
+  </ItemGroup>
+</Project>

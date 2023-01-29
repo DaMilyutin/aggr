@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations" Condition="'$(VisualStudioVersion)'=='10.0'">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F849E92C-248A-46B2-9EAB-F86578A21316}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)build.props\platform.props" />
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(SolutionDir)build.props\agge.props" Condition="exists('$(SolutionDir)build.props\agge.props')" />
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>../..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="blenders_intel.cpp" />
+    <ClCompile Include="color.cpp" />
+    <ClCompile Include="curves.cpp" />
+    <ClCompile Include="dash.cpp" />
+    <ClCompile Include="figures.cpp" />
+    <ClCompile Include="hybrid_event.cpp" />
+    <ClCompile Include="math.cpp" />
+    <ClCompile Include="parallel.cpp">
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+    </ClCompile>
+    <ClCompile Include="platform\apple\semaphore.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="platform\linux\semaphore.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="platform\unix\intrinsic.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="platform\unix\thread.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="platform\win32\bitmap.cpp">
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+    </ClCompile>
+    <ClCompile Include="platform\win32\intrinsic.cpp" />
+    <ClCompile Include="platform\win32\semaphore.cpp">
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+    </ClCompile>
+    <ClCompile Include="platform\win32\thread.cpp">
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+    </ClCompile>
+    <ClCompile Include="stroke.cpp" />
+    <ClCompile Include="stroke_features.cpp" />
+    <ClCompile Include="vector_rasterizer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\agge\bitmap.h" />
+    <ClInclude Include="..\..\agge\blenders.h" />
+    <ClInclude Include="..\..\agge\blenders_generic.h" />
+    <ClInclude Include="..\..\agge\blenders_simd.h" />
+    <ClInclude Include="..\..\agge\clipper.h" />
+    <ClInclude Include="..\..\agge\color.h" />
+    <ClInclude Include="..\..\agge\config.h" />
+    <ClInclude Include="..\..\agge\curves.h" />
+    <ClInclude Include="..\..\agge\dash.h" />
+    <ClInclude Include="..\..\agge\figures.h" />
+    <ClInclude Include="..\..\agge\hybrid_event.h" />
+    <ClInclude Include="..\..\agge\math.h" />
+    <ClInclude Include="..\..\agge\memory.h" />
+    <ClInclude Include="..\..\agge\minmax.h" />
+    <ClInclude Include="..\..\agge\parallel.h" />
+    <ClInclude Include="..\..\agge\path.h" />
+    <ClInclude Include="..\..\agge\pixel.h" />
+    <ClInclude Include="..\..\agge\platform\bitmap.h" />
+    <ClInclude Include="..\..\agge\pod_vector.h" />
+    <ClInclude Include="..\..\agge\precise_delta.h" />
+    <ClInclude Include="..\..\agge\rasterizer.h" />
+    <ClInclude Include="..\..\agge\renderer.h" />
+    <ClInclude Include="..\..\agge\renderer_parallel.h" />
+    <ClInclude Include="..\..\agge\scanline.h" />
+    <ClInclude Include="..\..\agge\stroke.h" />
+    <ClInclude Include="..\..\agge\stroke_features.h" />
+    <ClInclude Include="..\..\agge\thread.h" />
+    <ClInclude Include="..\..\agge\tools.h" />
+    <ClInclude Include="..\..\agge\types.h" />
+    <ClInclude Include="..\..\agge\vector_rasterizer.h" />
+    <ClInclude Include="..\..\agge\vertex_sequence.h" />
+    <ClInclude Include="..\..\agge\filling_rules.h" />
+    <ClInclude Include="intrinsic.h" />
+    <ClInclude Include="handle.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
