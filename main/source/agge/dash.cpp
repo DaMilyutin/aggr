@@ -1,6 +1,6 @@
-#include <agge/dash.h>
+#include <agge/primitives/dash.h>
 
-#include <agge/path.h>
+#include <agge/primitives/path.h>
 
 namespace agge
 {

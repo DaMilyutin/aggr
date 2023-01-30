@@ -1,7 +1,7 @@
 #pragma once
 
-#include "color.h"
-#include "pixel.h"
+#include <agge/color.h>
+#include <agge/pixel.h>
 
 namespace agge
 {

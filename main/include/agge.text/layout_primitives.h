@@ -4,8 +4,8 @@
 #include "shared_ptr.h"
 #include "types.h"
 
-#include <agge/pod_vector.h>
-#include <agge/tools.h>
+#include <agge/utils/pod_vector.h>
+#include <agge/utils/tools.h>
 #include <vector>
 
 namespace agge

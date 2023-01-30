@@ -1,8 +1,8 @@
 #pragma once
 
-#include "minmax.h"
-#include "scanline.h"
-#include "tools.h"
+#include <agge/utils/minmax.h>
+#include <agge/rendering/scanline.h>
+#include <agge/utils/tools.h>
 
 namespace agge
 {

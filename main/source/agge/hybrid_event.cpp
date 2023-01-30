@@ -1,4 +1,4 @@
-#include <agge/hybrid_event.h>
+#include <agge/parallel/hybrid_event.h>
 
 #include "intrinsic.h"
 #include "semaphore.h"
@@ -11,7 +11,7 @@ namespace agge
 
 	hybrid_event::~hybrid_event()
 	{	delete _semaphore;	}
-	
+
 	void hybrid_event::signal()
 	{
 		if (interlocked_exchange(&_state, state_set) == state_blocked)

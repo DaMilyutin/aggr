@@ -1,7 +1,7 @@
-#include <agge/clipper.h>
-#include <agge/filling_rules.h>
-#include <agge/rasterizer.h>
-#include <agge/renderer_parallel.h>
+#include <agge/rendering/clipper.h>
+#include <agge/rendering/filling_rules.h>
+#include <agge/rendering/rasterizer.h>
+#include <agge/rendering/renderer_parallel.h>
 #include <agge.text/layout.h>
 #include <agge.text/limit.h>
 #include <samples/common/font_loader.h>
@@ -22,7 +22,7 @@ namespace demo
 		TextDrawer(services &s)
 			: _renderer(3), _font_loader(s), _text_engine(_font_loader), _text(font_style_annotation()), _ddx(0.0f)
 		{
-			font_style_annotation a = {	font_descriptor::create("Times New Roman", 20, regular, false, hint_none),	};
+			font_style_annotation a = {	font_descriptor::create("Arial", 20, regular, false, hint_none),	};
 
 			_text.set_base_annotation(a);
 			_text << c_text_long.c_str();

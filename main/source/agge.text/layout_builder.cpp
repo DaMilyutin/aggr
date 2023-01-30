@@ -1,7 +1,7 @@
 #include <agge.text/layout_builder.h>
 
-#include <agge/math.h>
-#include <agge/minmax.h>
+#include <agge/utils/math.h>
+#include <agge/utils/minmax.h>
 #include <agge.text/font.h>
 
 namespace agge

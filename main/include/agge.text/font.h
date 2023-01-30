@@ -5,7 +5,7 @@
 #include "shared_ptr.h"
 #include "types.h"
 
-#include <agge/config.h>
+#include <agge/config/config.h>
 #include <string>
 
 namespace agge

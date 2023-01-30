@@ -1,9 +1,10 @@
-﻿#include <agge/clipper.h>
-#include <agge/curves.h>
-#include <agge/filling_rules.h>
-#include <agge/path.h>
-#include <agge/renderer.h>
-#include <agge/rasterizer.h>
+﻿#include <agge/rendering/clipper.h>
+#include <agge/rendering/renderer.h>
+#include <agge/rendering/rasterizer.h>
+#include <agge/rendering/filling_rules.h>
+
+#include <agge/primitives/curves.h>
+#include <agge/primitives/path.h>
 
 #include <samples/common/shell.h>
 #include <samples/common/timing.h>

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "pod_vector.h"
-#include "types.h"
+#include <agge/utils/pod_vector.h>
+#include <agge/types.h>
 
 namespace agge
 {
@@ -86,7 +86,7 @@ namespace agge
 		histogram::const_iterator offset = _histogram_y.begin() + y - _min_y;
 		const const_cells_iterator start = _cells.begin();
 		scanline_cells sc;
-		
+
 		sc.first = start + *offset++;
 		sc.second = start + *offset;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "color.h"
+#include <agge/color.h>
 
 namespace agge
 {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "config.h"
-#include "memory.h"
+#include <agge/config/config.h>
+#include <agge/utils/memory.h>
 
 namespace agge
 {

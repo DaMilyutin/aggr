@@ -1,6 +1,6 @@
 #pragma once
 
-#include "memory.h"
+#include <agge/utils/memory.h>
 
 namespace agge
 {

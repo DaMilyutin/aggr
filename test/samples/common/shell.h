@@ -1,9 +1,10 @@
 #pragma once
 
-#include <agge/bitmap.h>
-#include <agge/blenders.h>
-#include <agge/blenders_generic.h>
-#include <agge/config.h>
+#include <agge/rendering/bitmap.h>
+#include <agge/rendering/blenders.h>
+#include <agge/rendering/blenders_generic.h>
+#include <agge/config/config.h>
+#include <agge/pixel.h>
 
 #if defined(AGGE_PLATFORM_ANDROID)
 	#include "src/platform/android/bitmap.h"
@@ -12,7 +13,7 @@
 	typedef agge::order_rgba platform_pixel_order;
 
 #elif defined(AGGE_PLATFORM_WINDOWS)
-	#include <agge/platform/bitmap.h>
+	#include <agge/rendering/platform/bitmap.h>
 
 	typedef agge::bitmap<agge::pixel32, agge::platform::raw_bitmap> platform_bitmap;
 	typedef agge::order_bgra platform_pixel_order;
@@ -26,7 +27,7 @@
 #endif
 
 #if defined(AGGE_ARCH_INTEL)
-	#include <agge/blenders_simd.h>
+	#include <agge/rendering/blenders_simd.h>
 
 	typedef agge::blender_solid_color<agge::simd::blender_solid_color, platform_pixel_order> platform_blender_solid_color;
 

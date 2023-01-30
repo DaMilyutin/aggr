@@ -1,4 +1,4 @@
-#include <agge/thread.h>
+#include <agge/parallel/thread.h>
 
 #include <new>
 #include <windows.h>

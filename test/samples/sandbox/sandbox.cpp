@@ -1,11 +1,11 @@
-#include <agge/clipper.h>
-#include <agge/dash.h>
-#include <agge/filling_rules.h>
-#include <agge/math.h>
-#include <agge/rasterizer.h>
-#include <agge/renderer.h>
-#include <agge/stroke.h>
-#include <agge/stroke_features.h>
+#include <agge/rendering/clipper.h>
+#include <agge/primitives/dash.h>
+#include <agge/rendering/filling_rules.h>
+#include <agge/utils/math.h>
+#include <agge/rendering/rasterizer.h>
+#include <agge/rendering/renderer.h>
+#include <agge/primitives/stroke.h>
+#include <agge/primitives/stroke_features.h>
 
 #include <algorithm>
 #include <samples/common/paths.h>
@@ -52,7 +52,7 @@ namespace
 			real_t num = (ay-cy) * (dx-cx) - (ax-cx) * (dy-cy);
 			real_t den = (bx-ax) * (dy-cy) - (by-ay) * (dx-cx);
 			if (common::fabs(den) < distance_epsilon)
-				return false;	
+				return false;
 			real_t r = num / den;
 			*x = ax + r * (bx-ax);
 			*y = ay + r * (by-ay);

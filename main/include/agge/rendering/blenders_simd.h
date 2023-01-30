@@ -1,7 +1,7 @@
 #pragma once
 
-#include "config.h"
-#include "pixel.h"
+#include <agge/config/config.h>
+#include <agge/pixel.h>
 
 #include <emmintrin.h>
 

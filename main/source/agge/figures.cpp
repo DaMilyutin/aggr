@@ -1,8 +1,8 @@
-#include <agge/figures.h>
+#include <agge/primitives/figures.h>
 
-#include <agge/curves.h>
-#include <agge/math.h>
-#include <agge/path.h>
+#include <agge/primitives/curves.h>
+#include <agge/utils/math.h>
+#include <agge/primitives/path.h>
 
 namespace agge
 {

@@ -2,8 +2,8 @@
 
 #include <polyq/queue.h>
 
-#include <agge/hybrid_event.h>
-#include <agge/thread.h>
+#include <agge/parallel/hybrid_event.h>
+#include <agge/parallel/thread.h>
 
 namespace agge
 {

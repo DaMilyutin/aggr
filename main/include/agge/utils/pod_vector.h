@@ -1,7 +1,7 @@
 #pragma once
 
-#include "minmax.h"
-#include "types.h"
+#include <agge/utils/minmax.h>
+#include <agge/types.h>
 
 namespace agge
 {
@@ -172,7 +172,7 @@ namespace agge
 		new_capacity += agge_max(2 * by > new_capacity ? by : new_capacity / 2, 1u);
 
 		T *buffer = new T[new_capacity], *p = buffer;
-		
+
 		for (iterator i = _begin; i != _end; )
 			*p++ = *i++;
 		delete []_begin;

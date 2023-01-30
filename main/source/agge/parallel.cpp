@@ -1,7 +1,7 @@
-#include <agge/parallel.h>
+#include <agge/parallel/parallel.h>
 
-#include <agge/hybrid_event.h>
-#include <agge/thread.h>
+#include <agge/parallel/hybrid_event.h>
+#include <agge/parallel/thread.h>
 
 #include <memory>
 

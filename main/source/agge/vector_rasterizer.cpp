@@ -1,8 +1,8 @@
-#include <agge/vector_rasterizer.h>
+#include <agge/rendering/vector_rasterizer.h>
 
-#include <agge/config.h>
-#include <agge/minmax.h>
-#include <agge/precise_delta.h>
+#include <agge/config/config.h>
+#include <agge/utils/minmax.h>
+#include <agge/utils/precise_delta.h>
 
 namespace agge
 {
@@ -40,7 +40,7 @@ namespace agge
 					if (k->x > j->x)
 					{
 						vector_rasterizer::cell t = *k;
-						
+
 						*k = *j;
 						*j = t;
 						sorted = false;
@@ -161,7 +161,7 @@ namespace agge
 			{
 				// Vertical line - we have to calculate start and end cells,
 				// and then - the common values of the area and coverage for
-				// all cells of the line. We know exactly there's only one 
+				// all cells of the line. We know exactly there's only one
 				// cell, so, we don't have to call hline().
 
 				const int two_fx = 2 * (x1 & _1_mask);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vertex_sequence.h"
+#include <agge/utils/vertex_sequence.h>
 
 namespace agge
 {

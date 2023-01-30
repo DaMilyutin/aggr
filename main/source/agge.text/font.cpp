@@ -1,6 +1,6 @@
 #include <agge.text/font.h>
 
-#include <agge/memory.h>
+#include <agge/utils/memory.h>
 
 namespace agge
 {

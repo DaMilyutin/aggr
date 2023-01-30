@@ -3,8 +3,8 @@
 #include "layout.h"
 #include "text_engine_base.h"
 
-#include <agge/config.h>
-#include <agge/math.h>
+#include <agge/config/config.h>
+#include <agge/utils/math.h>
 #include <limits>
 
 namespace agge

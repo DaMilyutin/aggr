@@ -5,8 +5,8 @@
 #include "richtext.h"
 #include "tools.h"
 
-#include <agge/math.h>
-#include <agge/tools.h>
+#include <agge/utils/math.h>
+#include <agge/utils/tools.h>
 #include <utfia/iterator.h>
 
 namespace agge

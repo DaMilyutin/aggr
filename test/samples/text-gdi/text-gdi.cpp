@@ -1,6 +1,6 @@
-#include <agge/clipper.h>
-#include <agge/rasterizer.h>
-#include <agge/renderer.h>
+#include <agge/rendering/clipper.h>
+#include <agge/rendering/rasterizer.h>
+#include <agge/rendering/renderer.h>
 #include <agge.text/layout.h>
 #include <agge.text/limit.h>
 #include <map>
@@ -25,7 +25,7 @@ namespace demo
 		TextDrawerGDI()
 			: _text_engine(_font_loader), _text(font_style_annotation())
 		{
-			font_style_annotation a = {	font_descriptor::create("Times New Roman", 20, regular, false, hint_none),	};
+			font_style_annotation a = {	font_descriptor::create("Times New Roman", 25, regular, false, hint_none),	};
 
 			_text.set_base_annotation(a);
 			_text << c_text_long.c_str();

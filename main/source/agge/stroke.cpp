@@ -1,8 +1,8 @@
-#include <agge/stroke.h>
+#include <agge/primitives/stroke.h>
 
-#include <agge/math.h>
-#include <agge/path.h>
-#include <agge/stroke_features.h>
+#include <agge/utils/math.h>
+#include <agge/primitives/path.h>
+#include <agge/primitives/stroke_features.h>
 
 namespace agge
 {
@@ -31,7 +31,7 @@ namespace agge
 
 	void stroke::add_vertex(real_t x, real_t y, int command)
 	{	add_polyline_vertex(*this, x, y, command);	}
-		
+
 	int stroke::vertex(real_t *x, real_t *y)
 	{
 		for ( ; prepare(); )
@@ -106,7 +106,7 @@ namespace agge
 		}
 		return path_command_stop;
 	}
-		
+
 	void stroke::width(real_t w)
 	{	_width = 0.5f * w;	}
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <agge/config.h>
+#include <agge/config/config.h>
 #include <agge/pixel.h>
 
 #if defined(AGGE_PLATFORM_APPLE)
@@ -70,7 +70,7 @@ namespace agge
 
 		inline const void *raw_bitmap::row_ptr(count_t y) const
 		{	return _memory + y * _stride;	}
-		
+
 		inline image_handle raw_bitmap::native() const
 		{	return _native;	}
 

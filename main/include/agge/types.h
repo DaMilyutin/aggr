@@ -56,7 +56,7 @@ namespace agge
 		noncopyable() throw() { }
 
 	private:
-		noncopyable(const noncopyable &other);
-		const noncopyable &operator =(const noncopyable &rhs);
+		noncopyable(const noncopyable &other) = delete;
+		const noncopyable &operator =(const noncopyable &rhs) = delete;
 	};
 }

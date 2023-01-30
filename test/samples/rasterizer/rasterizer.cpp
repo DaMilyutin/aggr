@@ -1,7 +1,7 @@
-#include <agge/clipper.h>
-#include <agge/filling_rules.h>
-#include <agge/renderer.h>
-#include <agge/rasterizer.h>
+#include <agge/rendering/clipper.h>
+#include <agge/rendering/filling_rules.h>
+#include <agge/rendering/renderer.h>
+#include <agge/rendering/rasterizer.h>
 
 #include <samples/common/shell.h>
 

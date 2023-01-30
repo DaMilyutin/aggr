@@ -3,8 +3,8 @@
 #include "shared_ptr.h"
 #include "types.h"
 
-#include <agge/path.h>
-#include <agge/pod_vector.h>
+#include <agge/primitives/path.h>
+#include <agge/utils/pod_vector.h>
 
 namespace agge
 {

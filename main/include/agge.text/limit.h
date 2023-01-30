@@ -3,7 +3,7 @@
 #include "layout_builder.h"
 #include "tools.h"
 
-#include <agge/config.h>
+#include <agge/config/config.h>
 
 namespace agge
 {

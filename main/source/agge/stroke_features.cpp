@@ -1,8 +1,8 @@
-#include <agge/stroke_features.h>
+#include <agge/primitives/stroke_features.h>
 
-#include <agge/curves.h>
-#include <agge/math.h>
-#include <agge/tools.h>
+#include <agge/primitives/curves.h>
+#include <agge/utils/math.h>
+#include <agge/utils/tools.h>
 
 namespace agge
 {

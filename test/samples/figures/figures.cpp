@@ -1,13 +1,14 @@
-﻿#include <agge/clipper.h>
-#include <agge/curves.h>
-#include <agge/dash.h>
-#include <agge/figures.h>
-#include <agge/filling_rules.h>
-#include <agge/path.h>
-#include <agge/renderer.h>
-#include <agge/rasterizer.h>
-#include <agge/stroke.h>
-#include <agge/stroke_features.h>
+﻿#include <agge/rendering/clipper.h>
+#include <agge/rendering/filling_rules.h>
+#include <agge/rendering/renderer.h>
+#include <agge/rendering/rasterizer.h>
+
+#include <agge/primitives/curves.h>
+#include <agge/primitives/dash.h>
+#include <agge/primitives/figures.h>
+#include <agge/primitives/path.h>
+#include <agge/primitives/stroke.h>
+#include <agge/primitives/stroke_features.h>
 
 #include <samples/common/shell.h>
 

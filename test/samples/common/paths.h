@@ -1,6 +1,6 @@
 #pragma once
 
-#include <agge/path.h>
+#include <agge/primitives/path.h>
 #include <agge/types.h>
 #include <math.h>
 #include <vector>
@@ -46,7 +46,7 @@ namespace common
 		const AggPath &_path;
 		AggPath::const_iterator _position;
 	};
-	
+
 	class line_adaptor
 	{
 	public:
@@ -88,7 +88,7 @@ namespace common
 
 	inline void pathMoveTo(AggPath &path, agge::real_t x, agge::real_t y)
 	{	path.push_back(std::make_pair(std::make_pair(x, y), agge::path_command_move_to));	}
-	
+
 	inline void pathLineTo(AggPath &path, agge::real_t x, agge::real_t y)
 	{	path.push_back(std::make_pair(std::make_pair(x, y), agge::path_command_line_to));	}
 

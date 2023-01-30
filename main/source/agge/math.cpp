@@ -1,4 +1,4 @@
-#include <agge/math.h>
+#include <agge/utils/math.h>
 
 #include <math.h>
 

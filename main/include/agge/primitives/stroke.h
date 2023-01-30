@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vertex_sequence.h"
+#include <agge/utils/vertex_sequence.h>
 
 namespace agge
 {
@@ -22,10 +22,10 @@ namespace agge
 		using vertex_sequence::line_to;
 		void close_polygon();
 		void add_vertex(real_t x, real_t y, int command);
-		
+
 		// Vertex access
 		int vertex(real_t *x, real_t *y);
-		
+
 		// Setup
 		void width(real_t w);
 
@@ -86,7 +86,7 @@ namespace agge
 	inline void stroke::set_cap(const CapT &c)
 	{
 		const CapT *replacement = new CapT(c);
-		
+
 		delete _cap;
 		_cap = replacement;
 	}
@@ -95,7 +95,7 @@ namespace agge
 	inline void stroke::set_join(const JoinT &j)
 	{
 		const JoinT *replacement = new JoinT(j);
-		
+
 		delete _join;
 		_join = replacement;
 	}

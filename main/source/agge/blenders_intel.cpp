@@ -1,4 +1,4 @@
-#include <agge/blenders_simd.h>
+#include <agge/rendering/blenders_simd.h>
 
 namespace agge
 {

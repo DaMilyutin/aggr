@@ -1,9 +1,9 @@
 #include "balls_data.h"
 
-#include <agge/clipper.h>
-#include <agge/filling_rules.h>
-#include <agge/rasterizer.h>
-#include <agge/renderer_parallel.h>
+#include <agge/rendering/clipper.h>
+#include <agge/rendering/filling_rules.h>
+#include <agge/rendering/rasterizer.h>
+#include <agge/rendering/renderer_parallel.h>
 
 #include <samples/common/agg_ellipse.h>
 

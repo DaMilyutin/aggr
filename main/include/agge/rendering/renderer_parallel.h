@@ -1,7 +1,7 @@
 #pragma once
 
-#include "parallel.h"
-#include "renderer.h"
+#include <agge/parallel/parallel.h>
+#include <agge/rendering/renderer.h>
 
 namespace agge
 {

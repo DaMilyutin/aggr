@@ -1,7 +1,7 @@
 #pragma once
 
-#include "math.h"
-#include "types.h"
+#include <agge/utils/math.h>
+#include <agge/types.h>
 
 namespace agge
 {

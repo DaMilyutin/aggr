@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types.h"
+#include <agge/types.h>
 
 namespace agge
 {
