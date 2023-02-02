@@ -1,6 +1,7 @@
 #pragma once
 
 #include <agge/utils/vertex_sequence.h>
+#include <agge/utils/static_any.h>
 
 namespace agge
 {
@@ -62,8 +63,13 @@ namespace agge
 		points _output;
 		vertex_sequence::const_iterator _i;
 		points::const_iterator _o;
+
 		const cap *_cap;
 		const join *_join;
+        static_any<8> _capBuffer;
+        static_any<8> _joinBuffer;
+
+
 		real_t _width;
 		int _state;
 	};
@@ -85,18 +91,14 @@ namespace agge
 	template <typename CapT>
 	inline void stroke::set_cap(const CapT &c)
 	{
-		const CapT *replacement = new CapT(c);
-
-		delete _cap;
-		_cap = replacement;
+        _capBuffer = c;
+		_cap = &_capBuffer.get<CapT>();
 	}
 
 	template <typename JoinT>
 	inline void stroke::set_join(const JoinT &j)
 	{
-		const JoinT *replacement = new JoinT(j);
-
-		delete _join;
-		_join = replacement;
+        _joinBuffer = j;
+        _join = &_joinBuffer.get<JoinT>();
 	}
 }

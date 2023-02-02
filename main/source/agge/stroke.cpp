@@ -11,10 +11,7 @@ namespace agge
 	{	}
 
 	stroke::~stroke()
-	{
-		delete _cap;
-		delete _join;
-	}
+	{}
 
 	void stroke::remove_all()
 	{
