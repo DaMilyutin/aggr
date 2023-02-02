@@ -51,9 +51,9 @@ namespace
             line_style.set_cap(caps::butt());
             line_style.set_join(joins::bevel());
             add_path(ras,
-                      assist(agge::line(axes.coordinates.port_area.x1, axes.coordinates.port_area.y1,
-                                                   axes.coordinates.port_area.x1, axes.coordinates.port_area.y2),
-                                  line_style));
+                      agge::line(axes.coordinates.port_area.x1, axes.coordinates.port_area.y1,
+                                 axes.coordinates.port_area.x1, axes.coordinates.port_area.y2)
+                                 ^ line_style);
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
@@ -64,9 +64,9 @@ namespace
             line_style.set_cap(caps::butt());
             line_style.set_join(joins::bevel());
             add_path(ras,
-                assist(agge::line(axes.coordinates.port_area.x2, axes.coordinates.port_area.y1,
-                                             axes.coordinates.port_area.x2, axes.coordinates.port_area.y2),
-                    line_style));
+                agge::line(axes.coordinates.port_area.x2, axes.coordinates.port_area.y1,
+                           axes.coordinates.port_area.x2, axes.coordinates.port_area.y2)
+                           ^line_style);
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
@@ -91,11 +91,7 @@ namespace
                     line_style.set_cap(caps::butt());
                     line_style.set_join(joins::bevel());
                     for(real_t x = x1; x<=x2; x += step)
-                    {
-                        add_path(ras,
-                            assist(agge::line(x, y1, x, y2),
-                                line_style));
-                    }
+                        add_path(ras, agge::line(x, y1, x, y2)^line_style);
 
                     ras.sort();
                     ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
@@ -113,11 +109,7 @@ namespace
                     while(x < axes.coordinates.port_area.x1)
                         x += step;
                     for(; x<=x2; x += step)
-                    {
-                        add_path(ras,
-                            assist(agge::line(x, y1, x, y2),
-                                line_style));
-                    }
+                        add_path(ras, agge::line(x, y1, x, y2)^line_style);
 
                     ras.sort();
                     ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
@@ -140,9 +132,7 @@ namespace
                     {
                         if(i++ % 5 == 0)
                             continue;
-                        add_path(ras,
-                            assist(agge::line(x, y1, x, y2),
-                                line_style));
+                        add_path(ras, agge::line(x, y1, x, y2)^line_style);
                     }
 
                     ras.sort();
@@ -188,9 +178,9 @@ namespace
             line_style.set_cap(caps::butt());
             line_style.set_join(joins::bevel());
             add_path(ras,
-                assist(agge::line(axes.coordinates.port_area.x1, axes.coordinates.port_area.y1,
-                                             axes.coordinates.port_area.x2, axes.coordinates.port_area.y1),
-                    line_style));
+                agge::line(axes.coordinates.port_area.x1, axes.coordinates.port_area.y1,
+                           axes.coordinates.port_area.x2, axes.coordinates.port_area.y1)^
+                    line_style);
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
@@ -201,9 +191,9 @@ namespace
             line_style.set_cap(caps::butt());
             line_style.set_join(joins::bevel());
             add_path(ras,
-                assist(agge::line(axes.coordinates.port_area.x1, axes.coordinates.port_area.y2,
-                                             axes.coordinates.port_area.x2, axes.coordinates.port_area.y2),
-                    line_style));
+                     agge::line(axes.coordinates.port_area.x1, axes.coordinates.port_area.y2,
+                                axes.coordinates.port_area.x2, axes.coordinates.port_area.y2)
+                        ^line_style);
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
@@ -214,7 +204,7 @@ namespace
         void plot(platform_bitmap& surface, polyline& points, color col,
                   agge::stroke& lineStyle)
         {
-            add_path(ras, assist(polyline_adaptor(points), lineStyle));
+            add_path(ras, polyline_adaptor(points)^lineStyle);
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
@@ -228,9 +218,7 @@ namespace
         {
             ras.reset();
             add_path(ras,
-                assist(
-                    assist(polyline_adaptor(points), dashStyle),
-                    lineStyle));
+                    polyline_adaptor(points)^dashStyle^lineStyle);
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,

@@ -2,6 +2,7 @@
 
 #include <agge/types.h>
 #include <agge/primitives/path.h>
+#include <agge/primitives/pipeline.h>
 
 #include <vector>
 
@@ -78,7 +79,7 @@ namespace agge
     };
 
 
-    class polyline_adaptor
+    class polyline_adaptor: public pipeline::terminal<polyline_adaptor>
     {
     public:
         polyline_adaptor(polyline const& path)

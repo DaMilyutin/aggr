@@ -2,12 +2,13 @@
 
 #include <agge/utils/vertex_sequence.h>
 #include <agge/utils/static_any.h>
+#include <agge/primitives/pipeline.h>
 
 namespace agge
 {
 	typedef pod_vector<point_r> points;
 
-	class stroke : vertex_sequence, noncopyable
+	class stroke: public pipeline::terminal<stroke>, vertex_sequence, noncopyable
 	{
 	public:
 		struct cap;

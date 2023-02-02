@@ -1,6 +1,8 @@
 #pragma once
 
 #include <agge/types.h>
+#include <agge/primitives/pipeline.h>
+#include <utility>
 
 namespace agge
 {
@@ -22,10 +24,11 @@ namespace agge
 
 
 	template <typename SourceT, typename GeneratorT>
-	class path_generator_adapter
+	class path_generator_adapter: public pipeline::terminal<path_generator_adapter<SourceT, GeneratorT>>
 	{
 	public:
 		path_generator_adapter(const SourceT &source, GeneratorT &generator);
+        path_generator_adapter(SourceT&& source, GeneratorT& generator);
 
 		void rewind(int /*path_id*/) { /*not implemented*/ }
 		int vertex(real_t *x, real_t *y);
@@ -44,7 +47,7 @@ namespace agge
 	};
 
 
-	class path_close
+	class path_close: public pipeline::terminal<path_close>
 	{
 	public:
 		path_close();
@@ -58,7 +61,7 @@ namespace agge
 
 
 	template <typename PathIterator1T, typename PathIterator2T = void>
-	class join
+	class join: public pipeline::terminal<join<PathIterator1T, PathIterator2T>>
 	{
 	public:
 		join(const PathIterator1T &lhs, const PathIterator2T &rhs);
@@ -72,7 +75,7 @@ namespace agge
 	};
 
 	template <typename PathIterator1T>
-	class join<PathIterator1T, void>
+	class join<PathIterator1T, void>: public pipeline::terminal<join<PathIterator1T, void>>
 	{
 	public:
 		join(const PathIterator1T &lhs);
@@ -87,8 +90,14 @@ namespace agge
 
 
 	template <typename SourceT, typename GeneratorT>
-	path_generator_adapter<SourceT, GeneratorT> assist(const SourceT &source, GeneratorT &generator)
-	{	return path_generator_adapter<SourceT, GeneratorT>(source, generator);	}
+	path_generator_adapter<SourceT, GeneratorT> operator^(const pipeline::terminal<SourceT>& source, pipeline::terminal<GeneratorT>& generator)
+	{	return path_generator_adapter<SourceT, GeneratorT>(source._get_(), generator._get_());	}
+
+    template <typename SourceT, typename GeneratorT>
+    path_generator_adapter<SourceT, GeneratorT> operator^(pipeline::terminal<SourceT>&& source, pipeline::terminal<GeneratorT>& generator)
+    {
+        return path_generator_adapter<SourceT, GeneratorT>(std::move(source._get_()), generator._get_());
+    }
 
 	//template <typename PathIterator1T, typename PathIterator2T>
 	//join<PathIterator1T, PathIterator2T> join(const PathIterator1T &path1, const PathIterator2T &path2)
@@ -130,6 +139,11 @@ namespace agge
 	inline path_generator_adapter<SourceT, GeneratorT>::path_generator_adapter(const SourceT &source, GeneratorT &generator)
 		: _source(source), _generator(generator), _state(initial)
 	{	}
+
+    template <typename SourceT, typename GeneratorT>
+    inline path_generator_adapter<SourceT, GeneratorT>::path_generator_adapter(SourceT&& source, GeneratorT& generator)
+        : _source(std::move(source)), _generator(generator), _state(initial)
+    {	}
 
 	template <typename SourceT, typename GeneratorT>
 	inline int path_generator_adapter<SourceT, GeneratorT>::vertex(real_t *x, real_t *y)

@@ -1,10 +1,11 @@
 #pragma once
 
 #include <agge/types.h>
+#include <agge/primitives/pipeline.h>
 
 namespace agge
 {
-	class qbezier
+	class qbezier: public pipeline::terminal<qbezier>
 	{
 	public:
 		qbezier(real_t xb, real_t yb, real_t xc, real_t yc, real_t xe, real_t ye, real_t step);
@@ -19,7 +20,7 @@ namespace agge
 	};
 
 
-	class cbezier
+	class cbezier: public pipeline::terminal<cbezier>
 	{
 	public:
 		cbezier(real_t xb, real_t yb, real_t xc1, real_t yc1, real_t xc2, real_t yc2, real_t xe, real_t ye, real_t step);
@@ -37,7 +38,7 @@ namespace agge
 	};
 
 
-	class arc
+	class arc: public pipeline::terminal<arc>
 	{
 	public:
 		arc(real_t cx, real_t cy, real_t r, real_t start, real_t end, real_t da = 0.05f);
