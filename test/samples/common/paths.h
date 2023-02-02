@@ -1,6 +1,6 @@
 #pragma once
 
-#include <agge/primitives/path.h>
+#include <agge/primitives/polyline.h>
 #include <agge/types.h>
 #include <math.h>
 #include <vector>
@@ -19,33 +19,7 @@ namespace common
 	inline double acos(double value)
 	{	return ::acos(value);	}
 
-	typedef std::vector< std::pair<std::pair<agge::real_t, agge::real_t>, unsigned> > AggPath;
-
-	class agg_path_adaptor
-	{
-	public:
-		agg_path_adaptor(const AggPath &path)
-			: _path(path), _position(_path.begin())
-		{
-		}
-
-		void rewind(unsigned)
-		{
-			_position = _path.begin();
-		}
-
-		unsigned vertex(agge::real_t* x, agge::real_t* y)
-		{
-			if (_position == _path.end())
-				return agge::path_command_stop;
-			else
-				return *x = _position->first.first, *y = _position->first.second, _position++->second;
-		}
-
-	private:
-		const AggPath &_path;
-		AggPath::const_iterator _position;
-	};
+	typedef agge::polyline AggPath;
 
 	class line_adaptor
 	{
@@ -83,27 +57,16 @@ namespace common
 		int _pos;
 	};
 
-	inline void pathStart(AggPath &/*path*/)
-	{	}
 
-	inline void pathMoveTo(AggPath &path, agge::real_t x, agge::real_t y)
-	{	path.push_back(std::make_pair(std::make_pair(x, y), agge::path_command_move_to));	}
-
-	inline void pathLineTo(AggPath &path, agge::real_t x, agge::real_t y)
-	{	path.push_back(std::make_pair(std::make_pair(x, y), agge::path_command_line_to));	}
-
-	inline void pathEnd(AggPath &path)
-	{	path.push_back(std::make_pair(std::make_pair(0.0f, 0.0f), agge::path_command_stop));	}
-
-	template <typename RealT, typename TargetT, typename PathT>
-	inline void flatten(TargetT &destination, PathT source)
+	template <typename RealT, typename PathT>
+	inline void flatten(agge::polyline& destination, PathT source)
 	{
 		unsigned cmd;
 		RealT x, y;
 
 		source.rewind(0);
 		while (cmd = source.vertex(&x, &y), cmd != agge::path_command_stop)
-			destination.push_back(std::make_pair(std::make_pair(x, y), cmd));
+			destination.push_back(agge::polyline::Item{x, y, cmd});
 	}
 
 	template <typename TargetT>
@@ -114,17 +77,17 @@ namespace common
 
 		bool start = true;
 
-		pathStart(target);
+		target.start();
 		for (agge::real_t angle = start_angle, dr = k * step / 45.0f, da = k / 180.0f * agge::pi;
 			r1 < r2; r1 += dr, angle += da, start = false)
 		{
 			const agge::real_t px = x + agge::cos(angle) * r1, py = y + agge::sin(angle) * r1;
 
 			if (start)
-				pathMoveTo(target, px, py);
+                target.move_to(px, py);
 			else
-				pathLineTo(target, px, py);
+                target.line_to(px, py);
 		}
-		pathEnd(target);
+		target.stop();
 	}
 }

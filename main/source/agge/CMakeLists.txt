@@ -10,6 +10,7 @@ set(AGGE_SOURCES
 	hybrid_event.cpp
 	math.cpp
 	parallel.cpp
+    polyline.cpp
 	stroke.cpp
 	stroke_features.cpp
 	vector_rasterizer.cpp

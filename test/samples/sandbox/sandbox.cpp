@@ -93,14 +93,14 @@ namespace
 				_stroke2.set_join(joins::bevel());
 
 				_spiral_flattened.clear();
-				flatten<real_t>(_spiral_flattened, assist(agg_path_adaptor(_spiral), _stroke1));
+				flatten<real_t>(_spiral_flattened, assist(polyline_adaptor(_spiral), _stroke1));
 //				flatten<real_t>(_spiral_flattened, assist(assist(agg_path_adaptor(_spiral), _dash), _stroke1));
 //				flatten<real_t>(_spiral_flattened, assist(assist(agg_path_adaptor(_spiral), _stroke1), _stroke2));
 //				flatten<real_t>(_spiral_flattened, assist(assist(assist(agg_path_adaptor(_spiral), _dash), _stroke1), _stroke2));
 			timings.stroking += stopwatch(counter);
 
 			stopwatch(counter);
-				add_path(_rasterizer, agg_path_adaptor(_spiral_flattened));
+				add_path(_rasterizer, polyline_adaptor(_spiral_flattened));
 //				add_path(_rasterizer, assist(agg_path_adaptor(_spiral), _stroke1));
 				_rasterizer.sort();
 				timings.rasterization += stopwatch(counter);
@@ -117,7 +117,7 @@ namespace
 	private:
 		rasterizer< clipper<int> > _rasterizer;
 		renderer _renderer;
-		AggPath _spiral, _spiral_flattened;
+		polyline _spiral, _spiral_flattened;
 		stroke _stroke1, _stroke2;
 		dash _dash;
 	};
