@@ -12,6 +12,7 @@
 #include <agge/primitives/stroke_features.h>
 
 #include <plotting/Axes.h>
+#include <plotting/Canvas.h>
 
 #include <samples/common/shell.h>
 
@@ -38,10 +39,6 @@ namespace
         }
     private:
 
-
-
-
-
         void drawAxesArea(platform_bitmap& surface)
         {
             ras.reset();
@@ -53,7 +50,7 @@ namespace
             add_path(ras,
                       agge::line(axes.coordinates.port_area.x1, axes.coordinates.port_area.y1,
                                  axes.coordinates.port_area.x1, axes.coordinates.port_area.y2)
-                                 ^ line_style);
+                                 / line_style);
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
@@ -66,7 +63,7 @@ namespace
             add_path(ras,
                 agge::line(axes.coordinates.port_area.x2, axes.coordinates.port_area.y1,
                            axes.coordinates.port_area.x2, axes.coordinates.port_area.y2)
-                           ^line_style);
+                           / line_style);
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
@@ -91,7 +88,7 @@ namespace
                     line_style.set_cap(caps::butt());
                     line_style.set_join(joins::bevel());
                     for(real_t x = x1; x<=x2; x += step)
-                        add_path(ras, agge::line(x, y1, x, y2)^line_style);
+                        add_path(ras, agge::line(x, y1, x, y2)/line_style);
 
                     ras.sort();
                     ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
@@ -109,7 +106,7 @@ namespace
                     while(x < axes.coordinates.port_area.x1)
                         x += step;
                     for(; x<=x2; x += step)
-                        add_path(ras, agge::line(x, y1, x, y2)^line_style);
+                        add_path(ras, agge::line(x, y1, x, y2)/line_style);
 
                     ras.sort();
                     ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
@@ -132,7 +129,7 @@ namespace
                     {
                         if(i++ % 5 == 0)
                             continue;
-                        add_path(ras, agge::line(x, y1, x, y2)^line_style);
+                        add_path(ras, agge::line(x, y1, x, y2)/line_style);
                     }
 
                     ras.sort();
@@ -177,14 +174,13 @@ namespace
             line_style.width(axes.properties.y1.sep.width);
             line_style.set_cap(caps::butt());
             line_style.set_join(joins::bevel());
-            add_path(ras,
-                agge::line(axes.coordinates.port_area.x1, axes.coordinates.port_area.y1,
-                           axes.coordinates.port_area.x2, axes.coordinates.port_area.y1)^
-                    line_style);
-            ras.sort();
+            auto canvas = plotting::make_canvas(surface, ren, ras);
 
-            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-                platform_blender_solid_color(axes.properties.y1.sep.color), winding<>());
+            canvas << plotting::reset
+                   << agge::line(axes.coordinates.port_area.x1, axes.coordinates.port_area.y1,
+                                  axes.coordinates.port_area.x2, axes.coordinates.port_area.y1)
+                                 / line_style
+                   << platform_blender_solid_color(axes.properties.y1.sep.color);
 
             ras.reset();
             line_style.width(axes.properties.y2.sep.width);
@@ -193,36 +189,12 @@ namespace
             add_path(ras,
                      agge::line(axes.coordinates.port_area.x1, axes.coordinates.port_area.y2,
                                 axes.coordinates.port_area.x2, axes.coordinates.port_area.y2)
-                        ^line_style);
+                        /line_style);
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
                 platform_blender_solid_color(axes.properties.y2.sep.color), winding<>());
             ras.reset();
-        }
-
-        void plot(platform_bitmap& surface, polyline& points, color col,
-                  agge::stroke& lineStyle)
-        {
-            add_path(ras, polyline_adaptor(points)^lineStyle);
-            ras.sort();
-
-            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-                platform_blender_solid_color(col), winding<>());
-            ras.reset();
-        }
-
-        void plot(platform_bitmap& surface, polyline& points, color col,
-                  agge::dash& dashStyle,
-                  agge::stroke& lineStyle)
-        {
-            ras.reset();
-            add_path(ras,
-                    polyline_adaptor(points)^dashStyle^lineStyle);
-            ras.sort();
-
-            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-                platform_blender_solid_color(col), winding<>());
         }
 
         virtual void draw(platform_bitmap& surface, timings&/*timings*/)
@@ -245,8 +217,15 @@ namespace
             dash_style.add_dash(10.0f*scale, 5.0f*scale);
             dash_style.dash_start(0.5f*scale);
 
-            plot(surface, points1, color::make(255, 0, 0, 128), dash_style, line_style);
-            plot(surface, points2, color::make(0, 255, 0, 128), line_style);
+            auto canvas = plotting::make_canvas(surface, ren, ras);
+
+            canvas << plotting::reset
+                << agge::polyline_adaptor(points1)/dash_style/line_style
+                << platform_blender_solid_color(color::make(255, 0, 0, 128));
+
+            canvas << plotting::reset
+                << agge::polyline_adaptor(points2)/line_style
+                << platform_blender_solid_color(color::make(0, 255, 0, 128));
         }
 
         virtual void resize(int width, int height)

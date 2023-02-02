@@ -90,11 +90,11 @@ namespace agge
 
 
 	template <typename SourceT, typename GeneratorT>
-	path_generator_adapter<SourceT, GeneratorT> operator^(const pipeline::terminal<SourceT>& source, pipeline::terminal<GeneratorT>& generator)
+	path_generator_adapter<SourceT, GeneratorT> operator/(const pipeline::terminal<SourceT>& source, pipeline::terminal<GeneratorT>& generator)
 	{	return path_generator_adapter<SourceT, GeneratorT>(source._get_(), generator._get_());	}
 
     template <typename SourceT, typename GeneratorT>
-    path_generator_adapter<SourceT, GeneratorT> operator^(pipeline::terminal<SourceT>&& source, pipeline::terminal<GeneratorT>& generator)
+    path_generator_adapter<SourceT, GeneratorT> operator/(pipeline::terminal<SourceT>&& source, pipeline::terminal<GeneratorT>& generator)
     {
         return path_generator_adapter<SourceT, GeneratorT>(std::move(source._get_()), generator._get_());
     }
