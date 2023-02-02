@@ -1,4 +1,4 @@
-#include <agge/clipper.h>
+#include <agge/rendering/clipper.h>
 
 #include "helpers.h"
 #include "mocks.h"
