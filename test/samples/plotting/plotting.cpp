@@ -34,7 +34,7 @@ namespace
         Plotting()
             : application()
         {
-            axes.coord.repr_area = mkrect(-6.5, 20., 6.2, -20.);
+            axes.coordinates.repr_area = mkrect(-6.5, 20., 6.2, -20.);
         }
     private:
 
@@ -51,8 +51,8 @@ namespace
             line_style.set_cap(caps::butt());
             line_style.set_join(joins::bevel());
             add_path(ras,
-                      assist(agge::line(axes.coord.port_area.x1, axes.coord.port_area.y1,
-                                                   axes.coord.port_area.x1, axes.coord.port_area.y2),
+                      assist(agge::line(axes.coordinates.port_area.x1, axes.coordinates.port_area.y1,
+                                                   axes.coordinates.port_area.x1, axes.coordinates.port_area.y2),
                                   line_style));
             ras.sort();
 
@@ -64,8 +64,8 @@ namespace
             line_style.set_cap(caps::butt());
             line_style.set_join(joins::bevel());
             add_path(ras,
-                assist(agge::line(axes.coord.port_area.x2, axes.coord.port_area.y1,
-                                             axes.coord.port_area.x2, axes.coord.port_area.y2),
+                assist(agge::line(axes.coordinates.port_area.x2, axes.coordinates.port_area.y1,
+                                             axes.coordinates.port_area.x2, axes.coordinates.port_area.y2),
                     line_style));
             ras.sort();
 
@@ -74,17 +74,17 @@ namespace
             ras.reset();
 
             {
-                double step_repr = (axes.coord.repr_area.x2 - axes.coord.repr_area.x1)/axes.properties.x1.tickSteps;
+                double step_repr = (axes.coordinates.repr_area.x2 - axes.coordinates.repr_area.x1)/axes.properties.x1.tickSteps;
                 step_repr = floor(log(step_repr)/log(10.));
                 step_repr = exp(step_repr*log(10.));
-                double const X_repr = step_repr*ceil(axes.coord.repr_area.x1/step_repr);
-                real_t const x1 = real_t(axes.coord.scale.x*(X_repr-axes.coord.repr_area.x1) + axes.coord.port_area.x1);
-                real_t const step = real_t(step_repr*axes.coord.scale.x);
+                double const X_repr = step_repr*ceil(axes.coordinates.repr_area.x1/step_repr);
+                real_t const x1 = real_t(axes.coordinates.scale.x*(X_repr-axes.coordinates.repr_area.x1) + axes.coordinates.port_area.x1);
+                real_t const step = real_t(step_repr*axes.coordinates.scale.x);
 
-                real_t const x2 = axes.coord.port_area.x2;
+                real_t const x2 = axes.coordinates.port_area.x2;
 
                 auto major = [&](real_t const y1, real_t const y2,
-                                                        Axes::TickProperties const& tick)
+                                                        plotting::Axes::TickProperties const& tick)
                 {
                     ras.reset();
                     line_style.width(tick.width);
@@ -103,14 +103,14 @@ namespace
                 };
 
                 auto middle = [&](real_t const y1, real_t const y2,
-                    Axes::TickProperties const& tick)
+                    plotting::Axes::TickProperties const& tick)
                 {
                     ras.reset();
                     line_style.width(tick.width);
                     line_style.set_cap(caps::butt());
                     line_style.set_join(joins::bevel());
                     real_t x = x1 - step*0.5f;
-                    while(x < axes.coord.port_area.x1)
+                    while(x < axes.coordinates.port_area.x1)
                         x += step;
                     for(; x<=x2; x += step)
                     {
@@ -125,7 +125,7 @@ namespace
                 };
 
                 auto minor = [&](real_t const y1, real_t const y2, real_t step,
-                    Axes::TickProperties const& tick)
+                    plotting::Axes::TickProperties const& tick)
                 {
                     step *= 0.1f;
                     ras.reset();
@@ -134,7 +134,7 @@ namespace
                     line_style.set_join(joins::bevel());
                     int i = 1;
                     real_t x = x1 - step*9.0f;
-                    while(x < axes.coord.port_area.x1)
+                    while(x < axes.coordinates.port_area.x1)
                         x += step, ++i;
                     for(; x<=x2; x += step)
                     {
@@ -152,33 +152,33 @@ namespace
 
 
                 {
-                    real_t const y2 = axes.coord.port_area.y1;
-                    real_t const y1 = axes.coord.port_area.y1 - axes.properties.y1.tick[0].length;
+                    real_t const y2 = axes.coordinates.port_area.y1;
+                    real_t const y1 = axes.coordinates.port_area.y1 - axes.properties.y1.tick[0].length;
                     major(y1, y2, axes.properties.y1.tick[0]);
                 }
                 {
-                    real_t const y1 = axes.coord.port_area.y2;
-                    real_t const y2 = axes.coord.port_area.y2 + axes.properties.y2.tick[0].length;
+                    real_t const y1 = axes.coordinates.port_area.y2;
+                    real_t const y2 = axes.coordinates.port_area.y2 + axes.properties.y2.tick[0].length;
                     major(y1, y2, axes.properties.y2.tick[0]);
                 }
                 {
-                    real_t const y2 = axes.coord.port_area.y1;
-                    real_t const y1 = axes.coord.port_area.y1 - axes.properties.y1.tick[1].length;
+                    real_t const y2 = axes.coordinates.port_area.y1;
+                    real_t const y1 = axes.coordinates.port_area.y1 - axes.properties.y1.tick[1].length;
                     middle(y1, y2, axes.properties.y1.tick[1]);
                 }
                 {
-                    real_t const y1 = axes.coord.port_area.y2;
-                    real_t const y2 = axes.coord.port_area.y2 + axes.properties.y2.tick[1].length;
+                    real_t const y1 = axes.coordinates.port_area.y2;
+                    real_t const y2 = axes.coordinates.port_area.y2 + axes.properties.y2.tick[1].length;
                     middle(y1, y2, axes.properties.y2.tick[1]);
                 }
                 {
-                    real_t const y2 = axes.coord.port_area.y1;
-                    real_t const y1 = axes.coord.port_area.y1 - axes.properties.y1.tick[2].length;
+                    real_t const y2 = axes.coordinates.port_area.y1;
+                    real_t const y1 = axes.coordinates.port_area.y1 - axes.properties.y1.tick[2].length;
                     minor(y1, y2, step, axes.properties.y1.tick[2]);
                 }
                 {
-                    real_t const y1 = axes.coord.port_area.y2;
-                    real_t const y2 = axes.coord.port_area.y2 + axes.properties.y2.tick[2].length;
+                    real_t const y1 = axes.coordinates.port_area.y2;
+                    real_t const y2 = axes.coordinates.port_area.y2 + axes.properties.y2.tick[2].length;
                     minor(y1, y2, step, axes.properties.y2.tick[2]);
                 }
 
@@ -188,8 +188,8 @@ namespace
             line_style.set_cap(caps::butt());
             line_style.set_join(joins::bevel());
             add_path(ras,
-                assist(agge::line(axes.coord.port_area.x1, axes.coord.port_area.y1,
-                                             axes.coord.port_area.x2, axes.coord.port_area.y1),
+                assist(agge::line(axes.coordinates.port_area.x1, axes.coordinates.port_area.y1,
+                                             axes.coordinates.port_area.x2, axes.coordinates.port_area.y1),
                     line_style));
             ras.sort();
 
@@ -201,8 +201,8 @@ namespace
             line_style.set_cap(caps::butt());
             line_style.set_join(joins::bevel());
             add_path(ras,
-                assist(agge::line(axes.coord.port_area.x1, axes.coord.port_area.y2,
-                                             axes.coord.port_area.x2, axes.coord.port_area.y2),
+                assist(agge::line(axes.coordinates.port_area.x1, axes.coordinates.port_area.y2,
+                                             axes.coordinates.port_area.x2, axes.coordinates.port_area.y2),
                     line_style));
             ras.sort();
 
@@ -244,7 +244,7 @@ namespace
 
             drawAxesArea(surface);
 
-            ras.set_clipping(axes.coord.port_area);
+            ras.set_clipping(axes.coordinates.port_area);
 
             auto wid = float(surface.width());
             auto hei = float(surface.height());
@@ -264,30 +264,30 @@ namespace
         virtual void resize(int width, int height)
         {
             auto const F = [](double t) { return cos(t)*exp(0.5*t); };
-            axes.position = port_area_t{10.0f, 10.0f, (float)width-10.0f, (float)height-10.0f};
-            axes.coord.update(port_area_t{100.0f, 40.0f, (float)width-20.0f, (float)height-100.0f});
+            axes.position = plotting::port_area_t{10.0f, 10.0f, (float)width-10.0f, (float)height-10.0f};
+            axes.coordinates.update(plotting::port_area_t{100.0f, 40.0f, (float)width-20.0f, (float)height-100.0f});
 
             {
                 double t = -5.;
-                port_t cur;
-                port_t prev = axes.coord << repr_t{t, F(t)};
+                plotting::port_t cur;
+                plotting::port_t prev = axes.coordinates << plotting::repr_t{t, F(t)};
                 points1.clear();
                 points1.move_to(prev.x, prev.y);
                 for(t = -5; t < 5.; t += 0.01, prev = cur)
                 {
-                    cur = axes.coord << repr_t{t, F(t)};
+                    cur = axes.coordinates << plotting::repr_t{t, F(t)};
                     points1.line_to(cur.x, cur.y);
                 }
             }
             {
                 points2.clear();
-                points2.move_to(axes.coord << repr_t{-5., 10.});
-                points2.line_to(axes.coord << repr_t{5., -10.});
+                points2.move_to(axes.coordinates << plotting::repr_t{-5., 10.});
+                points2.line_to(axes.coordinates << plotting::repr_t{5., -10.});
             }
         }
 
     private:
-        Axes                       axes;
+        plotting::Axes             axes;
         rasterizer< clipper<int> > ras;
         renderer                   ren;
         stroke                     line_style;
