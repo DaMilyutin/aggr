@@ -74,10 +74,10 @@ namespace
             axes.position = plotting::port_area_t{10.0f, 10.0f, (float)width-10.0f, (float)height-10.0f};
             axes.coordinates.update(plotting::port_area_t{100.0f, 40.0f, (float)width-20.0f, (float)height-100.0f});
 
-            axes.alignTickStepsX1(150);
-            axes.alignTickStepsX2(300);
-            axes.alignTickStepsY1(150);
-            axes.alignTickStepsY2(300);
+            //axes.alignTickStepsX1(150);
+            //axes.alignTickStepsX2(300);
+            //axes.alignTickStepsY1(150);
+            //axes.alignTickStepsY2(300);
 
             {
                 double t = -5.;

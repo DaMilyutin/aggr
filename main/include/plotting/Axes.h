@@ -137,9 +137,9 @@ namespace plotting
 
         inline double quantize_step(double step_repr)
         {
-            int const sign = (step_repr>0) - (step_repr<0);
-            step_repr = floor(log(fabs(step_repr))/log(10.));
-            step_repr = sign*exp(step_repr*log(10.));
+            //int const sign = (step_repr>0) - (step_repr<0);
+            //step_repr = floor(log(fabs(step_repr))/log(10.));
+            //step_repr = sign*exp(step_repr*log(10.));
             return step_repr;
         }
 
