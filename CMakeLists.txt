@@ -41,6 +41,7 @@ if (NOT TARGET utfia)
 endif()
 
 add_subdirectory(main/source/agge)
+add_subdirectory(main/source/plotting)
 add_subdirectory(main/source/agge.text)
 if (NOT AGGE_NO_EXTENSIONS AND (NOT MSVC_VERSION OR (MSVC_VERSION GREATER_EQUAL 1600)))
 	if (NOT TARGET polyq)

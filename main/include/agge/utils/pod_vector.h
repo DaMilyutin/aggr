@@ -1,5 +1,6 @@
 #pragma once
 
+#include <initializer_list>
 #include <agge/utils/minmax.h>
 #include <agge/types.h>
 
@@ -15,7 +16,15 @@ namespace agge
 
 	public:
 		explicit pod_vector(count_t initial_size = 0);
-		pod_vector(const pod_vector &other);
+		pod_vector(const pod_vector& other);
+        pod_vector(pod_vector&& other);
+        pod_vector(std::initializer_list<T> other)
+        {
+            resize(agge::count_t(other.size()));
+            for(auto&& x: other)
+                *_end++ = x;
+        }
+
 		~pod_vector();
 
 		iterator push_back(const T &element);
@@ -73,9 +82,18 @@ namespace agge
 			*j++ = *i++;
 	}
 
+    template <typename T>
+    inline pod_vector<T>::pod_vector(pod_vector&& other)
+        : _begin(other._begin)
+        , _end(other._end)
+        , _limit(other._limit)
+    {
+        other._begin = 0;
+    }
+
 	template <typename T>
 	inline pod_vector<T>::~pod_vector()
-	{	delete []_begin;	}
+	{   if(_begin) delete []_begin;	}
 
 	template <typename T>
 	inline typename pod_vector<T>::iterator pod_vector<T>::push_back(const T &element)

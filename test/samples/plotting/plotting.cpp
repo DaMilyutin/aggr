@@ -11,6 +11,8 @@
 #include <agge/primitives/stroke.h>
 #include <agge/primitives/stroke_features.h>
 
+#include <plotting/Axes.h>
+
 #include <samples/common/shell.h>
 
 #include <algorithm>
@@ -36,65 +38,9 @@ namespace
         }
     private:
 
-        using port_t = point<real_t>;
-        using repr_t = point<double>;
 
-        using repr_area_t = rect<double>;
-        using port_area_t = rect<real_t>;
 
-        struct CoordSystem
-        {
-            CoordSystem() = default;
-            CoordSystem(repr_area_t r)
-                : repr_area{r}
-            {}
 
-            void update(port_area_t p)
-            {
-                port_area = p;
-                scale.x = (double(port_area.x2)-port_area.x1)/(repr_area.x2-repr_area.x1);
-                scale.y = (double(port_area.y2)-port_area.y1)/(repr_area.y2-repr_area.y1);
-            }
-
-            repr_area_t repr_area = repr_area_t{0., 1., 0., 1.};
-            port_area_t port_area = port_area_t{ real_t(repr_area.x1), real_t(repr_area.y1)
-                                               , real_t(repr_area.x2), real_t(repr_area.y2)};
-            repr_t      scale     = repr_t{1., 1.};
-
-            port_t operator<<(repr_t const& f) const
-            {
-                return port_t{real_t(port_area.x1 + scale.x*(f.x - repr_area.x1))
-                            , real_t(port_area.y1 + scale.y*(f.y - repr_area.y1))};
-            }
-        };
-
-        struct Axes
-        {
-            port_area_t position;
-            CoordSystem coord;
-
-            struct TickProperties
-            {
-                float length = 7;
-                float width  = 1;
-                color color  = {255, 255, 255, 128};
-            };
-
-            struct Separator
-            {
-                color color = {255, 255, 255, 128};
-                float width = 2.;
-            };
-
-            struct AxisProperties
-            {
-                TickProperties tick[3] = {{10.0f,1.5f}, {5.0f, 1.0f}, {2.0f, 1.0f}}; // major middle, minor
-                Separator      sep;
-                int            tickSteps = 5;
-            };
-
-            rect<AxisProperties> properties;
-        };
 
         void drawAxesArea(platform_bitmap& surface)
         {
@@ -280,6 +226,7 @@ namespace
                   agge::dash& dashStyle,
                   agge::stroke& lineStyle)
         {
+            ras.reset();
             add_path(ras,
                 assist(
                     assist(polyline_adaptor(points), dashStyle),
@@ -288,7 +235,6 @@ namespace
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
                 platform_blender_solid_color(col), winding<>());
-            ras.reset();
         }
 
         virtual void draw(platform_bitmap& surface, timings&/*timings*/)

@@ -66,7 +66,7 @@ namespace agge
 
 		const cap *_cap;
 		const join *_join;
-        static_any<8> _capBuffer;
+        static_any<16> _capBuffer;
         static_any<8> _joinBuffer;
 
 

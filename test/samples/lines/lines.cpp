@@ -72,11 +72,12 @@ namespace
 
 			line_style.width(1.0f*scale);
 			line_style.set_cap(caps::butt());
-			dash_style.remove_all_dashes();
-			dash_style.add_dash(1.0f*scale, 1.0f*scale);
-			dash_style.dash_start(0.5f*scale);
+			dash_style.clear();
+			dash_style.add(1.0f*scale, 1.0f*scale);
+			dash_style.set_start(0.5f*scale);
+            auto dash_gen = agge::generator(dash_style);
 			add_path(ras,
-            assist(assist(line(19.5f*scale, 300.5f*scale, 319.5f*scale, 300.5f*scale), dash_style), line_style));
+            assist(assist(line(19.5f*scale, 300.5f*scale, 319.5f*scale, 300.5f*scale), dash_gen), line_style));
 
 			ras.sort();
 
@@ -89,8 +90,8 @@ namespace
 	private:
 		rasterizer< clipper<int> > ras;
 		renderer ren;
-		stroke line_style;
-		dash dash_style;
+		stroke   line_style;
+		dash     dash_style;
 	};
 }
 
