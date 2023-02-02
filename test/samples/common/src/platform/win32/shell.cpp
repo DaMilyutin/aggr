@@ -65,7 +65,7 @@ namespace
 	private:
 		HWND _window;
 		uintptr_t _previousWindowProc;
-		platform_bitmap _bitmap;
+		agge::platform_bitmap _bitmap;
 		application &_application;
 
 		int _cycles;

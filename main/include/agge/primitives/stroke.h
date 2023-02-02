@@ -29,13 +29,13 @@ namespace agge
 		int vertex(real_t *x, real_t *y);
 
 		// Setup
-		void width(real_t w);
+        stroke& width(real_t w);
 
 		template <typename CapT>
-		void set_cap(const CapT &c);
+        stroke& set_cap(const CapT &c);
 
 		template <typename JoinT>
-		void set_join(const JoinT &j);
+        stroke& set_join(const JoinT &j);
 
 	private:
 		enum state {
@@ -90,16 +90,18 @@ namespace agge
 
 
 	template <typename CapT>
-	inline void stroke::set_cap(const CapT &c)
+	inline stroke& stroke::set_cap(const CapT &c)
 	{
         _capBuffer = c;
 		_cap = &_capBuffer.get<CapT>();
+        return *this;
 	}
 
 	template <typename JoinT>
-	inline void stroke::set_join(const JoinT &j)
+	inline stroke& stroke::set_join(const JoinT &j)
 	{
         _joinBuffer = j;
         _join = &_joinBuffer.get<JoinT>();
+        return *this;
 	}
 }

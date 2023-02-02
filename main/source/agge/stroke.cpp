@@ -104,8 +104,8 @@ namespace agge
 		return path_command_stop;
 	}
 
-	void stroke::width(real_t w)
-	{	_width = 0.5f * w;	}
+    stroke& stroke::width(real_t w)
+    { _width = 0.5f * w; return *this; }
 
 	bool stroke::prepare()
 	{

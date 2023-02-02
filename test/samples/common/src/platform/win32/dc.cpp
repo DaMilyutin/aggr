@@ -12,7 +12,7 @@ namespace
 	{	return ::SelectObject(hdc, hobject);	}
 }
 
-dc::dc(platform_bitmap *surface)
+dc::dc(agge::platform_bitmap *surface)
 	: _dc(::CreateCompatibleDC(NULL)), _bitmap_selector(surface ? select(surface->native()) : agge::shared_ptr<void>())
 {	}
 

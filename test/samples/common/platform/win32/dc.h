@@ -14,7 +14,7 @@ public:
 	typedef agge::shared_ptr<void> handle;
 
 public:
-	explicit dc(platform_bitmap *surface = 0);
+	explicit dc(agge::platform_bitmap *surface = 0);
 	~dc();
 
 	operator HDC() const;
