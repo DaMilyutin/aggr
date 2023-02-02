@@ -128,23 +128,23 @@ namespace
             ras.reset();
 
             {
-                double step = (axes.coord.repr_area.x2 - axes.coord.repr_area.x1)/axes.properties.x1.tickSteps;
-                step = floor(log(step)/log(10.));
-                step = exp(step*log(10.));
-                double X = step*ceil(axes.coord.repr_area.x1/step);
-                X = axes.coord.scale.x*(X-axes.coord.repr_area.x1) + axes.coord.port_area.x1;
-                step *= axes.coord.scale.x;
+                double step_repr = (axes.coord.repr_area.x2 - axes.coord.repr_area.x1)/axes.properties.x1.tickSteps;
+                step_repr = floor(log(step_repr)/log(10.));
+                step_repr = exp(step_repr*log(10.));
+                double const X_repr = step_repr*ceil(axes.coord.repr_area.x1/step_repr);
+                real_t const x1 = real_t(axes.coord.scale.x*(X_repr-axes.coord.repr_area.x1) + axes.coord.port_area.x1);
+                real_t const step = real_t(step_repr*axes.coord.scale.x);
 
-                double const y1 = axes.coord.port_area.y1;
-                double const x2 = axes.coord.port_area.x2;
+                real_t const x2 = axes.coord.port_area.x2;
 
+                auto major = [&](real_t const y1, real_t const y2,
+                                                        Axes::TickProperties const& tick)
                 {
-                    double const y2 = y1 - axes.properties.y1.tick[0].length;
                     ras.reset();
-                    line_style.width(axes.properties.y1.tick[0].width);
+                    line_style.width(tick.width);
                     line_style.set_cap(caps::butt());
                     line_style.set_join(joins::bevel());
-                    for(double x = X; x<=x2; x += step)
+                    for(real_t x = x1; x<=x2; x += step)
                     {
                         add_path(ras,
                             assist(agge::line(x, y1, x, y2),
@@ -153,15 +153,17 @@ namespace
 
                     ras.sort();
                     ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-                        platform_blender_solid_color(axes.properties.y1.tick[0].color), winding<>());
-                }
+                        platform_blender_solid_color(tick.color), winding<>());
+                };
+
+                auto middle = [&](real_t const y1, real_t const y2,
+                    Axes::TickProperties const& tick)
                 {
-                    double const y2 = y1 - axes.properties.y1.tick[1].length;
                     ras.reset();
-                    line_style.width(axes.properties.y1.tick[1].width);
+                    line_style.width(tick.width);
                     line_style.set_cap(caps::butt());
                     line_style.set_join(joins::bevel());
-                    double x = X-step*0.5;
+                    real_t x = x1 - step*0.5f;
                     while(x < axes.coord.port_area.x1)
                         x += step;
                     for(; x<=x2; x += step)
@@ -173,17 +175,19 @@ namespace
 
                     ras.sort();
                     ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-                        platform_blender_solid_color(axes.properties.y1.tick[1].color), winding<>());
-                }
+                        platform_blender_solid_color(tick.color), winding<>());
+                };
+
+                auto minor = [&](real_t const y1, real_t const y2, real_t step,
+                    Axes::TickProperties const& tick)
                 {
-                    step /= 10.;
-                    double const y2 = y1 - axes.properties.y1.tick[2].length;
+                    step *= 0.1f;
                     ras.reset();
-                    line_style.width(axes.properties.y1.tick[2].width);
+                    line_style.width(tick.width);
                     line_style.set_cap(caps::butt());
                     line_style.set_join(joins::bevel());
                     int i = 1;
-                    double x = X-step*9;
+                    real_t x = x1 - step*9.0f;
                     while(x < axes.coord.port_area.x1)
                         x += step, ++i;
                     for(; x<=x2; x += step)
@@ -197,7 +201,39 @@ namespace
 
                     ras.sort();
                     ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-                        platform_blender_solid_color(axes.properties.y1.tick[2].color), winding<>());
+                        platform_blender_solid_color(tick.color), winding<>());
+                };
+
+
+                {
+                    real_t const y2 = axes.coord.port_area.y1;
+                    real_t const y1 = axes.coord.port_area.y1 - axes.properties.y1.tick[0].length;
+                    major(y1, y2, axes.properties.y1.tick[0]);
+                }
+                {
+                    real_t const y1 = axes.coord.port_area.y2;
+                    real_t const y2 = axes.coord.port_area.y2 + axes.properties.y2.tick[0].length;
+                    major(y1, y2, axes.properties.y2.tick[0]);
+                }
+                {
+                    real_t const y2 = axes.coord.port_area.y1;
+                    real_t const y1 = axes.coord.port_area.y1 - axes.properties.y1.tick[1].length;
+                    middle(y1, y2, axes.properties.y1.tick[1]);
+                }
+                {
+                    real_t const y1 = axes.coord.port_area.y2;
+                    real_t const y2 = axes.coord.port_area.y2 + axes.properties.y2.tick[1].length;
+                    middle(y1, y2, axes.properties.y2.tick[1]);
+                }
+                {
+                    real_t const y2 = axes.coord.port_area.y1;
+                    real_t const y1 = axes.coord.port_area.y1 - axes.properties.y1.tick[2].length;
+                    minor(y1, y2, step, axes.properties.y1.tick[2]);
+                }
+                {
+                    real_t const y1 = axes.coord.port_area.y2;
+                    real_t const y2 = axes.coord.port_area.y2 + axes.properties.y2.tick[2].length;
+                    minor(y1, y2, step, axes.properties.y2.tick[2]);
                 }
 
             }
@@ -230,9 +266,9 @@ namespace
         }
 
         void plot(platform_bitmap& surface, polyline& points, color col,
-                  agge::stroke& line_style)
+                  agge::stroke& lineStyle)
         {
-            add_path(ras, assist(polyline_adaptor(points), line_style));
+            add_path(ras, assist(polyline_adaptor(points), lineStyle));
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
@@ -241,13 +277,13 @@ namespace
         }
 
         void plot(platform_bitmap& surface, polyline& points, color col,
-                  agge::dash& dash_style,
-                  agge::stroke& line_style)
+                  agge::dash& dashStyle,
+                  agge::stroke& lineStyle)
         {
             add_path(ras,
                 assist(
-                    assist(polyline_adaptor(points), dash_style),
-                    line_style));
+                    assist(polyline_adaptor(points), dashStyle),
+                    lineStyle));
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
