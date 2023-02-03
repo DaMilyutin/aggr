@@ -22,6 +22,7 @@ namespace plotting
             ras.sort();
             ren(surface, agge::zero(), 0 /*no windowing*/, ras /*mask*/,
                 bl, agge::winding<>());
+            ras.reset();
             return *this;
         }
 
@@ -31,6 +32,7 @@ namespace plotting
             ras.sort();
             ren(surface, agge::zero(), 0 /*no windowing*/, ras /*mask*/,
                 bl, agge::winding<>());
+            ras.reset();
             return *this;
         }
 
@@ -40,6 +42,7 @@ namespace plotting
             ras.sort();
             ren(surface, agge::zero(), 0 /*no windowing*/, ras /*mask*/,
                 bl, agge::winding<>());
+            ras.reset();
             return *this;
         }
 
@@ -49,9 +52,18 @@ namespace plotting
             ras.sort();
             ren(surface, agge::zero(), 0 /*no windowing*/, ras /*mask*/,
                 bl, agge::winding<>());
+            ras.reset();
             return *this;
         }
 
+        Canvas& operator<<(agge::color const& col)
+        {
+            ras.sort();
+            ren(surface, agge::zero(), 0 /*no windowing*/, ras /*mask*/,
+                agge::platform_blender_solid_color(col), agge::winding<>());
+            ras.reset();
+            return *this;
+        }
 
         using canvas_fcn = Canvas&(*)(Canvas&);
 

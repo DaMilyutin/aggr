@@ -8,13 +8,15 @@ option(AGGE_NO_TESTS "Do not build test modules." OFF)
 option(AGGE_NO_EXTENSIONS "Do not build/test extensions (like async)." OFF)
 option(AGGE_NO_SAMPLES "Do not build sample applications." OFF)
 
+set (CMAKE_CXX_STANDARD          17)
+
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/_lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/_bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/_bin)
 
 add_definitions(-D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS)
 
-set(GCC_CLANG_COMPILER_OPTIONS_CXX -std=c++11 -fPIC -Wall -fno-rtti)
+set(GCC_CLANG_COMPILER_OPTIONS_CXX -std=c++20 -fPIC -Wall -fno-rtti)
 set(GCC_CLANG_COMPILER_OPTIONS_CXX ${GCC_CLANG_COMPILER_OPTIONS_CXX}
 	-Wall -Wextra -Wpedantic
 	-Wno-missing-field-initializers
