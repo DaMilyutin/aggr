@@ -13,7 +13,7 @@
 
 #include <plotting/Axes.h>
 #include <plotting/Canvas.h>
-#include <plotting/types/text_engine.h>
+#include <plotting/Text.h>
 
 #include <agge.text/layout.h>
 #include <agge.text/limit.h>
@@ -68,21 +68,12 @@ namespace
                 << agge::polyline_adaptor(points2)/line_style
                 << agge::color::make(0, 255, 0, 128);
 
-            agge::rect_r dest = {surface.width()*0.5f, surface.height()*0.5f, surface.width()*0.5f, surface.height()*0.5f};
 
-            agge::font_style_annotation a = {agge::font_descriptor::create("Times New Roman", 30, agge::regular, false, agge::hint_none),};
-            agge::richtext_t _text(a);
-            _text.set_base_annotation(a);
-            _text << "Helloo, Text!";
-            auto& _text_engine = plotting::get_text_engine();
-            auto& _layout = plotting::get_layout();
-            _layout.process(_text, agge::limit::wrap(dest.x2), _text_engine);
-            _text_engine.render(ras, _layout, agge::align_near, agge::align_near, dest);
-            ras.sort(true);
-            ren(surface, agge::zero(), 0, ras
-                , agge::platform_blender_solid_color(agge::color::make(255, 0, 0)), agge::winding<>());
-
-            ras.reset();
+            canvas << plotting::Text(agge::font_descriptor::create("Times New Roman", 25,
+                                                            agge::regular, false, agge::hint_none))
+                                    .text("Hemlloo, shibe")
+                                    .fill(agge::color{0, 100, 255, 100})
+                                    .position(mkrect<float>(surface.width()*0.1f, surface.height()*0.1f, surface.width()*0.9f, surface.height()*0.9f));
         }
 
         virtual void resize(int width, int height)
