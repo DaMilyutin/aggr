@@ -18,9 +18,10 @@
 //	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //	THE SOFTWARE.
 
-#include <samples/common/services.h>
+#include <plotting/common/services.h>
 #include <samples/common/shell.h>
 #include <samples/common/timing.h>
+
 
 #include "../../shell-inline.h"
 
@@ -38,11 +39,6 @@ namespace
 	const application::timings c_zero_timings = { };
 	const int c_initial_width = 736;
 	const int c_initial_height = 800;
-
-	class desktop_services : public services
-	{
-		virtual stream *open_file(const char *path);
-	};
 
 	class MainDialog
 	{
@@ -71,28 +67,6 @@ namespace
 		int _cycles;
 		application::timings _timings;
 	};
-
-
-
-	stream *desktop_services::open_file(const char *path)
-	{
-		class file_stream : public stream
-		{
-		public:
-			file_stream(const char *path)
-				: _stream(fopen(path, "rb"), &fclose)
-			{	}
-
-			virtual void read(void *buffer, size_t size)
-			{	fread(buffer, 1, size, _stream.get());	}
-
-		private:
-			shared_ptr<FILE> _stream;
-		};
-
-		return new file_stream(path);
-	}
-
 
 	MainDialog::MainDialog(application &application_)
 		: _window(::CreateWindow(_T("#32770"), NULL, WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, c_initial_width, c_initial_height, NULL, NULL, NULL, NULL)),
@@ -234,8 +208,8 @@ int main()
 {
 	::SetProcessDPIAware();
 
-	desktop_services s;
-	agge::tests::scoped_ptr<application> app(agge_create_application(s));
+
+	agge::tests::scoped_ptr<application> app(agge_create_application(get_services()));
 	MainDialog dialog(*app);
 
 	MainDialog::PumpMessages();

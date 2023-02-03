@@ -1,6 +1,6 @@
 #include <samples/common/platform/win32/font_accessor.h>
 
-#include <samples/common/font_loader.h>
+#include <plotting/common/font_loader.h>
 #include <samples/common/platform/win32/dc.h>
 
 #include <windows.h>

@@ -38,7 +38,7 @@ namespace agge
 			if (_glyphs.end() == i)
 			{
 				glyph::outline_ptr o = _underlying->load_glyph(index, m);
-					
+
 				i = _glyphs.insert(make_pair(index, make_pair(o, m))).first;
 			}
 			m = i->second.second;

@@ -4,7 +4,7 @@
 #include <agge.text/layout.h>
 #include <agge.text/limit.h>
 #include <map>
-#include <samples/common/font_loader.h>
+#include <plotting/common/font_loader.h>
 #include <samples/common/lipsum.h>
 #include <samples/common/platform/win32/dc.h>
 #include <samples/common/platform/win32/font_accessor.h>
@@ -23,7 +23,8 @@ namespace demo
 	{
 	public:
 		TextDrawerGDI()
-			: _text_engine(_font_loader), _text(font_style_annotation())
+			: _text_engine(_font_loader)
+			, _text(font_style_annotation())
 		{
 			font_style_annotation a = {	font_descriptor::create("Times New Roman", 25, regular, false, hint_none),	};
 

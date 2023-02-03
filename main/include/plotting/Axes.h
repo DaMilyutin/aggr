@@ -7,11 +7,14 @@
 
 #include <agge/rendering/platform.h>
 #include <agge/rendering/renderer.h>
-
+#include <agge.text/font.h>
 
 #include <plotting/Canvas.h>
 #include <plotting/LinesGen.h>
+#include <plotting/LabelsGen.h>
 
+#include <functional>
+#include <string>
 
 namespace plotting
 {
@@ -22,6 +25,15 @@ namespace plotting
 
         agge::color outer { 40, 40, 40, 128};
         agge::color inner { 20, 20, 20, 255};
+
+        struct LabelProperties
+        {
+            using Formatter = std::function<std::string(double)>;
+            Formatter   format    = [](double x) { return std::to_string(x); };
+            std::string font      = "Courier";
+            int         font_size = 10;
+        };
+
 
         struct TickProperties
         {

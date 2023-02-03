@@ -13,20 +13,21 @@
 
 #include <plotting/Axes.h>
 #include <plotting/Canvas.h>
+#include <plotting/types/text_engine.h>
+
+#include <agge.text/layout.h>
+#include <agge.text/limit.h>
 
 #include <samples/common/shell.h>
 
 #include <algorithm>
 
-using namespace agge;
-
 namespace
 {
     template <typename T>
-    rect<T> mkrect(T x1, T y1, T x2, T y2)
+    agge::rect<T> mkrect(T x1, T y1, T x2, T y2)
     {
-        rect<T> r = {x1, y1, x2, y2};
-        return r;
+        return {x1, y1, x2, y2};
     }
 
     class Plotting: public application
@@ -42,7 +43,7 @@ namespace
         virtual void draw(agge::platform_bitmap& surface, timings&/*timings*/)
         {
             fill(surface, mkrect<int>(0, 0, surface.width(), surface.height()),
-                 agge::platform_blender_solid_color(color::make(10, 10, 10)));
+                 agge::platform_blender_solid_color(agge::color::make(10, 10, 10)));
 
             auto canvas = plotting::make_canvas(surface, ren, ras);
 
@@ -53,19 +54,35 @@ namespace
             auto scale = std::min(wid/400.0f, hei/370.0f);
 
             line_style.width(1.0f*scale);
-            line_style.set_cap(caps::butt());
-            line_style.set_join(joins::bevel());
+            line_style.set_cap(agge::caps::butt());
+            line_style.set_join(agge::joins::bevel());
             dash_style.remove_all_dashes();
             dash_style.add_dash(10.0f*scale, 5.0f*scale);
             dash_style.dash_start(0.5f*scale);
 
             canvas << plotting::reset
                 << agge::polyline_adaptor(points1)/dash_style/line_style
-                << platform_blender_solid_color(color::make(255, 0, 0, 128));
+                << agge::color::make(255, 0, 0, 128);
 
             canvas << plotting::reset
                 << agge::polyline_adaptor(points2)/line_style
-                << platform_blender_solid_color(color::make(0, 255, 0, 128));
+                << agge::color::make(0, 255, 0, 128);
+
+            agge::rect_r dest = {surface.width()*0.5f, surface.height()*0.5f, surface.width()*0.5f, surface.height()*0.5f};
+
+            agge::font_style_annotation a = {agge::font_descriptor::create("Times New Roman", 30, agge::regular, false, agge::hint_none),};
+            agge::richtext_t _text(a);
+            _text.set_base_annotation(a);
+            _text << "Helloo, Text!";
+            auto& _text_engine = plotting::get_text_engine();
+            auto& _layout = plotting::get_layout();
+            _layout.process(_text, agge::limit::wrap(dest.x2), _text_engine);
+            _text_engine.render(ras, _layout, agge::align_near, agge::align_near, dest);
+            ras.sort(true);
+            ren(surface, agge::zero(), 0, ras
+                , agge::platform_blender_solid_color(agge::color::make(255, 0, 0)), agge::winding<>());
+
+            ras.reset();
         }
 
         virtual void resize(int width, int height)
@@ -100,10 +117,10 @@ namespace
 
     private:
         plotting::Axes             axes;
-        rasterizer< clipper<int> > ras;
-        renderer                   ren;
-        stroke                     line_style;
-        dash                       dash_style;
+        plotting::rasterizer       ras;
+        agge::renderer             ren;
+        agge::stroke               line_style;
+        agge::dash                 dash_style;
         agge::polyline             points1;
         agge::polyline             points2;
     };

@@ -1,10 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
 
-set(SAMPLES_COMMON_SOURCES
-	font_loader.cpp
-	truetype.cpp
-)
-
 if (WIN32)
 	set(SAMPLES_COMMON_SOURCES ${SAMPLES_COMMON_SOURCES}
 		platform/win32/dc.cpp

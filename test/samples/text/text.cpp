@@ -4,7 +4,7 @@
 #include <agge/rendering/renderer_parallel.h>
 #include <agge.text/layout.h>
 #include <agge.text/limit.h>
-#include <samples/common/font_loader.h>
+#include <plotting/common/font_loader.h>
 #include <samples/common/lipsum.h>
 #include <samples/common/shell.h>
 #include <samples/common/timing.h>
@@ -20,10 +20,14 @@ namespace demo
 	{
 	public:
 		TextDrawer(services &s)
-			: _renderer(3), _font_loader(s), _text_engine(_font_loader), _text(font_style_annotation()), _ddx(0.0f)
+			: _renderer(3)
+            , _font_loader(s)
+            , _text_engine(_font_loader)
+            , _text(font_style_annotation())
+            , _ddx(0.0f)
 		{
-			font_style_annotation a = {	font_descriptor::create("Arial", 20, regular, false, hint_none),	};
-
+			font_style_annotation a = {	font_descriptor::create("Arial", 30, regular, false, hint_none),	};
+            a.foreground = agge::color{255,0,0,200};
 			_text.set_base_annotation(a);
 			_text << c_text_long.c_str();
 		}
@@ -38,17 +42,18 @@ namespace demo
 			stopwatch(counter);
 				agge::fill(surface, area, solid_color_brush(color::make(0, 50, 100)));
 				timings.clearing += stopwatch(counter);
-				_ddx += 0.02f;
-				dest.x1 += _ddx, dest.x2 += _ddx;
+				_ddx += 0.2f;
+				dest.x1 += _ddx; dest.x2 -= _ddx;
 				_rasterizer.reset();
 			stopwatch(counter);
-				_layout.process(_text, limit::wrap(_dest_rect.x2), _text_engine);
+				_layout.process(_text, limit::wrap(dest.x2), _text_engine);
 			double stroking = stopwatch(counter);
 				_text_engine.render(_rasterizer, _layout, align_near, align_near, dest);
 			double append = stopwatch(counter);
 				_rasterizer.sort(true);
 			double sort = stopwatch(counter);
-				_renderer(surface, zero(), 0, _rasterizer, solid_color_brush(color::make(255, 255, 255)), winding<>());
+				_renderer(surface, zero(), 0, _rasterizer
+                         , solid_color_brush(color::make(255, 0, 0)), winding<>());
 			double render = stopwatch(counter);
 
 			timings.stroking += stroking;
