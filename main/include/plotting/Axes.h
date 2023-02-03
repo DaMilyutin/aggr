@@ -25,8 +25,8 @@ namespace plotting
 
         struct TickProperties
         {
-            float length = 7;
-            float width = 1;
+            agge::real_t length = 7.0f;
+            agge::real_t width  = 1.0f;
             agge::color color = {255, 255, 255, 128};
         };
 
@@ -38,7 +38,7 @@ namespace plotting
 
         struct AxisProperties
         {
-            TickProperties tick[3] = {{10.0f,1.5f}, {7.0f, 1.5f}, {4.0f, 1.5f}}; // major middle, minor
+            TickProperties tick[3] = {{7.0f,1.5f}, {5.0f, 1.0f}, {2.0f,1.0f}}; // major middle, minor
             Separator      sep;
             int            tickSteps = 5;
         };
@@ -73,69 +73,6 @@ namespace plotting
 
     namespace inner
     {
-        //struct Selector_All
-        //{
-        //    bool is() const { return true; }
-        //    void next() {}
-        //};
-
-        //struct Selector_Skipper
-        //{
-        //    int index  = 0;
-        //    int period = 5;
-        //    bool is() const { return index%period != 0; }
-        //    void next() { ++index; }
-        //};
-
-        //struct LineVert
-        //{
-        //    agge::real_t const y1;
-        //    agge::real_t const y2;
-
-        //    agge::line make(agge::real_t x) const { return agge::line(x, y1, x, y2); }
-        //};
-
-        //struct LineHorz
-        //{
-        //    agge::real_t const x1;
-        //    agge::real_t const x2;
-
-        //    agge::line make(agge::real_t y) const { return agge::line(x1, y, x2, y); }
-        //};
-
-        //template<typename LineMaker, typename Selector = Selector_All>
-        //struct Range
-        //{
-        //    Selector  mutable   sel;
-        //    LineMaker           line;
-
-        //    agge::real_t const  t1;
-        //    agge::real_t const  t2;
-
-        //    agge::real_t const  start;
-        //    agge::real_t const  step;
-
-        //    agge::color  const& color;
-        //    agge::stroke&       line_style;
-        //};
-
-        //template<typename S, typename Rn, typename Rs, typename Line, typename Sel>
-        //plotting::Canvas<S, Rn, Rs>& operator<<(plotting::Canvas<S, Rn, Rs>& c,
-        //                                        Range<Line, Sel> const& rng)
-        //{
-        //    c.ras.reset();
-        //    agge::real_t t = rng.start;
-        //    while(t < rng.t1)
-        //        t += rng.step, rng.sel.next();
-        //    for(; t<=rng.t2; t += rng.step, rng.sel.next())
-        //        if(rng.sel.is())
-        //            agge::add_path(c.ras, rng.line.make(t)/rng.line_style);
-        //    c.ras.sort();
-        //    c.ren(c.surface, agge::zero(), 0 /*no windowing*/, c.ras /*mask*/,
-        //          agge::platform_blender_solid_color(rng.color), agge::winding<>());
-        //    return c;
-        //}
-
         inline double quantize_step(double step_repr)
         {
             int const sign = (step_repr>0) - (step_repr<0);
@@ -155,27 +92,38 @@ namespace plotting
 
         struct AxisXTicksMaker
         {
+            static float grow_step(float step)
+            {
+                constexpr float min_resolution = 100.0f;
+                if(step < min_resolution)
+                    return ceil(min_resolution/step)*step;
+                return step;
+            }
+
             AxisXTicksMaker(Axes const& axes, Axes::AxisProperties const& prop, agge::stroke& line_style)
                 : axes(axes)
                 , prop(prop)
                 , line_style(line_style)
             {
                 double const step_repr = quantize_step((axes.coordinates.repr_area.x2 - axes.coordinates.repr_area.x1)/prop.tickSteps);
-                double const X_repr = step_repr*ceil(axes.coordinates.repr_area.x1/step_repr);
-                start = agge::real_t(axes.coordinates.scale.x*(X_repr - axes.coordinates.repr_area.x1) + axes.coordinates.port_area.x1);
-                step  = agge::real_t(step_repr*axes.coordinates.scale.x);
+                step = grow_step(agge::real_t(step_repr*axes.coordinates.scale.x));
+                float mid = 0.5f*(axes.coordinates.port_area.x2 + axes.coordinates.port_area.x1);
+                float mid_q = round(mid/step)*step;
+                start = mid_q - floor((mid_q - axes.coordinates.port_area.x1)/step)*step;
             }
 
             MajorLines major(agge::real_t Y, int dir) const
             {
                 line_style.width(prop.tick[0].width);
                 auto const& pa = axes.coordinates.port_area;
-
+                agge::real_t from = start;
+                if(from < pa.y1 + 0.1f)
+                    from += step;
                 ParallelLinesGenerator<Selector_Any> gen;
-                gen.initial.start = {start, Y};
-                gen.initial.end = {start, Y+dir*prop.tick[0].length};
+                gen.initial.start = {from, Y};
+                gen.initial.end = {from, Y+dir*prop.tick[0].length};
                 gen.direction = {step, 0.0f};
-                gen.number = (int)ceil((pa.x2-start)/step);
+                gen.number = (int)ceil((pa.x2 - 0.1 - from)/step);
                 return {gen, StylishLineMaker{line_style}, prop.tick[0].color};
             }
 
@@ -184,13 +132,13 @@ namespace plotting
                 line_style.width(prop.tick[1].width);
                 auto const& pa = axes.coordinates.port_area;
                 agge::real_t from = start-step*0.5f;
-                if(from < pa.x1)
+                if(from < pa.x1 + 0.1f)
                     from += step;
                 ParallelLinesGenerator<Selector_Any> gen;
                 gen.initial.start = {from, Y};
                 gen.initial.end = {from, Y+dir*prop.tick[1].length};
                 gen.direction = {step, 0.0f};
-                gen.number = (int)ceil((pa.x2-from)/step);
+                gen.number = (int)ceil((pa.x2 - 0.1 - from)/step);
                 return {gen, StylishLineMaker{line_style}, prop.tick[1].color};
             }
 
@@ -201,14 +149,15 @@ namespace plotting
                 agge::real_t const inc = step*0.1f;
                 agge::real_t from = start - inc*9.0f;
                 ParallelLinesGenerator<Selector_SkipOverPeriod> gen;
-                gen.select.offset = 1;
-                while(from <= pa.x1)
-                    from += inc, ++gen.select.offset;
+                gen.select.offset = 9;
+                gen.select.period = 5;
+                while(from <= pa.x1 + 0.1f)
+                    from += inc, --gen.select.offset;
                 gen.select.offset = gen.select.offset % gen.select.period;
                 gen.initial.start = {from, Y};
                 gen.initial.end = {from, Y+dir*prop.tick[2].length};
                 gen.direction = {inc, 0.0f};
-                gen.number = (int)ceil((pa.x2-from)/inc);
+                gen.number = (int)ceil((pa.x2 - 0.1 -from)/inc);
                 return {gen, StylishLineMaker{line_style}, prop.tick[2].color};
             }
 
@@ -219,7 +168,83 @@ namespace plotting
             agge::real_t                step;
         };
 
+        struct AxisYTicksMaker
+        {
+            static float grow_step(float step)
+            {
+                constexpr float min_resolution = 50.0f;
+                if(step < min_resolution)
+                    return ceil(min_resolution/step)*step;
+                return step;
+            }
 
+            AxisYTicksMaker(Axes const& axes, Axes::AxisProperties const& prop, agge::stroke& line_style)
+                : axes(axes)
+                , prop(prop)
+                , line_style(line_style)
+            {
+                double const step_repr = quantize_step((axes.coordinates.repr_area.y2 - axes.coordinates.repr_area.y1)/prop.tickSteps);
+                step = grow_step(agge::real_t(step_repr*axes.coordinates.scale.y));
+                float mid = 0.5f*(axes.coordinates.port_area.y2 + axes.coordinates.port_area.y1);
+                float mid_q = round(mid/step)*step;
+                start = mid_q - floor((mid_q - axes.coordinates.port_area.y1)/step)*step;
+            }
+
+            MajorLines major(agge::real_t X, int dir) const
+            {
+                line_style.width(prop.tick[0].width);
+                auto const& pa = axes.coordinates.port_area;
+                agge::real_t from = start;
+                if(from < pa.y1 + 0.1f)
+                    from += step;
+                ParallelLinesGenerator<Selector_Any> gen;
+                gen.initial.start = {X, from};
+                gen.initial.end = {X+dir*prop.tick[0].length, from};
+                gen.direction = {0.0f, step};
+                gen.number = (int)ceil((pa.y2  - 0.1 - from)/step);
+                return {gen, StylishLineMaker{line_style}, prop.tick[0].color};
+            }
+
+            MajorLines medium(agge::real_t X, int dir) const
+            {
+                line_style.width(prop.tick[1].width);
+                auto const& pa = axes.coordinates.port_area;
+                agge::real_t from = start-step*0.5f;
+                if(from < pa.y1 + 0.1f)
+                    from += step;
+                ParallelLinesGenerator<Selector_Any> gen;
+                gen.initial.start = {X, from};
+                gen.initial.end = {X+dir*prop.tick[1].length, from};
+                gen.direction = {0.0f, step};
+                gen.number = (int)ceil((pa.y2 - 0.1 - from)/step);
+                return {gen, StylishLineMaker{line_style}, prop.tick[1].color};
+            }
+
+            MinorLines minor(agge::real_t X, int dir) const
+            {
+                line_style.width(prop.tick[2].width);
+                auto const& pa = axes.coordinates.port_area;
+                agge::real_t const inc = step*0.1f;
+                agge::real_t from = start - inc*9.0f;
+                ParallelLinesGenerator<Selector_SkipOverPeriod> gen;
+                gen.select.offset = 9;
+                gen.select.period = 5;
+                while(from <= pa.y1 + 0.1f)
+                    from += inc, --gen.select.offset;
+                gen.select.offset = gen.select.offset % gen.select.period;
+                gen.initial.start = {X, from};
+                gen.initial.end = {X+dir*prop.tick[2].length, from};
+                gen.direction = {0.0f, inc};
+                gen.number = (int)ceil((pa.y2 - 0.1 -from)/inc);
+                return {gen, StylishLineMaker{line_style}, prop.tick[2].color};
+            }
+
+            Axes                 const& axes;
+            Axes::AxisProperties const& prop;
+            agge::stroke& line_style;
+            agge::real_t                start;
+            agge::real_t                step;
+        };
     }
 
     template<typename S, typename Rn, typename Rs>
@@ -260,6 +285,8 @@ namespace plotting
                 axes.coordinates.port_area.x2, axes.coordinates.port_area.y2)
             / line_style.width(axes.properties.y2.sep.width)
             << agge::platform_blender_solid_color(axes.properties.y2.sep.color);
+
+        c.ras.reset_clipping();
         return c;
     }
 
@@ -271,11 +298,30 @@ namespace plotting
         line_style.set_join(agge::joins::bevel());
         c << inner::AxesArea{axes, line_style};
 
+        c.ras.set_clipping(axes.position);
         {
             inner::AxisXTicksMaker xTicks{axes, axes.properties.x1, line_style};
             c << xTicks.major(axes.coordinates.port_area.y1,-1);
             c << xTicks.medium(axes.coordinates.port_area.y1, -1);
             c << xTicks.minor(axes.coordinates.port_area.y1, -1);
+        }
+        {
+            inner::AxisXTicksMaker xTicks{axes, axes.properties.x2, line_style};
+            c << xTicks.major(axes.coordinates.port_area.y2, 1);
+            c << xTicks.medium(axes.coordinates.port_area.y2, 1);
+            c << xTicks.minor(axes.coordinates.port_area.y2, 1);
+        }
+        {
+            inner::AxisYTicksMaker yTicks{axes, axes.properties.y1, line_style};
+            c << yTicks.major(axes.coordinates.port_area.x1, -1);
+            c << yTicks.medium(axes.coordinates.port_area.x1, -1);
+            c << yTicks.minor(axes.coordinates.port_area.x1, -1);
+        }
+        {
+            inner::AxisYTicksMaker yTicks{axes, axes.properties.y2, line_style};
+            c << yTicks.major(axes.coordinates.port_area.x2, 1);
+            c << yTicks.medium(axes.coordinates.port_area.x2, 1);
+            c << yTicks.minor(axes.coordinates.port_area.x2, 1);
         }
         return c;
     }
