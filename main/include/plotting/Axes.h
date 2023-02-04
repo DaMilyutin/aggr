@@ -84,7 +84,7 @@ namespace plotting
 
         inline auto make_formatter(int digits)
         {
-            return [digits](double x) { return std::format("{:.{}f}", x, digits); };
+            return [digits](double x) { return std::format("{:+.{}f}", x, digits); };
         }
 
         inline double grow_step(float step, float min_resolution = 100.0f)
@@ -94,9 +94,11 @@ namespace plotting
 
         inline int digits(double inc)
         {
-            int d = int(ceil(log(fabs(inc))/log(10.) + 0.1));
-            if(d > 1) d = 1;
-            return d;
+            double const ref = log(fabs(inc))/log(10.);
+            if(ref >= 0.)
+                return 1;
+            int const d = int(floor(ref-0.1));
+            return d < 0? -d: 1;
         }
 
         struct AxesArea
@@ -117,7 +119,7 @@ namespace plotting
                 , line_style(line_style)
             {
                 double step_repr = quantize_step((axes.coordinates.repr_area.x2 - axes.coordinates.repr_area.x1)/prop.tickSteps);
-                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.scale.x));
+                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.scale.x), min_tick_gap);
                 step_repr *= step_mul;
                 double const mid_q = round(0.5*(axes.coordinates.repr_area.x2 + axes.coordinates.repr_area.x1)/step_repr)*step_repr;
                 double const start_repr = mid_q - floor((mid_q - axes.coordinates.repr_area.x1)/step_repr)*step_repr;
@@ -204,6 +206,7 @@ namespace plotting
             Axes                 const& axes;
             Axes::AxisProperties const& prop;
             agge::stroke&               line_style;
+            agge::real_t                min_tick_gap{80.0f};
             agge::real_t                start;
             agge::real_t                step;
         };
@@ -216,7 +219,7 @@ namespace plotting
                 , line_style(line_style)
             {
                 double step_repr = quantize_step((axes.coordinates.repr_area.y2 - axes.coordinates.repr_area.y1)/prop.tickSteps);
-                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.scale.y));
+                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.scale.y), min_tick_gap);
                 step_repr *= step_mul;
                 double const mid_q = round(0.5*(axes.coordinates.repr_area.y2 + axes.coordinates.repr_area.y1)/step_repr)*step_repr;
                 double const start_repr = mid_q - floor((mid_q - axes.coordinates.repr_area.y1)/step_repr)*step_repr;
@@ -301,7 +304,8 @@ namespace plotting
 
             Axes                 const& axes;
             Axes::AxisProperties const& prop;
-            agge::stroke& line_style;
+            agge::stroke&               line_style;
+            agge::real_t                min_tick_gap{40.f};
             agge::real_t                start;
             agge::real_t                step;
         };
