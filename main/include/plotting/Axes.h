@@ -39,7 +39,7 @@ namespace plotting
                 dash.remove_all_dashes();
                 dash.add_dash(2.0f, 1.0f);
                 dash.dash_start(1.0f);
-                color = {128, 128, 0, 64};
+                color = {128, 128, 128, 64};
             }
             agge::dash   dash;
             agge::stroke line_style;
@@ -64,6 +64,7 @@ namespace plotting
         {
             TickProperties     tick[3] = {{7.0f,1.5f}, {5.0f, 1.0f}, {2.0f,1.0f}}; // major middle, minor
             Separator          sep {};
+            agge::real_t       tickGap{10.};
             int                tickSteps = 5;
             LabelProperties    labels {};
             GridLineProperties mutable grid;
@@ -71,7 +72,7 @@ namespace plotting
             {
                 auto text = TextProperties::from(al).color({200,200,200,255});
                 return {{{7.0f,1.5f}, {5.0f, 1.0f}, {2.0f,1.0f}},
-                        {}, 5,
+                        {}, 10., 5,
                         LabelProperties{{}, text, offs},
                         {}};
             }
@@ -140,7 +141,7 @@ namespace plotting
                 , line_style(line_style)
             {
                 double step_repr = quantize_step((axes.coordinates.repr_area.x2 - axes.coordinates.repr_area.x1)/prop.tickSteps);
-                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.scale.x), min_tick_gap);
+                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.scale.x), prop.tickGap);
                 step_repr *= step_mul;
                 double const mid_q = round(0.5*(axes.coordinates.repr_area.x2 + axes.coordinates.repr_area.x1)/step_repr)*step_repr;
                 double const start_repr = mid_q - floor((mid_q - axes.coordinates.repr_area.x1)/step_repr)*step_repr;
@@ -241,7 +242,6 @@ namespace plotting
             Axes                 const& axes;
             Axes::AxisProperties const& prop;
             agge::stroke&               line_style;
-            agge::real_t                min_tick_gap{80.0f};
             agge::real_t                start;
             agge::real_t                step;
         };
@@ -254,7 +254,7 @@ namespace plotting
                 , line_style(line_style)
             {
                 double step_repr = quantize_step((axes.coordinates.repr_area.y2 - axes.coordinates.repr_area.y1)/prop.tickSteps);
-                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.scale.y), min_tick_gap);
+                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.scale.y), prop.tickGap);
                 step_repr *= step_mul;
                 double const mid_q = round(0.5*(axes.coordinates.repr_area.y2 + axes.coordinates.repr_area.y1)/step_repr)*step_repr;
                 double const start_repr = mid_q - floor((mid_q - axes.coordinates.repr_area.y1)/step_repr)*step_repr;
@@ -355,7 +355,6 @@ namespace plotting
             Axes                 const& axes;
             Axes::AxisProperties const& prop;
             agge::stroke&               line_style;
-            agge::real_t                min_tick_gap{40.f};
             agge::real_t                start;
             agge::real_t                step;
         };
