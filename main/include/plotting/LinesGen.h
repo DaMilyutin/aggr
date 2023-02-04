@@ -83,7 +83,7 @@ namespace plotting
         }
     };
 
-    class FancyLineMaker
+    struct FancyLineMaker
     {
         agge::dash& dash;
         agge::stroke& style;

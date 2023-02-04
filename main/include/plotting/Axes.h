@@ -31,9 +31,19 @@ namespace plotting
 
         struct GridLineProperties
         {
-            agge::dash&   dash;
-            agge::stroke& line_style;
-            agge::real_t  color;
+            GridLineProperties()
+            {
+                line_style.set_cap(agge::caps::butt());
+                line_style.set_join(agge::joins::bevel());
+                line_style.width(1.);
+                dash.remove_all_dashes();
+                dash.add_dash(2.0f, 1.0f);
+                dash.dash_start(1.0f);
+                color = {128, 128, 0, 64};
+            }
+            agge::dash   dash;
+            agge::stroke line_style;
+            agge::color  color;
         };
 
 
@@ -52,17 +62,18 @@ namespace plotting
 
         struct AxisProperties
         {
-            TickProperties  tick[3] = {{7.0f,1.5f}, {5.0f, 1.0f}, {2.0f,1.0f}}; // major middle, minor
-            Separator       sep {};
-            int             tickSteps = 5;
-            LabelProperties labels {};
-
+            TickProperties     tick[3] = {{7.0f,1.5f}, {5.0f, 1.0f}, {2.0f,1.0f}}; // major middle, minor
+            Separator          sep {};
+            int                tickSteps = 5;
+            LabelProperties    labels {};
+            GridLineProperties mutable grid;
             static inline AxisProperties from(agge::full_alignment al, agge::real_t offs = 0.0f)
             {
                 auto text = TextProperties::from(al).color({200,200,200,255});
                 return {{{7.0f,1.5f}, {5.0f, 1.0f}, {2.0f,1.0f}},
                         {}, 5,
-                        LabelProperties{{}, text, offs}};
+                        LabelProperties{{}, text, offs},
+                        {}};
             }
         };
 
@@ -150,6 +161,20 @@ namespace plotting
                 gen.direction = {step, 0.0f};
                 gen.number = (int)ceil((pa.x2 - 0.1 - from)/step);
                 return {gen, StylishLineMaker{line_style}, prop.tick[0].color};
+            }
+
+            GridLines grid(agge::real_t Y1, agge::real_t Y2) const
+            {
+                auto const& pa = axes.coordinates.port_area;
+                agge::real_t from = start;
+                if(from < pa.x1 + 0.1f)
+                    from += step;
+                ParallelLinesGenerator<Selector_Any> gen;
+                gen.initial.start = {from, Y1};
+                gen.initial.end = {from, Y2};
+                gen.direction = {step, 0.0f};
+                gen.number = (int)ceil((pa.x2 - 0.1 - from)/step);
+                return {gen, FancyLineMaker{prop.grid.dash, prop.grid.line_style}, prop.grid.color};
             }
 
             MajorLabels labels(agge::real_t Y, agge::real_t dir) const
@@ -250,6 +275,21 @@ namespace plotting
                 gen.direction = {0.0f, step};
                 gen.number = (int)ceil((pa.y2  - 0.1 - from)/step);
                 return {gen, StylishLineMaker{line_style}, prop.tick[0].color};
+            }
+
+            GridLines grid(agge::real_t X1, agge::real_t X2) const
+            {
+                line_style.width(prop.tick[0].width);
+                auto const& pa = axes.coordinates.port_area;
+                agge::real_t from = start;
+                if(from < pa.y1 + 0.1f)
+                    from += step;
+                ParallelLinesGenerator<Selector_Any> gen;
+                gen.initial.start = {X1, from};
+                gen.initial.end = {X2, from};
+                gen.direction = {0.0f, step};
+                gen.number = (int)ceil((pa.y2  - 0.1 - from)/step);
+                return {gen, FancyLineMaker{prop.grid.dash, prop.grid.line_style}, prop.grid.color};
             }
 
             MajorLabels labels(agge::real_t X, agge::real_t dir) const
@@ -389,6 +429,8 @@ namespace plotting
             c << xTicks.minor(axes.coordinates.port_area.y1, -1);
 
             c << xTicks.labels(axes.coordinates.port_area.y1, -2.0f);
+
+            c << xTicks.grid(axes.coordinates.port_area.y1, axes.coordinates.port_area.y2);
         }
         {
             inner::AxisXTicksMaker xTicks{axes, axes.properties.x2, line_style};
@@ -405,6 +447,7 @@ namespace plotting
 
             c << yTicks.labels(axes.coordinates.port_area.x1, -1);
 
+            c << yTicks.grid(axes.coordinates.port_area.x1, axes.coordinates.port_area.x2);
         }
         {
             inner::AxisYTicksMaker yTicks{axes, axes.properties.y2, line_style};
