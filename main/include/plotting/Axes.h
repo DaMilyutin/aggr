@@ -9,9 +9,11 @@
 #include <agge/rendering/renderer.h>
 #include <agge.text/font.h>
 
-#include <plotting/Canvas.h>
-#include <plotting/LinesGen.h>
-#include <plotting/LabelsGen.h>
+#include <plotting/primitives/Canvas.h>
+#include <plotting/generators/LinesGen.h>
+#include <plotting/generators/LabelsGen.h>
+
+#include <plotting/primitives/Colored.h>
 
 #include <functional>
 #include <string>
@@ -149,7 +151,7 @@ namespace plotting
                 step  = agge::real_t(axes.coordinates.scale.x*step_repr);
             }
 
-            MajorLines major(agge::real_t Y, agge::real_t dir) const
+            auto major(agge::real_t Y, agge::real_t dir) const
             {
                 line_style.width(prop.tick[0].width);
                 auto const& pa = axes.coordinates.port_area;
@@ -161,10 +163,10 @@ namespace plotting
                 gen.initial.end = {from, Y+dir*prop.tick[0].length};
                 gen.direction = {step, 0.0f};
                 gen.number = (int)ceil((pa.x2 - 0.1 - from)/step);
-                return {gen, StylishLineMaker{line_style}, prop.tick[0].color};
+                return MajorLines{{}, gen, StylishLineMaker{line_style}}/prop.tick[0].color;
             }
 
-            GridLines grid(agge::real_t Y1, agge::real_t Y2) const
+            auto grid(agge::real_t Y1, agge::real_t Y2) const
             {
                 auto const& pa = axes.coordinates.port_area;
                 agge::real_t from = start;
@@ -175,10 +177,10 @@ namespace plotting
                 gen.initial.end = {from, Y2};
                 gen.direction = {step, 0.0f};
                 gen.number = (int)ceil((pa.x2 - 0.1 - from)/step);
-                return {gen, FancyLineMaker{prop.grid.dash, prop.grid.line_style}, prop.grid.color};
+                return GridLines{{}, gen, FancyLineMaker{prop.grid.dash, prop.grid.line_style}}/prop.grid.color;
             }
 
-            MajorLabels labels(agge::real_t Y, agge::real_t dir) const
+            auto labels(agge::real_t Y, agge::real_t dir) const
             {
                 auto const& pa = axes.coordinates.port_area;
                 agge::real_t from = start;
@@ -200,11 +202,10 @@ namespace plotting
                 gen.direction = {step, 0.0f};
                 gen.number = (int)ceil((pa.x2 - 0.1 - from)/step);
 
-                return {gen, labelMaker,
-                        prop.labels.base._fill};
+                return MajorLabels{{}, gen, labelMaker};
             }
 
-            MajorLines medium(agge::real_t Y, agge::real_t dir) const
+            auto medium(agge::real_t Y, agge::real_t dir) const
             {
                 line_style.width(prop.tick[1].width);
                 auto const& pa = axes.coordinates.port_area;
@@ -216,10 +217,10 @@ namespace plotting
                 gen.initial.end = {from, Y+dir*prop.tick[1].length};
                 gen.direction = {step, 0.0f};
                 gen.number = (int)ceil((pa.x2 - 0.1 - from)/step);
-                return {gen, StylishLineMaker{line_style}, prop.tick[1].color};
+                return MajorLines{{}, gen, StylishLineMaker{line_style}}/prop.tick[1].color;
             }
 
-            MinorLines minor(agge::real_t Y, agge::real_t dir) const
+            auto minor(agge::real_t Y, agge::real_t dir) const
             {
                 line_style.width(prop.tick[2].width);
                 auto const& pa = axes.coordinates.port_area;
@@ -235,7 +236,7 @@ namespace plotting
                 gen.initial.end = {from, Y+dir*prop.tick[2].length};
                 gen.direction = {inc, 0.0f};
                 gen.number = (int)ceil((pa.x2 - 0.1 -from)/inc);
-                return {gen, StylishLineMaker{line_style}, prop.tick[2].color};
+                return MinorLines{{}, gen, StylishLineMaker{line_style}}/prop.tick[2].color;
             }
 
 
@@ -262,7 +263,7 @@ namespace plotting
                 step = agge::real_t(axes.coordinates.scale.y*step_repr);
             }
 
-            MajorLines major(agge::real_t X, agge::real_t dir) const
+            auto major(agge::real_t X, agge::real_t dir) const
             {
                 line_style.width(prop.tick[0].width);
                 auto const& pa = axes.coordinates.port_area;
@@ -274,10 +275,10 @@ namespace plotting
                 gen.initial.end = {X+dir*prop.tick[0].length, from};
                 gen.direction = {0.0f, step};
                 gen.number = (int)ceil((pa.y2  - 0.1 - from)/step);
-                return {gen, StylishLineMaker{line_style}, prop.tick[0].color};
+                return MajorLines{{}, gen, StylishLineMaker{line_style}}/prop.tick[0].color;
             }
 
-            GridLines grid(agge::real_t X1, agge::real_t X2) const
+            auto grid(agge::real_t X1, agge::real_t X2) const
             {
                 line_style.width(prop.tick[0].width);
                 auto const& pa = axes.coordinates.port_area;
@@ -289,10 +290,10 @@ namespace plotting
                 gen.initial.end = {X2, from};
                 gen.direction = {0.0f, step};
                 gen.number = (int)ceil((pa.y2  - 0.1 - from)/step);
-                return {gen, FancyLineMaker{prop.grid.dash, prop.grid.line_style}, prop.grid.color};
+                return GridLines{{}, gen, FancyLineMaker{prop.grid.dash, prop.grid.line_style}}/prop.grid.color;
             }
 
-            MajorLabels labels(agge::real_t X, agge::real_t dir) const
+            auto labels(agge::real_t X, agge::real_t dir) const
             {
                 auto const& pa = axes.coordinates.port_area;
                 agge::real_t from = start;
@@ -314,11 +315,10 @@ namespace plotting
                 gen.direction = {0.0f, step};
                 gen.number = (int)ceil((pa.y2 - 0.1 - from)/step);
 
-                return {gen, labelMaker,
-                        prop.labels.base._fill};
+                return MajorLabels{{}, gen, labelMaker};
             }
 
-            MajorLines medium(agge::real_t X, agge::real_t dir) const
+            auto medium(agge::real_t X, agge::real_t dir) const
             {
                 line_style.width(prop.tick[1].width);
                 auto const& pa = axes.coordinates.port_area;
@@ -330,10 +330,10 @@ namespace plotting
                 gen.initial.end = {X+dir*prop.tick[1].length, from};
                 gen.direction = {0.0f, step};
                 gen.number = (int)ceil((pa.y2 - 0.1 - from)/step);
-                return {gen, StylishLineMaker{line_style}, prop.tick[1].color};
+                return MajorLines{{}, gen, StylishLineMaker{line_style}}/prop.tick[1].color;
             }
 
-            MinorLines minor(agge::real_t X, agge::real_t dir) const
+            auto minor(agge::real_t X, agge::real_t dir) const
             {
                 line_style.width(prop.tick[2].width);
                 auto const& pa = axes.coordinates.port_area;
@@ -349,7 +349,7 @@ namespace plotting
                 gen.initial.end = {X+dir*prop.tick[2].length, from};
                 gen.direction = {0.0f, inc};
                 gen.number = (int)ceil((pa.y2 - 0.1 -from)/inc);
-                return {gen, StylishLineMaker{line_style}, prop.tick[2].color};
+                return MinorLines{{}, gen, StylishLineMaker{line_style}}/prop.tick[2].color;
             }
 
             Axes                 const& axes;

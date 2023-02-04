@@ -12,8 +12,8 @@
 #include <agge/primitives/stroke_features.h>
 
 #include <plotting/Axes.h>
-#include <plotting/Canvas.h>
-#include <plotting/Text.h>
+#include <plotting/primitives/Canvas.h>
+#include <plotting/primitives/Text.h>
 
 #include <agge.text/layout.h>
 #include <agge.text/limit.h>

@@ -8,7 +8,7 @@
 #include <agge/rendering/platform.h>
 #include <agge/rendering/renderer.h>
 
-#include <plotting/Canvas.h>
+#include <plotting/primitives/Canvas.h>
 
 namespace plotting
 {
@@ -29,12 +29,11 @@ namespace plotting
     };
 
     template<typename Generator, typename Maker>
-    class EntitiesGenerator
+    class EntitiesGenerator: public agge::pipeline::terminal<EntitiesGenerator<Generator, Maker>>
     {
     public:
         Generator   gen;
         Maker       maker;
-        agge::color color;
     };
 
     template<typename S, typename Rn, typename Rs, typename Generator, typename Maker>
@@ -44,7 +43,6 @@ namespace plotting
         c << reset;
         for(auto const& l : entities.gen)
             c << entities.maker(l);
-        c << entities.color;
         return c;
     }
 }

@@ -5,7 +5,6 @@
 #include <agge/primitives/pipeline.h>
 #include <agge/rendering/filling_rules.h>
 
-
 namespace plotting
 {
     template<typename SurfaceT, typename RendererT, typename RasterizerT>
@@ -80,6 +79,8 @@ namespace plotting
             add_path(ras, e._get_());
             return *this;
         }
+
+
 
         Canvas& operator<<(canvas_fcn f)
         {

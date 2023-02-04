@@ -4,7 +4,7 @@
 #include <agge.text/limit.h>
 
 #include <plotting/types/text_engine.h>
-#include <plotting/canvas.h>
+#include <plotting/primitives/Canvas.h>
 
 namespace plotting
 {

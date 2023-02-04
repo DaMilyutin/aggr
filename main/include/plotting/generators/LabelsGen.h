@@ -1,6 +1,6 @@
 #pragma once
-#include "EntitiesGen.h"
-#include "Text.h"
+#include <plotting/generators/EntitiesGen.h>
+#include <plotting/primitives/Text.h>
 #include <functional>
 
 namespace plotting
@@ -89,7 +89,7 @@ namespace plotting
         for(auto const& l : entities.gen)
         {
             auto e = entities.maker(l);
-            c << e << e._color;
+            c << e;
         }
         return c;
     }
