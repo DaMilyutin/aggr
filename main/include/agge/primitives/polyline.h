@@ -78,7 +78,6 @@ namespace agge
         Items _items;
     };
 
-
     class polyline_adaptor: public pipeline::terminal<polyline_adaptor>
     {
     public:

@@ -20,9 +20,5 @@ namespace agge
             E const &  _get_() const & { return static_cast<E const  &>(*this); }
             E      &&  _get_()      && { return std::move(*this); }
         };
-
-        template<typename E>
-        class Generator
-        {};
     }
 }
