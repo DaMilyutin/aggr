@@ -21,6 +21,7 @@
 #include <samples/common/shell.h>
 
 #include <algorithm>
+#include <chrono>
 
 namespace
 {
@@ -39,6 +40,16 @@ namespace
             axes.coordinates.repr_area = mkrect(-0.05, 1.0, 0.1, -1.0);
             line_style.set_cap(agge::caps::butt());
             line_style.set_join(agge::joins::bevel());
+
+            auto t = std::chrono::system_clock::now();
+            std::chrono::time_point days = std::chrono::round<std::chrono::days>(t);
+            axes.properties.x2.tickSteps = 4;
+            axes.properties.x2.tickGap = 160;
+            axes.properties.x2.labels.base.vertical(agge::align_far);
+            axes.properties.x2.labels.format = [days](double x) {
+                std::chrono::time_point t =  days + std::chrono::seconds{std::chrono::seconds::rep(x*86400.)};
+                return std::format("{:%Y-%m-%d}\n{:%H:%M}", t, t);
+            };
         }
     private:
 
