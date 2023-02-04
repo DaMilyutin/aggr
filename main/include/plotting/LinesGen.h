@@ -1,47 +1,22 @@
 #pragma once
-#include <agge/color.h>
-#include <agge/primitives/figures.h>
-#include <agge/primitives/dash.h>
-#include <agge/primitives/stroke.h>
-#include <agge/primitives/stroke_features.h>
-
-#include <agge/rendering/platform.h>
-#include <agge/rendering/renderer.h>
-
-#include <plotting/Canvas.h>
+#include "EntitiesGen.h"
 
 namespace plotting
 {
     struct LineData
     {
-        agge::point_r start {};
-        agge::point_r end   {};
-    };
-
-    struct Selector_Any
-    {
-        bool operator()(int) const { return true; }
-    };
-
-    struct Selector_SkipOverPeriod
-    {
-        int period = 10;
-        int offset = 0;
-
-        bool operator()(int x) const
-        {
-            return (x-offset)%period != 0;
-        }
+        agge::point_r start{};
+        agge::point_r end{};
     };
 
     template<typename Selector = Selector_Any>
     struct ParallelLinesGenerator
     {
-        LineData      initial   {};
-        agge::point_r direction {};
-        int           start     {};
-        int           number    {};
-        Selector      select    {};
+        LineData       initial{};
+        agge::vector_r direction{};
+        int            start{};
+        int            number{};
+        Selector       select{};
 
         class Sentinel
         {
@@ -72,10 +47,8 @@ namespace plotting
             void skip()
             {
                 ++i;
-                data.start.x += ref.direction.x;
-                data.start.y += ref.direction.y;
-                data.end.x   += ref.direction.x;
-                data.end.y   += ref.direction.y;
+                data.start += ref.direction;
+                data.end   += ref.direction;
             }
 
             void next_sel()
@@ -92,25 +65,6 @@ namespace plotting
         Sentinel end()   const { return {number}; }
     };
 
-    template<typename Generator, typename Maker>
-    class LinesGenerator
-    {
-    public:
-        Generator   gen;
-        Maker       maker;
-        agge::color color;
-    };
-
-    template<typename S, typename Rn, typename Rs, typename Generator, typename Maker>
-    plotting::Canvas<S, Rn, Rs>& operator<<(plotting::Canvas<S, Rn, Rs>& c,
-        LinesGenerator<Generator, Maker> const& lines)
-    {
-        c << reset;
-        for(LineData const& l : lines.gen)
-            c << lines.maker(l);
-        c << lines.color;
-        return c;
-    }
 
     struct SimpleLineMaker
     {
@@ -129,9 +83,8 @@ namespace plotting
         }
     };
 
-    class FancyLineMaker: SimpleLineMaker
+    class FancyLineMaker
     {
-        SimpleLineMaker simple;
         agge::dash& dash;
         agge::stroke& style;
         auto operator()(LineData const& l) const

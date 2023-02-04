@@ -68,19 +68,22 @@ namespace
                 << agge::polyline_adaptor(points2)/line_style
                 << agge::color::make(0, 255, 0, 128);
 
-
-            canvas << plotting::Text(agge::font_descriptor::create("Times New Roman", 25,
-                                                            agge::regular, false, agge::hint_none))
-                                    .text("Hemlloo, shibe")
-                                    .fill(agge::color{0, 100, 255, 100})
-                                    .position(mkrect<float>(surface.width()*0.1f, surface.height()*0.1f, surface.width()*0.9f, surface.height()*0.9f));
+            plotting::Text hello(agge::font_descriptor::create("Times New Roman", 25,
+                agge::regular, false, agge::hint_none));
+            hello.text("Hemlloo, shibe")
+                .position(agge::point_r{surface.width()*0.5f, surface.height()*0.5f});
+            //canvas << hello.fill(agge::color{0, 255, 255, 255}).align({agge::align_far, agge::align_near});
+            //canvas << hello.fill(agge::color{255, 0, 0, 255}).align({agge::align_near,agge::align_far});
+            //canvas << hello.fill(agge::color{0, 255, 255, 255}).align({agge::align_far, agge::align_far});
+            canvas << hello.contrast(agge::color{255, 0, 0, 255}).align({agge::align_center,agge::align_near});
+            canvas << hello.contrast(agge::color{255, 255, 0, 255}).align({agge::align_center,agge::align_center});
         }
 
         virtual void resize(int width, int height)
         {
             auto const F = [](double t) { return cos(t)*exp(0.5*t); };
             axes.position = plotting::port_area_t{10.0f, 10.0f, (float)width-10.0f, (float)height-10.0f};
-            axes.coordinates.update(plotting::port_area_t{100.0f, 40.0f, (float)width-20.0f, (float)height-100.0f});
+            axes.coordinates.update(plotting::port_area_t{100.0f, 40.0f, (float)width-120.0f, (float)height-100.0f});
 
             //axes.alignTickStepsX1(150);
             //axes.alignTickStepsX2(300);

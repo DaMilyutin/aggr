@@ -9,9 +9,9 @@ namespace agge
 	typedef unsigned int codepoint_t;
 
 	enum text_alignment {
-		align_near,	// vertical: top, horizontal: LTR -> left, RTL -> right
-		align_far,	// vertical: bottom, horizontal: LTR -> right, RTL -> left
-		align_center,
+		align_near   = -1,	// vertical: top, horizontal: LTR -> left, RTL -> right
+        align_center = 0,
+		align_far    = 1,	// vertical: bottom, horizontal: LTR -> right, RTL -> left
 	};
 
 	struct full_alignment {

@@ -14,10 +14,8 @@ namespace agge
 		path_command_end_poly = 0x10,
 
 		path_vertex_mask = 0x07,
-		path_command_mask = 0x1F
-	};
+		path_command_mask = 0x1F,
 
-	enum path_flags {
 		path_flag_close = 0x20,
 		path_flags_mask = 0xE0
 	};

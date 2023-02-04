@@ -58,6 +58,12 @@ namespace agge
 		return result;
 	}
 
+    template <typename CoordT>
+    inline const rect<CoordT>& operator +=(rect<CoordT>& lhs, const agge_vector<CoordT>& rhs)
+    {
+        return lhs.x1 += rhs.dx, lhs.y1 += rhs.dy, lhs.x2 += rhs.dx, lhs.y2 += rhs.dy, lhs;
+    }
+
 	template <typename CoordT>
 	inline agge_vector<CoordT> operator -(const point<CoordT> &lhs, const point<CoordT> &rhs)
 	{

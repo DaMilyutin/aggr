@@ -31,8 +31,28 @@ namespace plotting
 
         port_t operator<<(repr_t const& f) const
         {
-            return port_t{agge::real_t(port_area.x1 + scale.x*(f.x - repr_area.x1))
-                         ,agge::real_t(port_area.y1 + scale.y*(f.y - repr_area.y1))};
+            return port_t{to_port_x(f.x), to_port_y(f.y)};
         }
+
+        agge::real_t to_port_x(double x) const
+        {
+            return agge::real_t(port_area.x1 + scale.x*(x - repr_area.x1));
+        }
+
+        agge::real_t to_port_y(double y) const
+        {
+            return agge::real_t(port_area.y1 + scale.y*(y - repr_area.y1));
+        }
+
+        double to_repr_x(agge::real_t x) const
+        {
+            return repr_area.x1 + double(x - port_area.x1)/scale.x;
+        }
+
+        double to_repr_y(agge::real_t y) const
+        {
+            return repr_area.y1 + double(y - port_area.y1)/scale.y;
+        }
+
     };
 }

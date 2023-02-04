@@ -94,7 +94,7 @@ namespace agge
 		if (hint_none != fd.hinting)
 			return make_pair(_loader.load(fd), 1.0f);
 
-		const real_t factor = static_cast<real_t>(fd.height) / c_rescalable_height;
+		const real_t factor = static_cast<real_t>(fd.height) / static_cast<real_t>(c_rescalable_height);
 		const int height = fd.height;
 
 		fd.height = c_rescalable_height;
