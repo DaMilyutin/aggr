@@ -21,18 +21,19 @@ namespace plotting
 {
     struct Axes
     {
-        port_area_t      position;
-        CoordinateSystem coordinates;
-
-        agge::color outer { 40, 40, 40, 128};
-        agge::color inner { 20, 20, 20, 255};
-
         struct LabelProperties
         {
             using Formatter = std::function<std::string(double)>;
             Formatter      format;
             TextProperties base{};
             agge::real_t   offset = 1.0f;
+        };
+
+        struct GridLineProperties
+        {
+            agge::dash&   dash;
+            agge::stroke& line_style;
+            agge::real_t  color;
         };
 
 
@@ -64,6 +65,14 @@ namespace plotting
                         LabelProperties{{}, text, offs}};
             }
         };
+
+        port_area_t      position;
+        CoordinateSystem coordinates;
+
+        agge::color outer{40, 40, 40, 128};
+        agge::color inner{20, 20, 20, 255};
+        Separator   boundary{};
+
 
         agge::rect<AxisProperties> properties
             {AxisProperties::from({agge::align_center, agge::align_center}, 5.0f),
@@ -108,6 +117,7 @@ namespace plotting
         };
 
         using MajorLines = EntitiesGenerator<ParallelLinesGenerator<Selector_Any>, StylishLineMaker>;
+        using GridLines = EntitiesGenerator<ParallelLinesGenerator<Selector_Any>,  FancyLineMaker>;
         using MinorLines = EntitiesGenerator<ParallelLinesGenerator<Selector_SkipOverPeriod>, StylishLineMaker>;
         using MajorLabels = EntitiesGenerator<ParallelLabelsGenerator, LabelMaker>;
 
@@ -350,6 +360,14 @@ namespace plotting
             / line_style.width(axes.properties.y2.sep.width)
             << agge::platform_blender_solid_color(axes.properties.y2.sep.color);
 
+        line_style.width(axes.boundary.width);
+        c << reset
+            << agge::line(axes.position.x1, axes.position.y1, axes.position.x1, axes.position.y2)/line_style
+            << agge::line(axes.position.x1, axes.position.y2, axes.position.x2, axes.position.y2)/line_style
+            << agge::line(axes.position.x2, axes.position.y2, axes.position.x2, axes.position.y1)/line_style
+            << agge::line(axes.position.x2, axes.position.y1, axes.position.x1, axes.position.y1)/line_style
+            << axes.boundary.color;
+
         c.ras.reset_clipping();
         return c;
     }
@@ -357,6 +375,7 @@ namespace plotting
     template<typename S, typename Rn, typename Rs>
     Canvas<S, Rn, Rs>& operator<<(Canvas<S, Rn, Rs>& c, Axes const& axes)
     {
+        agge::dash   dash;
         agge::stroke line_style;
         line_style.set_cap(agge::caps::butt());
         line_style.set_join(agge::joins::bevel());

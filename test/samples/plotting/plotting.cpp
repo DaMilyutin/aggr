@@ -36,7 +36,7 @@ namespace
         Plotting()
             : application()
         {
-            axes.coordinates.repr_area = mkrect(-6.5, 0.05, 6.2, -0.05);
+            axes.coordinates.repr_area = mkrect(-0.05, 1.0, 0.1, -1.0);
             line_style.set_cap(agge::caps::butt());
             line_style.set_join(agge::joins::bevel());
         }
@@ -74,7 +74,7 @@ namespace
 
         virtual void resize(int width, int height)
         {
-            auto const F = [](double t) { return cos(t)*exp(0.5*t); };
+            auto const F = [](double t) { return cos(1./(fabs(t)+1.e-10))*exp(0.5*t); };
             axes.position = plotting::port_area_t{10.0f, 10.0f, (float)width-10.0f, (float)height-10.0f};
             axes.coordinates.update(plotting::port_area_t{100.0f, 40.0f, (float)width-120.0f, (float)height-100.0f});
 
@@ -84,7 +84,7 @@ namespace
                 plotting::port_t prev = axes.coordinates << plotting::repr_t{t, F(t)};
                 points1.clear();
                 points1.move_to(prev.x, prev.y);
-                for(t = -5; t < 5.; t += 0.01, prev = cur)
+                for(t = -5; t < 5.; t += 0.0001, prev = cur)
                 {
                     cur = axes.coordinates << plotting::repr_t{t, F(t)};
                     points1.line_to(cur.x, cur.y);
