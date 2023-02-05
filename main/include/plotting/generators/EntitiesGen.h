@@ -41,7 +41,7 @@ namespace plotting
         EntitiesGenerator<Generator, Maker> const& entities)
     {
         c << reset;
-        for(auto const& l : entities.gen)
+        for(auto&& l : entities.gen)
             c << entities.maker(l);
         return c;
     }

@@ -79,19 +79,5 @@ namespace plotting
         auto wrap = agge::limit::wrap(max_width);
         return text_engine.measure(text, wrap);
     }
-
-
-    template<typename S, typename Rn, typename Rs>
-    plotting::Canvas<S, Rn, Rs>& operator<<(plotting::Canvas<S, Rn, Rs>& c,
-        EntitiesGenerator<ParallelLabelsGenerator, LabelMaker> const& entities)
-    {
-        c << reset;
-        for(auto const& l : entities.gen)
-        {
-            auto e = entities.maker(l);
-            c << e;
-        }
-        return c;
-    }
 }
 
