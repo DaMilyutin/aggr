@@ -25,48 +25,38 @@ namespace agge
 
         using Items = std::vector<Item>;
 
-        void clear() { _items.clear(); }
-        void start() { clear(); }
+        polyline& clear() { _items.clear(); return *this; }
+        polyline& start() { _items.clear(); return *this; }
 
-        void move_to(agge::real_t x, agge::real_t y)
+        polyline& move_to(agge::real_t x, agge::real_t y)
         {
             _items.push_back(Item{x, y, agge::path_command_move_to});
+            return *this;
         }
 
-        void move_to(agge::point_r p)
+        polyline& move_to(agge::point_r p)
         {
             _items.push_back(Item{p, agge::path_command_move_to});
+            return *this;
         }
 
-        void line_to(agge::real_t x, agge::real_t y)
+        polyline& line_to(agge::real_t x, agge::real_t y)
         {
-            if(!_items.empty())
-            {
-                if(_items.back().command == agge::path_command_stop)
-                    return;
-                auto const& prev =_items.back().point;
-                float const dist = fabsf(x - prev.x) + fabsf(y - prev.y);
-                extern const real_t distance_epsilon;
-                if(dist <= distance_epsilon)
-                    return;
-            }
-            _items.push_back(Item{x, y, agge::path_command_line_to});
+            return line_to({x, y});
         }
 
-        void line_to(agge::point_r p)
+        polyline& line_to(agge::point_r p)
         {
-            if(!_items.empty())
-            {
-                if(_items.back().command == agge::path_command_stop)
-                    return;
-                auto const& prev = _items.back().point;
-                float const dist = fabsf(p.x - prev.x) + fabsf(p.y - prev.y);
-                extern const real_t distance_epsilon;
-                if(dist <= distance_epsilon)
-                    return;
-            }
+            if(_items.empty())
+                _items.push_back(Item{p, agge::path_command_move_to});
+            if(_items.back().command == agge::path_command_stop
+                || too_small_step(p))
+                return *this;
             _items.push_back(Item{p, agge::path_command_line_to});
+            return *this;
         }
+
+        polyline& operator<<(agge::point_r p) { return line_to(p); }
 
         void push_back(Item const& item) { _items.push_back(item); }
         void stop()
@@ -75,6 +65,14 @@ namespace agge
         }
 
     private:
+        bool too_small_step(point_r const& p) const
+        {
+            auto const& prev = _items.back().point;
+            float const dist = fabsf(p.x - prev.x) + fabsf(p.y - prev.y);
+            extern const real_t distance_epsilon;
+            return dist <= distance_epsilon;
+        }
+
         Items _items;
     };
 
