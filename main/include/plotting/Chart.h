@@ -5,69 +5,27 @@
 #include <agge/primitives/pipeline.h>
 #include <agge/primitives/polyline.h>
 
-#include <plotting/CoordinateSystem.h>
+#include <plotting/generators/PointsGen.h>
 
 namespace plotting
 {
-    namespace pipeline
-    {
-        template<typename E>
-        struct PointGenerator: public agge::pipeline::terminal<E>
-        {};
-
-        template<typename G>
-        struct transformed
-        {
-            CoordinateSystem const& coordinates;
-            G                       generator;
-        };
-    }
-
     template<typename E>
-    pipeline::transformed<E const&> operator/(pipeline::PointGenerator<E> const& points, CoordinateSystem const& c)
+    agge::polyline& operator<<(agge::polyline& ret, pipeline::PointsGenerator<E, port_t> const& gen)
     {
-        return {c, points._get_()};
-    }
-
-    template<typename E>
-    pipeline::transformed<E&&> operator/(pipeline::PointGenerator<E>&& points, CoordinateSystem const& c)
-    {
-        return {c, std::move(points._get_())};
-    }
-
-    template<typename E>
-    agge::polyline& operator<<(agge::polyline& ret, pipeline::transformed<E> const& t)
-    {
-        for(auto&& p: t.generator)
-            ret.line_to(t.coordinates << p);
+        for(auto&& p: gen._get_())
+            ret.line_to(p);
         return ret;
     }
 
     template<typename E>
-    agge::polyline& operator<<(agge::polyline& ret, pipeline::transformed<E>&& t)
+    agge::polyline& operator<<(agge::polyline& ret, pipeline::PointsGenerator<E, port_t>&& gen)
     {
-        for(auto&& p: t.generator)
-            ret.line_to(p/t.coordinates);
+        for(auto&& p: gen._get_())
+            ret.line_to(p);
         return ret;
     }
 
-    template<typename E>
-    agge::polyline&& operator<<(agge::polyline&& ret, pipeline::transformed<E> const& t)
-    {
-        for(auto&& p: t.generator)
-            ret.line_to(t.coordinates/p);
-        return ret;
-    }
-
-    template<typename E>
-    agge::polyline&& operator<<(agge::polyline&& ret, pipeline::transformed<E>&& t)
-    {
-        for(auto&& p: t.generator)
-            ret.line_to(p/t.coordinates);
-        return ret;
-    }
-
-    struct Function: pipeline::PointGenerator<Function>
+    struct Function: public pipeline::PointsGenerator<Function, repr_t>
     {
         double a    =-5.;
         double b    = 5.;
@@ -82,7 +40,7 @@ namespace plotting
 
             Iterator& operator++() { t+= ref.step; return *this; }
             repr_t operator*() const { return {t, ref.f(t)}; }
-            bool operator != (Iterator const& rhs) { return t <= rhs.t; }
+            bool operator != (Iterator const& rhs) const { return t <= rhs.t; }
         private:
             double          t;
             Function const& ref;
@@ -94,7 +52,7 @@ namespace plotting
         std::function<double(double)> f;
     };
 
-    struct ChartData: pipeline::PointGenerator<ChartData>
+    struct ChartData: public pipeline::PointsGenerator<ChartData, repr_t>
     {
         std::vector<repr_t> data;
 
