@@ -57,10 +57,14 @@ namespace
             {
                 std::chrono::time_point t = days + std::chrono::round<std::chrono::seconds>(std::chrono::duration<double>(x*86400.*0.125));
                 auto c = std::chrono::floor<std::chrono::days>(t.time_since_epoch());
-                if(c == p)
-                    return std::format("{:%T}", t);
+                std::string ret;
+                constexpr auto undef = std::chrono::days(std::numeric_limits<std::chrono::days::rep>::min());
+                if(c == p /*|| p == undef*/)
+                    ret = std::format("{:%T}", t);
+                else
+                    ret = std::format("{:%T\n%F}", t);
                 p = c;
-                return std::format("{:%T\n%F}", t);
+                return ret;
             };
 
             axes.properties.x2.grid.color = agge::color{255, 255, 0, 128};
