@@ -143,7 +143,9 @@ namespace plotting
                 , line_style(line_style)
             {
                 double step_repr = quantize_step((axes.coordinates.repr_area.x2 - axes.coordinates.repr_area.x1)/prop.tickSteps);
-                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.scale.x), prop.tickGap);
+                agge::real_t const calcGap = fabs(axes.coordinates.port_area.x2 - axes.coordinates.port_area.x1)/prop.tickSteps;
+                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.scale.x),
+                                      std::max(prop.tickGap, calcGap));
                 step_repr *= step_mul;
                 double const mid_q = round(0.5*(axes.coordinates.repr_area.x2 + axes.coordinates.repr_area.x1)/step_repr)*step_repr;
                 double const start_repr = mid_q - floor((mid_q - axes.coordinates.repr_area.x1)/step_repr)*step_repr;
@@ -255,7 +257,9 @@ namespace plotting
                 , line_style(line_style)
             {
                 double step_repr = quantize_step((axes.coordinates.repr_area.y2 - axes.coordinates.repr_area.y1)/prop.tickSteps);
-                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.scale.y), prop.tickGap);
+                agge::real_t const calcGap = fabs(axes.coordinates.port_area.y2 - axes.coordinates.port_area.y1)/prop.tickSteps;
+                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.scale.y),
+                                     std::max(prop.tickGap, calcGap));
                 step_repr *= step_mul;
                 double const mid_q = round(0.5*(axes.coordinates.repr_area.y2 + axes.coordinates.repr_area.y1)/step_repr)*step_repr;
                 double const start_repr = mid_q - floor((mid_q - axes.coordinates.repr_area.y1)/step_repr)*step_repr;
@@ -437,6 +441,8 @@ namespace plotting
             c << xTicks.medium(axes.coordinates.port_area.y2, 1);
             c << xTicks.minor(axes.coordinates.port_area.y2, 1);
             c << xTicks.labels(axes.coordinates.port_area.y2, 2.0f);
+
+            //c << xTicks.grid(axes.coordinates.port_area.y1, axes.coordinates.port_area.y2);
         }
         {
             inner::AxisYTicksMaker yTicks{axes, axes.properties.y1, line_style};
