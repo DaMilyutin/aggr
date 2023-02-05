@@ -29,7 +29,7 @@ namespace plotting
                                            ,agge::real_t(repr_area.x2), agge::real_t(repr_area.y2)};
         repr_t      scale = repr_t{1., 1.};
 
-        port_t operator<<(repr_t const& f) const
+        port_t operator/(repr_t const& f) const
         {
             return port_t{to_port_x(f.x), to_port_y(f.y)};
         }
