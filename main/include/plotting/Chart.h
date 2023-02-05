@@ -24,13 +24,13 @@ namespace plotting
     }
 
     template<typename E>
-    pipeline::transformed<E const&> operator/(CoordinateSystem const& c, pipeline::PointGenerator<E> const& points)
+    pipeline::transformed<E const&> operator/(pipeline::PointGenerator<E> const& points, CoordinateSystem const& c)
     {
         return {c, points._get_()};
     }
 
     template<typename E>
-    pipeline::transformed<E&&> operator/(CoordinateSystem const& c, pipeline::PointGenerator<E>&& points)
+    pipeline::transformed<E&&> operator/(pipeline::PointGenerator<E>&& points, CoordinateSystem const& c)
     {
         return {c, std::move(points._get_())};
     }
@@ -47,7 +47,7 @@ namespace plotting
     agge::polyline& operator<<(agge::polyline& ret, pipeline::transformed<E>&& t)
     {
         for(auto&& p: t.generator)
-            ret.line_to(t.coordinates/p);
+            ret.line_to(p/t.coordinates);
         return ret;
     }
 
@@ -63,7 +63,7 @@ namespace plotting
     agge::polyline&& operator<<(agge::polyline&& ret, pipeline::transformed<E>&& t)
     {
         for(auto&& p: t.generator)
-            ret.line_to(t.coordinates << p);
+            ret.line_to(p/t.coordinates);
         return ret;
     }
 

@@ -117,9 +117,9 @@ namespace
             //        points1.line_to(cur.x, cur.y);
             //    }
             //}
-            points1.clear() << axes.coordinates/gen;
-            points2.clear() << axes.coordinates/plotting::repr_t{-5., 10.}
-                            << axes.coordinates/plotting::repr_t{5., -10.};
+            points1.clear() << gen/axes.coordinates;
+            points2.clear() << plotting::repr_t{-5., 10.}/axes.coordinates
+                            << plotting::repr_t{5., -10.}/axes.coordinates;
 
         }
 

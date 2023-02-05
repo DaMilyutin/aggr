@@ -29,11 +29,6 @@ namespace plotting
                                            ,agge::real_t(repr_area.x2), agge::real_t(repr_area.y2)};
         repr_t      scale = repr_t{1., 1.};
 
-        port_t operator/(repr_t const& f) const
-        {
-            return port_t{to_port_x(f.x), to_port_y(f.y)};
-        }
-
         agge::real_t to_port_x(double x) const
         {
             return agge::real_t(port_area.x1 + scale.x*(x - repr_area.x1));
@@ -55,4 +50,9 @@ namespace plotting
         }
 
     };
+
+    inline port_t operator/(repr_t const& f, CoordinateSystem const& c)
+    {
+        return port_t{c.to_port_x(f.x), c.to_port_y(f.y)};
+    }
 }
