@@ -153,33 +153,74 @@ namespace plotting
                 step  = agge::real_t(axes.coordinates.scale.x*step_repr);
             }
 
-            auto major(agge::real_t Y, agge::real_t dir) const
+            auto major_points(agge::real_t Y) const
             {
-                line_style.width(prop.tick[0].width);
                 auto const& pa = axes.coordinates.port_area;
                 agge::real_t from = start;
                 if(from < pa.x1 + 0.1f)
                     from += step;
-                ParallelLinesGenerator<Selector_Any> gen;
-                gen.initial.start = {from, Y};
-                gen.initial.end = {from, Y+dir*prop.tick[0].length};
-                gen.direction = {step, 0.0f};
-                gen.number = (int)ceil((pa.x2 - 0.1 - from)/step);
-                return MajorLines{{}, gen, StylishLineMaker{line_style}}/prop.tick[0].color;
+                PointsOnSegmentGenerator<Selector_Any> points;
+                points.initial = {from, Y};
+                points.increment = {step, 0.0f};
+                points.number = (int)ceil((pa.x2 - 0.1 - from)/step);
+                return points;
+            }
+
+            auto medium_points(agge::real_t Y) const
+            {
+                auto const& pa = axes.coordinates.port_area;
+                agge::real_t from = start - step*0.5f;
+                if(from < pa.x1 + 0.1f)
+                    from += step;
+                PointsOnSegmentGenerator<Selector_Any> points;
+                points.initial = {from, Y};
+                points.increment = {step, 0.0f};
+                points.number = (int)ceil((pa.x2 - 0.1 - from)/step);
+                return points;
+            }
+
+            auto minor_points(agge::real_t Y) const
+            {
+                auto const& pa = axes.coordinates.port_area;
+                agge::real_t const inc = step*0.1f;
+                agge::real_t from = start - inc*9.0f;
+                PointsOnSegmentGenerator<Selector_SkipOverPeriod> points;
+                points.select.offset = 9;
+                points.select.period = 5;
+                while(from <= pa.x1 + 0.1f)
+                    from += inc, --points.select.offset;
+                points.select.offset = points.select.offset % points.select.period;
+                points.initial = {from, Y};
+                points.increment = {inc, 0.0f};
+                points.number = (int)ceil((pa.x2 - 0.1 -from)/inc);
+                return points;
+            }
+
+            auto major(agge::real_t Y, agge::real_t dir) const
+            {
+                line_style.width(prop.tick[0].width);
+                return MajorLines{{}, {major_points(Y), {0, dir*prop.tick[0].length}},
+                                  StylishLineMaker{line_style}}/prop.tick[0].color;
+            }
+
+            auto medium(agge::real_t Y, agge::real_t dir) const
+            {
+                line_style.width(prop.tick[1].width);
+                return MajorLines{{}, {medium_points(Y), {0, dir*prop.tick[1].length}},
+                                  StylishLineMaker{line_style}}/prop.tick[1].color;
+            }
+
+            auto minor(agge::real_t Y, agge::real_t dir) const
+            {
+                line_style.width(prop.tick[2].width);
+                return MinorLines{{}, {minor_points(Y), {0, dir*prop.tick[2].length}}
+                                 , StylishLineMaker{line_style}}/prop.tick[2].color;
             }
 
             auto grid(agge::real_t Y1, agge::real_t Y2) const
             {
-                auto const& pa = axes.coordinates.port_area;
-                agge::real_t from = start;
-                if(from < pa.x1 + 0.1f)
-                    from += step;
-                ParallelLinesGenerator<Selector_Any> gen;
-                gen.initial.start = {from, Y1};
-                gen.initial.end = {from, Y2};
-                gen.direction = {step, 0.0f};
-                gen.number = (int)ceil((pa.x2 - 0.1 - from)/step);
-                return GridLines{{}, gen, FancyLineMaker{prop.grid.dash, prop.grid.line_style}}/prop.grid.color;
+                return GridLines{{}, {major_points(Y1), {0, Y2-Y1}},
+                                 FancyLineMaker{prop.grid.dash, prop.grid.line_style}}/prop.grid.color;
             }
 
             auto labels(agge::real_t Y, agge::real_t dir) const
@@ -195,52 +236,9 @@ namespace plotting
                                         ? prop.labels.format
                                         : make_formatter(digits(inc)),
                                       prop.labels.base};
-                //agge::box_r box = estimate_box(labelMaker, initial);
-
-                ParallelLabelsGenerator gen;
-                gen.initial.position = {from, Y+dir*prop.labels.offset};
-                gen.initial.value = initial;
-                gen.inc = inc;
-                gen.direction = {step, 0.0f};
-                gen.number = (int)ceil((pa.x2 - 0.1 - from)/step);
-
-                return MajorLabels{{}, gen, labelMaker};
+                return MajorLabels{{}, {major_points(Y+prop.labels.offset*dir), initial, inc},
+                                   labelMaker};
             }
-
-            auto medium(agge::real_t Y, agge::real_t dir) const
-            {
-                line_style.width(prop.tick[1].width);
-                auto const& pa = axes.coordinates.port_area;
-                agge::real_t from = start-step*0.5f;
-                if(from < pa.x1 + 0.1f)
-                    from += step;
-                ParallelLinesGenerator<Selector_Any> gen;
-                gen.initial.start = {from, Y};
-                gen.initial.end = {from, Y+dir*prop.tick[1].length};
-                gen.direction = {step, 0.0f};
-                gen.number = (int)ceil((pa.x2 - 0.1 - from)/step);
-                return MajorLines{{}, gen, StylishLineMaker{line_style}}/prop.tick[1].color;
-            }
-
-            auto minor(agge::real_t Y, agge::real_t dir) const
-            {
-                line_style.width(prop.tick[2].width);
-                auto const& pa = axes.coordinates.port_area;
-                agge::real_t const inc = step*0.1f;
-                agge::real_t from = start - inc*9.0f;
-                ParallelLinesGenerator<Selector_SkipOverPeriod> gen;
-                gen.select.offset = 9;
-                gen.select.period = 5;
-                while(from <= pa.x1 + 0.1f)
-                    from += inc, --gen.select.offset;
-                gen.select.offset = gen.select.offset % gen.select.period;
-                gen.initial.start = {from, Y};
-                gen.initial.end = {from, Y+dir*prop.tick[2].length};
-                gen.direction = {inc, 0.0f};
-                gen.number = (int)ceil((pa.x2 - 0.1 -from)/inc);
-                return MinorLines{{}, gen, StylishLineMaker{line_style}}/prop.tick[2].color;
-            }
-
 
             Axes                 const& axes;
             Axes::AxisProperties const& prop;
@@ -267,34 +265,75 @@ namespace plotting
                 step = agge::real_t(axes.coordinates.scale.y*step_repr);
             }
 
-            auto major(agge::real_t X, agge::real_t dir) const
+            auto major_points(agge::real_t X) const
             {
-                line_style.width(prop.tick[0].width);
                 auto const& pa = axes.coordinates.port_area;
                 agge::real_t from = start;
                 if(from < pa.y1 + 0.1f)
                     from += step;
-                ParallelLinesGenerator<Selector_Any> gen;
-                gen.initial.start = {X, from};
-                gen.initial.end = {X+dir*prop.tick[0].length, from};
-                gen.direction = {0.0f, step};
-                gen.number = (int)ceil((pa.y2  - 0.1 - from)/step);
-                return MajorLines{{}, gen, StylishLineMaker{line_style}}/prop.tick[0].color;
+                PointsOnSegmentGenerator<Selector_Any> points;
+                points.initial = {X, from};
+                points.increment = {0.0f, step};
+                points.number = (int)ceil((pa.y2 - 0.1 - from)/step);
+                return points;
+            }
+
+            auto medium_points(agge::real_t X) const
+            {
+                auto const& pa = axes.coordinates.port_area;
+                agge::real_t from = start - step*0.5f;
+                if(from < pa.y1 + 0.1f)
+                    from += step;
+                PointsOnSegmentGenerator<Selector_Any> points;
+                points.initial = {X, from};
+                points.increment = {0.0f, step};
+                points.number = (int)ceil((pa.y2 - 0.1 - from)/step);
+                return points;
+            }
+
+            auto minor_points(agge::real_t X) const
+            {
+                auto const& pa = axes.coordinates.port_area;
+                agge::real_t const inc = step*0.1f;
+                agge::real_t from = start - inc*9.0f;
+                PointsOnSegmentGenerator<Selector_SkipOverPeriod> points;
+                points.select.offset = 9;
+                points.select.period = 5;
+                while(from <= pa.y1 + 0.1f)
+                    from += inc, --points.select.offset;
+                points.select.offset = points.select.offset % points.select.period;
+                points.initial = {X, from};
+                points.increment = {0.0f, inc};
+                points.number = (int)ceil((pa.y2 - 0.1 -from)/inc);
+                return points;
+            }
+
+
+            auto major(agge::real_t X, agge::real_t dir) const
+            {
+                line_style.width(prop.tick[0].width);
+                return MajorLines{{}, {major_points(X), {dir*prop.tick[0].length, 0}},
+                                  StylishLineMaker{line_style}}/prop.tick[0].color;
+            }
+
+            auto medium(agge::real_t X, agge::real_t dir) const
+            {
+                line_style.width(prop.tick[1].width);
+                return MajorLines{{}, {medium_points(X), {dir*prop.tick[1].length, 0}},
+                                  StylishLineMaker{line_style}}/prop.tick[1].color;
+            }
+
+            auto minor(agge::real_t X, agge::real_t dir) const
+            {
+                line_style.width(prop.tick[2].width);
+                return MinorLines{{}, {minor_points(X), {dir*prop.tick[2].length, 0}}
+                                 , StylishLineMaker{line_style}}/prop.tick[2].color;
             }
 
             auto grid(agge::real_t X1, agge::real_t X2) const
             {
-                line_style.width(prop.tick[0].width);
-                auto const& pa = axes.coordinates.port_area;
-                agge::real_t from = start;
-                if(from < pa.y1 + 0.1f)
-                    from += step;
-                ParallelLinesGenerator<Selector_Any> gen;
-                gen.initial.start = {X1, from};
-                gen.initial.end = {X2, from};
-                gen.direction = {0.0f, step};
-                gen.number = (int)ceil((pa.y2  - 0.1 - from)/step);
-                return GridLines{{}, gen, FancyLineMaker{prop.grid.dash, prop.grid.line_style}}/prop.grid.color;
+                return GridLines{{}, {major_points(X1), {X2-X1, 0}},
+                                 FancyLineMaker{prop.grid.dash, prop.grid.line_style}}/prop.grid.color;
             }
 
             auto labels(agge::real_t X, agge::real_t dir) const
@@ -310,50 +349,8 @@ namespace plotting
                                         ? prop.labels.format
                                         : make_formatter(digits(inc)),
                                       prop.labels.base};
-                //agge::box_r box = estimate_box(labelMaker, initial);
-
-                ParallelLabelsGenerator gen;
-                gen.initial.position = {X+dir*prop.labels.offset, from};
-                gen.initial.value = initial;
-                gen.inc = inc;
-                gen.direction = {0.0f, step};
-                gen.number = (int)ceil((pa.y2 - 0.1 - from)/step);
-
-                return MajorLabels{{}, gen, labelMaker};
-            }
-
-            auto medium(agge::real_t X, agge::real_t dir) const
-            {
-                line_style.width(prop.tick[1].width);
-                auto const& pa = axes.coordinates.port_area;
-                agge::real_t from = start-step*0.5f;
-                if(from < pa.y1 + 0.1f)
-                    from += step;
-                ParallelLinesGenerator<Selector_Any> gen;
-                gen.initial.start = {X, from};
-                gen.initial.end = {X+dir*prop.tick[1].length, from};
-                gen.direction = {0.0f, step};
-                gen.number = (int)ceil((pa.y2 - 0.1 - from)/step);
-                return MajorLines{{}, gen, StylishLineMaker{line_style}}/prop.tick[1].color;
-            }
-
-            auto minor(agge::real_t X, agge::real_t dir) const
-            {
-                line_style.width(prop.tick[2].width);
-                auto const& pa = axes.coordinates.port_area;
-                agge::real_t const inc = step*0.1f;
-                agge::real_t from = start - inc*9.0f;
-                ParallelLinesGenerator<Selector_SkipOverPeriod> gen;
-                gen.select.offset = 9;
-                gen.select.period = 5;
-                while(from <= pa.y1 + 0.1f)
-                    from += inc, --gen.select.offset;
-                gen.select.offset = gen.select.offset % gen.select.period;
-                gen.initial.start = {X, from};
-                gen.initial.end = {X+dir*prop.tick[2].length, from};
-                gen.direction = {0.0f, inc};
-                gen.number = (int)ceil((pa.y2 - 0.1 -from)/inc);
-                return MinorLines{{}, gen, StylishLineMaker{line_style}}/prop.tick[2].color;
+                return MajorLabels{{}, {major_points(X+prop.labels.offset*dir), initial, inc},
+                                   labelMaker};
             }
 
             Axes                 const& axes;

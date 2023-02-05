@@ -1,5 +1,6 @@
 #pragma once
 #include "EntitiesGen.h"
+#include "PointsGen.h"
 
 namespace plotting
 {
@@ -12,57 +13,37 @@ namespace plotting
     template<typename Selector = Selector_Any>
     struct ParallelLinesGenerator
     {
-        LineData       initial{};
-        agge::vector_r direction{};
-        int            start{};
-        int            number{};
-        Selector       select{};
+        PointsOnSegmentGenerator<Selector> points;
+        agge::vector_r                     direction{};
 
-        class Sentinel
-        {
-        public:
-            int const number;
-        };
+        using Sentinel = PointsOnSegmentGenerator<Selector>::Sentinel;
 
         class Iterator
         {
         public:
             Iterator(ParallelLinesGenerator const& ref)
-                : data(ref.initial), i(ref.start), ref(ref)
-            {
-                next_sel();
-            }
+                : _it(ref.points), ref(ref)
+            {}
 
-            LineData const& operator*() const { return data; }
+            LineData operator*() const
+            {
+                auto const p = *_it;
+                return {p, p + ref.direction};
+            }
 
             Iterator& operator++()
             {
-                skip();
-                next_sel();
+                ++_it;
                 return *this;
             }
 
-            bool operator!=(Sentinel const& s) const { return i < s.number; }
+            bool operator!=(Sentinel const& s) const { return _it != s; }
         private:
-            void skip()
-            {
-                ++i;
-                data.start += ref.direction;
-                data.end   += ref.direction;
-            }
-
-            void next_sel()
-            {
-                while(!ref.select(i))
-                    skip();
-            }
-
-            LineData                      data;
-            int                           i;
-            ParallelLinesGenerator const& ref;
+            PointsOnSegmentGenerator<Selector>::Iterator _it;
+            ParallelLinesGenerator const&                ref;
         };
         Iterator begin() const { return Iterator(*this); }
-        Sentinel end()   const { return {number}; }
+        Sentinel end()   const { return points.end(); }
     };
 
 

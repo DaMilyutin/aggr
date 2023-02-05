@@ -12,22 +12,6 @@
 
 namespace plotting
 {
-    struct Selector_Any
-    {
-        bool operator()(int) const { return true; }
-    };
-
-    struct Selector_SkipOverPeriod
-    {
-        int period = 10;
-        int offset = 0;
-
-        bool operator()(int x) const
-        {
-            return (x-offset)%period != 0;
-        }
-    };
-
     template<typename Generator, typename Maker>
     class EntitiesGenerator: public agge::pipeline::terminal<EntitiesGenerator<Generator, Maker>>
     {

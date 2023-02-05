@@ -3,6 +3,8 @@
 #include <plotting/primitives/Text.h>
 #include <functional>
 
+#include "PointsGen.h"
+
 namespace plotting
 {
     struct LabelData
@@ -13,48 +15,36 @@ namespace plotting
 
     struct ParallelLabelsGenerator
     {
-        LabelData      initial{};
-        agge::vector_r direction{};
-        double         inc{};
-        int            start{};
-        int            number{};
+        PointsOnSegmentGenerator<> points;
+        double                     value_initial;
+        double                     value_increment;
 
-        class Sentinel
-        {
-        public:
-            int const number;
-        };
+        using Sentinel = PointsOnSegmentGenerator<>::Sentinel;
 
         class Iterator
         {
         public:
             Iterator(ParallelLabelsGenerator const& ref)
-                : data(ref.initial), i(ref.start), ref(ref)
+                : _it(ref.points.begin()), _value(ref.value_initial), ref(ref)
             {}
 
-            LabelData const& operator*() const { return data; }
+            LabelData operator*() const { return LabelData{*_it, _value}; }
 
             Iterator& operator++()
             {
-                skip();
+                ++_it;
+                _value += ref.value_increment;
                 return *this;
             }
 
-            bool operator!=(Sentinel const& s) const { return i < s.number; }
+            bool operator!=(Sentinel const& s) const { return _it != s; }
         private:
-            void skip()
-            {
-                ++i;
-                data.position += ref.direction;
-                data.value += ref.inc;
-            }
-
-            LabelData                      data;
-            int                            i;
-            ParallelLabelsGenerator const& ref;
+            PointsOnSegmentGenerator<>::Iterator _it;
+            double                               _value;
+            ParallelLabelsGenerator const&       ref;
         };
         Iterator begin() const { return Iterator(*this); }
-        Sentinel end()   const { return {number}; }
+        Sentinel end()   const { return points.end(); }
     };
 
     struct LabelMaker
