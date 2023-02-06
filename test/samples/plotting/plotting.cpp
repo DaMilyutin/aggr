@@ -68,6 +68,12 @@ namespace
             //};
 
             axes.properties.x2.grid.color = agge::color{255, 255, 0, 128};
+
+
+            auto const F = [](double t) { return sin(t/(t*t+1.e-2))*exp(0.5*t); };
+            plotting::Function gen{{}, -5., 5., 1.e-5, {F}};
+            chart.from(gen);
+
         }
     private:
 
@@ -79,16 +85,9 @@ namespace
             auto canvas = plotting::make_canvas(surface, ren, ras);
 
             canvas << axes;
-            auto wid = float(surface.width());
-            auto hei = float(surface.height());
-            auto scale = std::min(wid/400.0f, hei/370.0f);
-
-            line_style.width(1.0f*scale);
-            dash_style.remove_all_dashes();
-            dash_style.add_dash(10.0f*scale, 5.0f*scale);
-            dash_style.dash_start(0.5f*scale);
 
             canvas.ras.set_clipping(axes.coordinates.port_area);
+
             canvas << plotting::reset
                 << agge::polyline_adaptor(points1)/dash_style/line_style
                 << agge::color::make(255, 0, 0, 128);
@@ -103,25 +102,21 @@ namespace
 
         virtual void resize(int width, int height)
         {
-            auto const F = [](double t) { return sin(t/(t*t+0.03))*exp(0.5*t); };
+            auto wid = float(width);
+            auto hei = float(height);
+            scale = std::min(wid/400.0f, hei/370.0f);
+
+            line_style.width(2.0f);
+            dash_style.remove_all_dashes();
+            dash_style.add_dash(10.0f, 1.0f);
+            dash_style.dash_start(0.5f);
+
             axes.position = plotting::port_area_t{10.0f, 10.0f, (float)width-10.0f, (float)height-10.0f};
-            axes.coordinates.update(plotting::port_area_t{100.0f, 40.0f, (float)width-120.0f, (float)height-100.0f});
+            axes.coordinates.update({100.0f, 40.0f,
+                                     std::max((float)width-120.0f, 105.0f),
+                                     std::max((float)height-100.0f, 45.0f)});
 
-            plotting::Function gen{{}, -5., 5., 0.01, {F}};
-
-            //{
-            //    double t = -5.;
-            //    plotting::port_t cur;
-            //    plotting::port_t prev = axes.coordinates << plotting::repr_t{t, F(t)};
-            //    points1.clear();
-            //    points1.move_to(prev.x, prev.y);
-            //    for(t = -5; t < 5.; t += 0.01, prev = cur)
-            //    {
-            //        cur = axes.coordinates << plotting::repr_t{t, F(t)};
-            //        points1.line_to(cur.x, cur.y);
-            //    }
-            //}
-            points1 << agge::clear << gen/axes.coordinates/filter(plotting::filters::FarEnough{50.0f});
+            points1 << agge::clear << chart/axes.coordinates/filter(plotting::filters::FarEnough{5.0f});
             points2 << agge::clear << plotting::repr_t{-5., 10.}/axes.coordinates
                                    << plotting::repr_t{5., -10.}/axes.coordinates;
         }
@@ -134,6 +129,9 @@ namespace
         agge::dash                 dash_style;
         agge::polyline             points1;
         agge::polyline             points2;
+
+        plotting::ChartData        chart;
+        float                      scale = 1.0f;
     };
 }
 
