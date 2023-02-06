@@ -10,7 +10,7 @@
 #include <agge.text/font.h>
 
 #include <plotting/primitives/Canvas.h>
-#include <plotting/primitives/PointsGenerator.h>
+#include <plotting/generators/Iota.h>
 #include <plotting/generators/filter.h>
 
 #include <plotting/primitives/LinesGenerator.h>
@@ -134,8 +134,8 @@ namespace plotting
             agge::stroke& line_style;
         };
 
-        using MajorPoints = PointsOnSegmentGenerator;
-        using MinorPoints = pipeline::FilterGenerator<PointsOnSegmentGenerator, filters::SkipOverPeriod>;
+        using MajorPoints = pipeline::Iota<port_t, port_diff_t, size_t>;
+        using MinorPoints = pipeline::FilterGenerator<pipeline::Iota<port_t, port_diff_t, size_t>, filters::SkipOverPeriod>;
 
         using MajorLines = EntitiesGenerator<ParallelLinesGenerator<MajorPoints>, StylishLineMaker>;
         using GridLines = EntitiesGenerator<ParallelLinesGenerator<MajorPoints>,  FancyLineMaker>;
@@ -166,11 +166,8 @@ namespace plotting
                 agge::real_t from = start;
                 if(from < pa.x1 + 0.1f)
                     from += step;
-                PointsOnSegmentGenerator points;
-                points.initial = {from, Y};
-                points.increment = {step, 0.0f};
-                points.number = (int)ceil((pa.x2 - 0.1 - from)/step);
-                return points;
+                return iota(port_t{from, Y}, port_diff_t{step, 0.0f},
+                            (size_t)ceil((pa.x2 - 0.1 - from)/step));
             }
 
             auto medium_points(agge::real_t Y) const
@@ -179,11 +176,8 @@ namespace plotting
                 agge::real_t from = start - step*0.5f;
                 if(from < pa.x1 + 0.1f)
                     from += step;
-                PointsOnSegmentGenerator points;
-                points.initial = {from, Y};
-                points.increment = {step, 0.0f};
-                points.number = (int)ceil((pa.x2 - 0.1 - from)/step);
-                return points;
+                return iota(port_t{from, Y}, port_diff_t{step, 0.0f},
+                            (size_t)ceil((pa.x2 - 0.1 - from)/step));
             }
 
             auto minor_points(agge::real_t Y) const
@@ -195,12 +189,9 @@ namespace plotting
                 while(from <= pa.x1 + 0.1f)
                     from += inc, select.offset;
                 select.offset = select.offset % select.period;
-
-                PointsOnSegmentGenerator points;
-                points.initial = {from, Y};
-                points.increment = {inc, 0.0f};
-                points.number = (int)ceil((pa.x2 - 0.1 -from)/inc);
-                return std::move(points)/std::move(select);
+                return iota(port_t{from, Y}, port_diff_t{inc, 0.0f},
+                           (size_t)ceil((pa.x2 - 0.1 - from)/inc))
+                        / std::move(select);
             }
 
             auto major(agge::real_t Y, agge::real_t dir) const
@@ -244,7 +235,7 @@ namespace plotting
                                         : make_formatter(digits(inc)),
                                       prop.labels.base};
                 return MajorLabels{ParallelLabelsGenerator{major_points(Y+prop.labels.offset*dir),
-                                                           InfiniteLinspace{initial, inc}},
+                                                           iota(initial, inc, pipeline::Infinite{})},
                                    labelMaker};
             }
 
@@ -279,11 +270,8 @@ namespace plotting
                 agge::real_t from = start;
                 if(from < pa.y1 + 0.1f)
                     from += step;
-                PointsOnSegmentGenerator points;
-                points.initial = {X, from};
-                points.increment = {0.0f, step};
-                points.number = (int)ceil((pa.y2 - 0.1 - from)/step);
-                return points;
+                return iota(port_t{X, from}, port_diff_t{0.0f, step},
+                            (size_t)ceil((pa.y2 - 0.1 - from)/step));
             }
 
             auto medium_points(agge::real_t X) const
@@ -292,11 +280,8 @@ namespace plotting
                 agge::real_t from = start - step*0.5f;
                 if(from < pa.y1 + 0.1f)
                     from += step;
-                PointsOnSegmentGenerator points;
-                points.initial = {X, from};
-                points.increment = {0.0f, step};
-                points.number = (int)ceil((pa.y2 - 0.1 - from)/step);
-                return points;
+                return iota(port_t{X, from}, port_diff_t{0.0f, step},
+                            (size_t)ceil((pa.y2 - 0.1 - from)/step));
             }
 
             auto minor_points(agge::real_t X) const
@@ -308,12 +293,9 @@ namespace plotting
                 while(from <= pa.y1 + 0.1f)
                     from += inc, ++select.offset;
                 select.offset = select.offset % select.period;
-
-                PointsOnSegmentGenerator points;
-                points.initial = {X, from};
-                points.increment = {0.0f, inc};
-                points.number = (int)ceil((pa.y2 - 0.1 -from)/inc);
-                return std::move(points)/std::move(select);
+                return iota(port_t{X, from}, port_diff_t{0.0f, inc},
+                            (size_t)ceil((pa.y2 - 0.1 - from)/inc))
+                        /  select;
             }
 
 
@@ -357,7 +339,8 @@ namespace plotting
                                         ? prop.labels.format
                                         : make_formatter(digits(inc)),
                                       prop.labels.base};
-                return MajorLabels{ParallelLabelsGenerator{major_points(X+prop.labels.offset*dir), {initial, inc}},
+                return MajorLabels{ParallelLabelsGenerator{major_points(X+prop.labels.offset*dir),
+                                                           iota(initial, inc, pipeline::Infinite{})},
                                    labelMaker};
             }
 

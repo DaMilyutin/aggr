@@ -1,6 +1,5 @@
 #pragma once
 #include "EntitiesGenerator.h"
-#include "PointsGenerator.h"
 
 namespace plotting
 {

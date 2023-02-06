@@ -1,7 +1,6 @@
 #pragma once
 #include <plotting/generators/Generator.h>
 #include <tuple>
-#include "aFWD.h"
 
 namespace plotting
 {

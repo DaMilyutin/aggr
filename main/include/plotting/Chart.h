@@ -5,8 +5,7 @@
 #include <agge/primitives/pipeline.h>
 #include <agge/primitives/polyline.h>
 
-#include <plotting/primitives/PointsGenerator.h>
-#include <plotting/generators/filter.h>
+#include <plotting/generators/Generator.h>
 
 namespace plotting
 {

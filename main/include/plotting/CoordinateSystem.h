@@ -1,16 +1,10 @@
 #pragma once
 
-#include <agge/types.h>
+#include <plotting/types/point_types.h>
 #include <plotting/generators/transform.h>
 
 namespace plotting
 {
-    using port_t = agge::point<agge::real_t>;
-    using repr_t = agge::point<double>;
-
-    using repr_area_t = agge::rect<double>;
-    using port_area_t = agge::rect<agge::real_t>;
-
     struct ReprToPort: pipeline::Transformer<ReprToPort>
     {
         void from(repr_area_t const& repr_area, port_area_t const& port_area)
@@ -64,7 +58,6 @@ namespace plotting
         {
             return offset.y + scale.y*v;
         }
-
 
         repr_t      scale = repr_t{1., 1.};
         repr_t      offset = repr_t{0., 0.};

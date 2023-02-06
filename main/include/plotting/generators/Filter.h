@@ -1,10 +1,7 @@
 #pragma once
 #include <utility>
 
-#include <plotting/primitives/PointsGenerator.h>
-#include <agge/primitives/pipeline.h>
-#include <agge/types.h>
-
+#include <plotting/generators/Generator.h>
 #include <limits>
 
 namespace plotting
@@ -32,8 +29,6 @@ namespace plotting
             using UnderlyingSentinel = std::remove_cv_t<decltype(std::end(std::declval<G>()))>;
 
             using from_t = std::remove_cvref_t<decltype(*std::begin(std::declval<G>()))>;
-            static_assert(std::is_same_v<from_t, port_t>,
-                "generator from must generate port_t (aka agge::point_r) or ref of port_t");
         public:
             struct Sentinel {};
 

@@ -1,9 +1,9 @@
 #pragma once
 #include <plotting/primitives/EntitiesGenerator.h>
-#include <plotting/primitives/PointsGenerator.h>
 #include <plotting/primitives/Text.h>
 
 #include <functional>
+#include <plotting/generators/Iota.h>
 #include <plotting/generators/zip.h>
 
 
@@ -16,39 +16,14 @@ namespace plotting
         double         label;
     };
 
-    struct InfiniteLinspace
-    {
-        double                     value_initial;
-        double                     value_increment;
-
-        class Sentinel {};
-
-        class Iterator
-        {
-            friend struct InfiniteLinspace;
-            Iterator(InfiniteLinspace const& r): _v(r.value_initial), _inc(r.value_increment) {}
-        public:
-            Iterator& operator++() { _v += _inc; return *this; }
-            double const& operator*() const { return _v; }
-            bool operator!=(Sentinel ) const { return true; }
-            bool operator==(Sentinel) const { return false; }
-        private:
-            double       _v;
-            double const _inc;
-        };
-
-        Iterator begin() const { return Iterator(*this); }
-        Sentinel end() const   { return {}; }
-    };
-
     //using ParallelLabelsGenerator = pipeline::zip_helper<PointsOnSegmentGenerator, InfiniteLinspace>;
 
     struct ParallelLabelsGenerator
     {
-        PointsOnSegmentGenerator   points;
-        InfiniteLinspace           labels;
+        pipeline::Iota<port_t, port_diff_t, size_t>        points;
+        pipeline::Iota<double, double, pipeline::Infinite> labels;
 
-        using Sentinel = PointsOnSegmentGenerator::Sentinel;
+        using Sentinel = pipeline::Iota<port_t, port_diff_t, size_t>::Sentinel;
 
         class Iterator
         {
@@ -68,8 +43,8 @@ namespace plotting
 
             bool operator!=(Sentinel const& s) const { return _position != s; }
         private:
-            PointsOnSegmentGenerator::Iterator   _position;
-            InfiniteLinspace::Iterator           _label;
+            pipeline::Iota<port_t, port_diff_t, size_t>::Iterator        _position;
+            pipeline::Iota<double, double, pipeline::Infinite>::Iterator _label;
         };
         Iterator begin() const { return Iterator(*this); }
         Sentinel end()   const { return points.end(); }
