@@ -243,8 +243,8 @@ namespace plotting
                                         ? prop.labels.format
                                         : make_formatter(digits(inc)),
                                       prop.labels.base};
-                return MajorLabels{{}, {major_points(Y+prop.labels.offset*dir), initial, inc},
-                                   labelMaker};
+                return MajorLabels{{}, {major_points(Y+prop.labels.offset*dir),
+                                   InfiniteLinspace{initial, inc}}, labelMaker};
             }
 
             Axes                 const& axes;
@@ -356,7 +356,7 @@ namespace plotting
                                         ? prop.labels.format
                                         : make_formatter(digits(inc)),
                                       prop.labels.base};
-                return MajorLabels{{}, {major_points(X+prop.labels.offset*dir), initial, inc},
+                return MajorLabels{{}, {major_points(X+prop.labels.offset*dir), {initial, inc}},
                                    labelMaker};
             }
 

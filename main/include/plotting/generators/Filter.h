@@ -45,6 +45,7 @@ namespace plotting
                 Iterator& operator++() { if(_it!=_end) ++_it; next(); return *this; }
 
                 bool operator!=(Sentinel) const { return _it != _end; }
+                bool operator==(Sentinel) const { return _it == _end; }
             private:
                 void next()
                 {
@@ -97,7 +98,6 @@ namespace plotting
 
         template<typename F>
         auto filter(F&& f) { return pipeline::Filter<F>{ {}, std::move(f)}; }
-
 
         struct FarEnough
         {

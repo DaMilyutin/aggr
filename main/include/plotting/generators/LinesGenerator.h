@@ -10,11 +10,17 @@ namespace plotting
         agge::point_r end{};
     };
 
+    struct ParallelLinesMaker
+    {
+        LineData operator()(agge::point_r const& p) const { return { p, p + direction }; };
+        agge::vector_r  direction{};
+    };
+
     template<typename PointsGenerator>
     struct ParallelLinesGenerator
     {
-        PointsGenerator points;
-        agge::vector_r  direction{};
+        PointsGenerator     points;
+        ParallelLinesMaker  make;
 
         using Sentinel = PointsGenerator::Sentinel;
 
@@ -27,8 +33,7 @@ namespace plotting
 
             LineData operator*() const
             {
-                auto const p = *_it;
-                return {p, p + ref.direction};
+                return ref.make(*_it);
             }
 
             Iterator& operator++()
@@ -38,6 +43,7 @@ namespace plotting
             }
 
             bool operator!=(Sentinel const& s) const { return _it != s; }
+            bool operator==(Sentinel const& s) const { return _it != s; }
         private:
             PointsGenerator::Iterator       _it;
             ParallelLinesGenerator const&   ref;

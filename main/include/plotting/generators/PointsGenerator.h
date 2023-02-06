@@ -90,6 +90,7 @@ namespace plotting
             agge::point_r const& operator*() const { return point; }
 
             bool operator!=(Sentinel) const { return i > 0; }
+            bool operator==(Sentinel) const { return i == 0; }
         private:
             agge::point_r          point;
             int                    i;
