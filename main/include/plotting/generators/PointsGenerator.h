@@ -65,76 +65,38 @@ namespace plotting
         }
     }
 
-
-    struct Selector_Any
-    {
-        bool operator()(int) const { return true; }
-    };
-
-    struct Selector_SkipOverPeriod
-    {
-        int period = 10;
-        int offset = 0;
-
-        bool operator()(int x) const
-        {
-            return (x-offset)%period != 0;
-        }
-    };
-
-    template<typename Selector = Selector_Any>
-    struct PointsOnSegmentGenerator: pipeline::PointsGenerator<PointsOnSegmentGenerator<Selector>, agge::point_r>
+    struct PointsOnSegmentGenerator: pipeline::PointsGenerator<PointsOnSegmentGenerator, agge::point_r>
     {
         agge::point_r  initial{};
         agge::vector_r increment{};
-        int            start{};
         int            number{};
-        Selector       select{};
 
         class Sentinel
-        {
-        public:
-            int const number;
-        };
+        {};
 
         class Iterator
         {
-        public:
+            friend struct PointsOnSegmentGenerator;
             Iterator(PointsOnSegmentGenerator const& ref)
-                : point(ref.initial), i(ref.start), ref(ref)
-            {
-                next_sel();
-            }
-
-            agge::point_r const& operator*() const { return point; }
-
+                : point(ref.initial), i(ref.number), ref(ref)
+            {}
+        public:
             Iterator& operator++()
             {
-                skip();
-                next_sel();
+                --i;
+                point += ref.increment;
                 return *this;
             }
+            agge::point_r const& operator*() const { return point; }
 
-            bool operator!=(Sentinel const& s) const { return i < s.number; }
+            bool operator!=(Sentinel) const { return i > 0; }
         private:
-            void skip()
-            {
-                ++i;
-                point += ref.increment;
-            }
-
-            void next_sel()
-            {
-                while(!ref.select(i))
-                    skip();
-            }
-
             agge::point_r          point;
             int                    i;
             PointsOnSegmentGenerator const& ref;
         };
         Iterator begin() const { return Iterator(*this); }
-        Sentinel end()   const { return {number}; }
+        Sentinel end()   const { return {}; }
     };
 
 }

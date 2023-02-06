@@ -10,19 +10,19 @@ namespace plotting
         agge::point_r end{};
     };
 
-    template<typename Selector = Selector_Any>
+    template<typename PointsGenerator>
     struct ParallelLinesGenerator
     {
-        PointsOnSegmentGenerator<Selector> points;
-        agge::vector_r                     direction{};
+        PointsGenerator points;
+        agge::vector_r  direction{};
 
-        using Sentinel = PointsOnSegmentGenerator<Selector>::Sentinel;
+        using Sentinel = PointsGenerator::Sentinel;
 
         class Iterator
         {
         public:
             Iterator(ParallelLinesGenerator const& ref)
-                : _it(ref.points), ref(ref)
+                : _it(ref.points.begin()), ref(ref)
             {}
 
             LineData operator*() const
@@ -39,8 +39,8 @@ namespace plotting
 
             bool operator!=(Sentinel const& s) const { return _it != s; }
         private:
-            PointsOnSegmentGenerator<Selector>::Iterator _it;
-            ParallelLinesGenerator const&                ref;
+            PointsGenerator::Iterator       _it;
+            ParallelLinesGenerator const&   ref;
         };
         Iterator begin() const { return Iterator(*this); }
         Sentinel end()   const { return points.end(); }

@@ -128,6 +128,19 @@ namespace plotting
             agge::point_r mutable prev{-std::numeric_limits<agge::real_t>::infinity(),
                                        -std::numeric_limits<agge::real_t>::infinity()};
         };
-    }
 
+        struct SkipOverPeriod
+        {
+            int const   period = 10;
+            int mutable offset = 0;
+
+            bool operator()(agge::point_r const&) const
+            {
+                bool keep = offset != 0;
+                if(++offset >= period)
+                    offset = 0;
+                return keep;
+            }
+        };
+    }
 }

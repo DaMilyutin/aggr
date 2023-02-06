@@ -15,11 +15,11 @@ namespace plotting
 
     struct ParallelLabelsGenerator
     {
-        PointsOnSegmentGenerator<> points;
+        PointsOnSegmentGenerator   points;
         double                     value_initial;
         double                     value_increment;
 
-        using Sentinel = PointsOnSegmentGenerator<>::Sentinel;
+        using Sentinel = PointsOnSegmentGenerator::Sentinel;
 
         class Iterator
         {
@@ -39,7 +39,7 @@ namespace plotting
 
             bool operator!=(Sentinel const& s) const { return _it != s; }
         private:
-            PointsOnSegmentGenerator<>::Iterator _it;
+            PointsOnSegmentGenerator::Iterator   _it;
             double                               _value;
             ParallelLabelsGenerator const&       ref;
         };

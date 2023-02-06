@@ -10,8 +10,12 @@
 #include <agge.text/font.h>
 
 #include <plotting/primitives/Canvas.h>
+#include <plotting/generators/PointsGenerator.h>
+#include <plotting/generators/Filter.h>
+
 #include <plotting/generators/LinesGenerator.h>
 #include <plotting/generators/LabelsGenerator.h>
+
 
 #include <plotting/primitives/Colored.h>
 
@@ -130,9 +134,12 @@ namespace plotting
             agge::stroke& line_style;
         };
 
-        using MajorLines = EntitiesGenerator<ParallelLinesGenerator<Selector_Any>, StylishLineMaker>;
-        using GridLines = EntitiesGenerator<ParallelLinesGenerator<Selector_Any>,  FancyLineMaker>;
-        using MinorLines = EntitiesGenerator<ParallelLinesGenerator<Selector_SkipOverPeriod>, StylishLineMaker>;
+        using MajorPoints = PointsOnSegmentGenerator;
+        using MinorPoints = pipeline::FilterGenerator<PointsOnSegmentGenerator, filters::SkipOverPeriod>;
+
+        using MajorLines = EntitiesGenerator<ParallelLinesGenerator<MajorPoints>, StylishLineMaker>;
+        using GridLines = EntitiesGenerator<ParallelLinesGenerator<MajorPoints>,  FancyLineMaker>;
+        using MinorLines = EntitiesGenerator<ParallelLinesGenerator<MinorPoints>, StylishLineMaker>;
         using MajorLabels = EntitiesGenerator<ParallelLabelsGenerator, LabelMaker>;
 
         struct AxisXTicksMaker
@@ -159,7 +166,7 @@ namespace plotting
                 agge::real_t from = start;
                 if(from < pa.x1 + 0.1f)
                     from += step;
-                PointsOnSegmentGenerator<Selector_Any> points;
+                PointsOnSegmentGenerator points;
                 points.initial = {from, Y};
                 points.increment = {step, 0.0f};
                 points.number = (int)ceil((pa.x2 - 0.1 - from)/step);
@@ -172,7 +179,7 @@ namespace plotting
                 agge::real_t from = start - step*0.5f;
                 if(from < pa.x1 + 0.1f)
                     from += step;
-                PointsOnSegmentGenerator<Selector_Any> points;
+                PointsOnSegmentGenerator points;
                 points.initial = {from, Y};
                 points.increment = {step, 0.0f};
                 points.number = (int)ceil((pa.x2 - 0.1 - from)/step);
@@ -184,16 +191,16 @@ namespace plotting
                 auto const& pa = axes.coordinates.port_area;
                 agge::real_t const inc = step*0.1f;
                 agge::real_t from = start - inc*9.0f;
-                PointsOnSegmentGenerator<Selector_SkipOverPeriod> points;
-                points.select.offset = 9;
-                points.select.period = 5;
+                filters::SkipOverPeriod select{5, 1};
                 while(from <= pa.x1 + 0.1f)
-                    from += inc, --points.select.offset;
-                points.select.offset = points.select.offset % points.select.period;
+                    from += inc, select.offset;
+                select.offset = select.offset % select.period;
+
+                PointsOnSegmentGenerator points;
                 points.initial = {from, Y};
                 points.increment = {inc, 0.0f};
                 points.number = (int)ceil((pa.x2 - 0.1 -from)/inc);
-                return points;
+                return std::move(points)/filter(std::move(select));
             }
 
             auto major(agge::real_t Y, agge::real_t dir) const
@@ -271,7 +278,7 @@ namespace plotting
                 agge::real_t from = start;
                 if(from < pa.y1 + 0.1f)
                     from += step;
-                PointsOnSegmentGenerator<Selector_Any> points;
+                PointsOnSegmentGenerator points;
                 points.initial = {X, from};
                 points.increment = {0.0f, step};
                 points.number = (int)ceil((pa.y2 - 0.1 - from)/step);
@@ -284,7 +291,7 @@ namespace plotting
                 agge::real_t from = start - step*0.5f;
                 if(from < pa.y1 + 0.1f)
                     from += step;
-                PointsOnSegmentGenerator<Selector_Any> points;
+                PointsOnSegmentGenerator points;
                 points.initial = {X, from};
                 points.increment = {0.0f, step};
                 points.number = (int)ceil((pa.y2 - 0.1 - from)/step);
@@ -296,16 +303,16 @@ namespace plotting
                 auto const& pa = axes.coordinates.port_area;
                 agge::real_t const inc = step*0.1f;
                 agge::real_t from = start - inc*9.0f;
-                PointsOnSegmentGenerator<Selector_SkipOverPeriod> points;
-                points.select.offset = 9;
-                points.select.period = 5;
+                filters::SkipOverPeriod select{5, 1};
                 while(from <= pa.y1 + 0.1f)
-                    from += inc, --points.select.offset;
-                points.select.offset = points.select.offset % points.select.period;
+                    from += inc, ++select.offset;
+                select.offset = select.offset % select.period;
+
+                PointsOnSegmentGenerator points;
                 points.initial = {X, from};
                 points.increment = {0.0f, inc};
                 points.number = (int)ceil((pa.y2 - 0.1 -from)/inc);
-                return points;
+                return std::move(points)/filter(std::move(select));
             }
 
 

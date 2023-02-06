@@ -48,24 +48,24 @@ namespace
             axes.properties.y2.tickSteps = 5;
             axes.properties.y2.tickGap = 10;
 
-            auto t = std::chrono::system_clock::now();
-            std::chrono::time_point days = std::chrono::round<std::chrono::days>(t);
-            axes.properties.x2.tickSteps = 20;
-            axes.properties.x2.tickGap = 120;
+            //auto t = std::chrono::system_clock::now();
+            //std::chrono::time_point days = std::chrono::round<std::chrono::days>(t);
+            //axes.properties.x2.tickSteps = 20;
+            //axes.properties.x2.tickGap = 120;
             axes.properties.x2.labels.base.vertical(agge::align_far);
-            axes.properties.x2.labels.format = [days, p = std::chrono::days(std::numeric_limits<std::chrono::days::rep>::min())](double x) mutable
-            {
-                std::chrono::time_point t = days + std::chrono::round<std::chrono::seconds>(std::chrono::duration<double>(x*86400.*0.125));
-                auto c = std::chrono::floor<std::chrono::days>(t.time_since_epoch());
-                std::string ret;
-                constexpr auto undef = std::chrono::days(std::numeric_limits<std::chrono::days::rep>::min());
-                if(c == p /*|| p == undef*/)
-                    ret = std::format("{:%T}", t);
-                else
-                    ret = std::format("{:%T\n%F}", t);
-                p = c;
-                return ret;
-            };
+            //axes.properties.x2.labels.format = [days, p = std::chrono::days(std::numeric_limits<std::chrono::days::rep>::min())](double x) mutable
+            //{
+            //    std::chrono::time_point t = days + std::chrono::round<std::chrono::seconds>(std::chrono::duration<double>(x*86400.*0.125));
+            //    auto c = std::chrono::floor<std::chrono::days>(t.time_since_epoch());
+            //    std::string ret;
+            //    constexpr auto undef = std::chrono::days(std::numeric_limits<std::chrono::days::rep>::min());
+            //    if(c == p /*|| p == undef*/)
+            //        ret = std::format("{:%T}", t);
+            //    else
+            //        ret = std::format("{:%T\n%F}", t);
+            //    p = c;
+            //    return ret;
+            //};
 
             axes.properties.x2.grid.color = agge::color{255, 255, 0, 128};
         }
