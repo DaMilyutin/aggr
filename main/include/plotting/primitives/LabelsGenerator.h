@@ -1,10 +1,12 @@
 #pragma once
-#include <plotting/generators/EntitiesGenerator.h>
+#include <plotting/primitives/EntitiesGenerator.h>
+#include <plotting/primitives/PointsGenerator.h>
 #include <plotting/primitives/Text.h>
-#include <functional>
-#include "Zip.h"
 
-#include "PointsGenerator.h"
+#include <functional>
+#include <plotting/generators/zip.h>
+
+
 
 namespace plotting
 {

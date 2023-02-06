@@ -71,7 +71,7 @@ namespace
 
 
             auto const F = [](double t) { return sin(t/(t*t+1.e-2))*exp(0.5*t); };
-            plotting::Function gen{{}, -5., 5., 1.e-5, {F}};
+            plotting::Function gen{{}, -5., 5., 1.e-2, {F}};
             chart.from(gen);
 
         }
@@ -116,9 +116,16 @@ namespace
                                      std::max((float)width-120.0f, 105.0f),
                                      std::max((float)height-100.0f, 45.0f)});
 
-            points1 << agge::clear << chart/axes.coordinates/filter(plotting::filters::FarEnough{5.0f});
-            points2 << agge::clear << plotting::repr_t{-5., 10.}/axes.coordinates
-                                   << plotting::repr_t{5., -10.}/axes.coordinates;
+            points1 << agge::clear << chart/axes.coordinates.repr2port
+                                           /plotting::filters::FarEnough{{},5.0f};
+
+            points2 << agge::clear << chart/plotting::transform([](plotting::repr_t p){ return plotting::repr_t{-p.x, -p.y}; })
+                                           /axes.coordinates.repr2port
+                                           /plotting::filters::FarEnough{{},5.0f};
+
+            //points2 << agge::clear << plotting::repr_t{-5., 10.}/axes.coordinates.repr2port
+            //                       << plotting::repr_t{5., -10.}/axes.coordinates.repr2port
+            //                       << plotting::repr_t{7., 0.}/axes.coordinates.repr2port;
         }
 
     private:

@@ -1,4 +1,5 @@
 #pragma once
+#include <utility>
 #include <agge/color.h>
 #include <agge/primitives/figures.h>
 #include <agge/primitives/dash.h>
@@ -10,14 +11,19 @@
 
 #include <plotting/primitives/Canvas.h>
 
+#include <plotting/generators/Generator.h>
+
 namespace plotting
 {
-    template<typename Generator, typename Maker>
-    class EntitiesGenerator: public agge::pipeline::terminal<EntitiesGenerator<Generator, Maker>>
+    template<typename GeneratorT, typename MakerT>
+    class EntitiesGenerator: public pipeline::Generator<EntitiesGenerator<GeneratorT, MakerT>>
     {
     public:
-        Generator   gen;
-        Maker       maker;
+        template<typename G, typename M>
+        EntitiesGenerator(G&& g, M&& m): gen(std::forward<G>(g)), maker(std::forward<M>(m)) {}
+
+        GeneratorT   gen;
+        MakerT       maker;
     };
 
     template<typename S, typename Rn, typename Rs, typename Generator, typename Maker>

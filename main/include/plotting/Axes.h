@@ -10,11 +10,11 @@
 #include <agge.text/font.h>
 
 #include <plotting/primitives/Canvas.h>
-#include <plotting/generators/PointsGenerator.h>
-#include <plotting/generators/Filter.h>
+#include <plotting/primitives/PointsGenerator.h>
+#include <plotting/generators/filter.h>
 
-#include <plotting/generators/LinesGenerator.h>
-#include <plotting/generators/LabelsGenerator.h>
+#include <plotting/primitives/LinesGenerator.h>
+#include <plotting/primitives/LabelsGenerator.h>
 
 
 #include <plotting/primitives/Colored.h>
@@ -151,13 +151,13 @@ namespace plotting
             {
                 double step_repr = quantize_step((axes.coordinates.repr_area.x2 - axes.coordinates.repr_area.x1)/prop.tickSteps);
                 agge::real_t const calcGap = fabs(axes.coordinates.port_area.x2 - axes.coordinates.port_area.x1)/prop.tickSteps;
-                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.scale.x),
+                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.repr2port.scale.x),
                                       std::max(prop.tickGap, calcGap));
                 step_repr *= step_mul;
                 double const mid_q = round(0.5*(axes.coordinates.repr_area.x2 + axes.coordinates.repr_area.x1)/step_repr)*step_repr;
                 double const start_repr = mid_q - floor((mid_q - axes.coordinates.repr_area.x1)/step_repr)*step_repr;
-                start = axes.coordinates.to_port_x(start_repr);
-                step  = agge::real_t(axes.coordinates.scale.x*step_repr);
+                start = axes.coordinates.repr2port.x(start_repr);
+                step  = agge::real_t(axes.coordinates.repr2port.scale.x*step_repr);
             }
 
             auto major_points(agge::real_t Y) const
@@ -200,33 +200,33 @@ namespace plotting
                 points.initial = {from, Y};
                 points.increment = {inc, 0.0f};
                 points.number = (int)ceil((pa.x2 - 0.1 -from)/inc);
-                return std::move(points)/filter(std::move(select));
+                return std::move(points)/std::move(select);
             }
 
             auto major(agge::real_t Y, agge::real_t dir) const
             {
                 line_style.width(prop.tick[0].width);
-                return MajorLines{{}, {major_points(Y), {0, dir*prop.tick[0].length}},
+                return MajorLines{ParallelLinesGenerator<MajorPoints>{major_points(Y), {0, dir*prop.tick[0].length}},
                                   StylishLineMaker{line_style}}/prop.tick[0].color;
             }
 
             auto medium(agge::real_t Y, agge::real_t dir) const
             {
                 line_style.width(prop.tick[1].width);
-                return MajorLines{{}, {medium_points(Y), {0, dir*prop.tick[1].length}},
+                return MajorLines{ParallelLinesGenerator<MajorPoints>{medium_points(Y), {0, dir*prop.tick[1].length}},
                                   StylishLineMaker{line_style}}/prop.tick[1].color;
             }
 
             auto minor(agge::real_t Y, agge::real_t dir) const
             {
                 line_style.width(prop.tick[2].width);
-                return MinorLines{{}, {minor_points(Y), {0, dir*prop.tick[2].length}}
+                return MinorLines{ParallelLinesGenerator<MinorPoints>{minor_points(Y), {0, dir*prop.tick[2].length}}
                                  , StylishLineMaker{line_style}}/prop.tick[2].color;
             }
 
             auto grid(agge::real_t Y1, agge::real_t Y2) const
             {
-                return GridLines{{}, {major_points(Y1), {0, Y2-Y1}},
+                return GridLines{ParallelLinesGenerator<MajorPoints>{major_points(Y1), {0, Y2-Y1}},
                                  FancyLineMaker{prop.grid.dash, prop.grid.line_style}}/prop.grid.color;
             }
 
@@ -236,15 +236,16 @@ namespace plotting
                 agge::real_t from = start;
                 if(from < pa.x1 + 0.1f)
                     from += step;
-                double const initial = axes.coordinates.to_repr_x(from);
-                double const inc = double(step)/axes.coordinates.scale.x;
+                double const initial = axes.coordinates.port2repr.x(from);
+                double const inc = double(step)*axes.coordinates.port2repr.scale.x;
 
                 LabelMaker labelMaker{prop.labels.format
                                         ? prop.labels.format
                                         : make_formatter(digits(inc)),
                                       prop.labels.base};
-                return MajorLabels{{}, {major_points(Y+prop.labels.offset*dir),
-                                   InfiniteLinspace{initial, inc}}, labelMaker};
+                return MajorLabels{ParallelLabelsGenerator{major_points(Y+prop.labels.offset*dir),
+                                                           InfiniteLinspace{initial, inc}},
+                                   labelMaker};
             }
 
             Axes                 const& axes;
@@ -263,13 +264,13 @@ namespace plotting
             {
                 double step_repr = quantize_step((axes.coordinates.repr_area.y2 - axes.coordinates.repr_area.y1)/prop.tickSteps);
                 agge::real_t const calcGap = fabs(axes.coordinates.port_area.y2 - axes.coordinates.port_area.y1)/prop.tickSteps;
-                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.scale.y),
+                double const step_mul = grow_step(agge::real_t(step_repr*axes.coordinates.repr2port.scale.y),
                                      std::max(prop.tickGap, calcGap));
                 step_repr *= step_mul;
                 double const mid_q = round(0.5*(axes.coordinates.repr_area.y2 + axes.coordinates.repr_area.y1)/step_repr)*step_repr;
                 double const start_repr = mid_q - floor((mid_q - axes.coordinates.repr_area.y1)/step_repr)*step_repr;
-                start = axes.coordinates.to_port_y(start_repr);
-                step = agge::real_t(axes.coordinates.scale.y*step_repr);
+                start = axes.coordinates.repr2port.y(start_repr);
+                step = agge::real_t(axes.coordinates.repr2port.scale.y*step_repr);
             }
 
             auto major_points(agge::real_t X) const
@@ -312,34 +313,34 @@ namespace plotting
                 points.initial = {X, from};
                 points.increment = {0.0f, inc};
                 points.number = (int)ceil((pa.y2 - 0.1 -from)/inc);
-                return std::move(points)/filter(std::move(select));
+                return std::move(points)/std::move(select);
             }
 
 
             auto major(agge::real_t X, agge::real_t dir) const
             {
                 line_style.width(prop.tick[0].width);
-                return MajorLines{{}, {major_points(X), {dir*prop.tick[0].length, 0}},
+                return MajorLines{ParallelLinesGenerator<MajorPoints>{major_points(X), {dir*prop.tick[0].length, 0}},
                                   StylishLineMaker{line_style}}/prop.tick[0].color;
             }
 
             auto medium(agge::real_t X, agge::real_t dir) const
             {
                 line_style.width(prop.tick[1].width);
-                return MajorLines{{}, {medium_points(X), {dir*prop.tick[1].length, 0}},
+                return MajorLines{ParallelLinesGenerator<MajorPoints>{medium_points(X), {dir*prop.tick[1].length, 0}},
                                   StylishLineMaker{line_style}}/prop.tick[1].color;
             }
 
             auto minor(agge::real_t X, agge::real_t dir) const
             {
                 line_style.width(prop.tick[2].width);
-                return MinorLines{{}, {minor_points(X), {dir*prop.tick[2].length, 0}}
+                return MinorLines{ParallelLinesGenerator<MinorPoints>{minor_points(X), {dir*prop.tick[2].length, 0}}
                                  , StylishLineMaker{line_style}}/prop.tick[2].color;
             }
 
             auto grid(agge::real_t X1, agge::real_t X2) const
             {
-                return GridLines{{}, {major_points(X1), {X2-X1, 0}},
+                return GridLines{ParallelLinesGenerator<MajorPoints>{major_points(X1), {X2-X1, 0}},
                                  FancyLineMaker{prop.grid.dash, prop.grid.line_style}}/prop.grid.color;
             }
 
@@ -349,14 +350,14 @@ namespace plotting
                 agge::real_t from = start;
                 if(from < pa.y1 + 0.1f)
                     from += step;
-                double const initial = axes.coordinates.to_repr_y(from);
-                double const inc = double(step)/axes.coordinates.scale.y;
+                double const initial = axes.coordinates.port2repr.y(from);
+                double const inc = double(step)*axes.coordinates.port2repr.scale.y;
 
                 LabelMaker labelMaker{prop.labels.format
                                         ? prop.labels.format
                                         : make_formatter(digits(inc)),
                                       prop.labels.base};
-                return MajorLabels{{}, {major_points(X+prop.labels.offset*dir), {initial, inc}},
+                return MajorLabels{ParallelLabelsGenerator{major_points(X+prop.labels.offset*dir), {initial, inc}},
                                    labelMaker};
             }
 

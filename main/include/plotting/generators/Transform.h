@@ -1,14 +1,23 @@
 #pragma once
 #include <utility>
-#include <plotting/generators/Generator,h>
+#include <assert.h>
+
+#include <plotting/generators/Generator.h>
 
 namespace plotting
 {
     namespace pipeline
     {
+        template<typename E>
+        struct Transformer: public agge::pipeline::terminal<E> {};
+
         template<typename Func>
-        struct Transform: public agge::pipeline::terminal<Transform<Func>>
+        struct Transform: public Transformer<Transform<Func>>
         {
+            template<typename F>
+            Transform(F&& f): transform(std::forward<F>(f)) {}
+
+            auto operator()(auto x) const { return transform(x); }
             Func transform;
         };
 
@@ -22,6 +31,9 @@ namespace plotting
         public:
             using Sentinel = UnderlyingSentinel;
 
+            template<typename G, typename T>
+            TransformGenerator(G&& g, T&& t): gen(std::forward<G>(g)), transform(std::forward<T>(t)) {}
+
             class Iterator
             {
                 friend class TransformGenerator;
@@ -31,7 +43,7 @@ namespace plotting
                 {}
             public:
                 Iterator& operator++() { ++_it; return *this; }
-                auto const& operator*() const { return ref.transform(*it); }
+                auto operator*() const { return ref.transform(*_it); }
                 bool operator!=(Sentinel const& s) const { return _it != s; }
                 bool operator==(Sentinel const& s) const { return _it == s; }
             private:
@@ -40,43 +52,54 @@ namespace plotting
             };
 
             Iterator begin() const { return Iterator(*this); }
-            Sentinel end() const { return {}; }
+            Sentinel end() const { return gen.end(); }
 
             G     gen;
             F     transform;
         };
 
         template<typename G, typename F>
-        TransformGenerator<G const&, F> operator/(Generator<G> const& g, Transform<F> const& f)
+        TransformGenerator<G const&, F> operator/(Generator<G> const& g, Transformer<F> const& f)
         {
-            return {{}, g._get_(), f.select};
+            return {g._get_(), f._get_()};
         }
 
         template<typename G, typename F>
-        TransformGenerator<G const&, F> operator/(Generator<G> const& g, Transform<F>&& f)
+        TransformGenerator<G const&, F> operator/(Generator<G> const& g, Transformer<F>&& f)
         {
-            return {{}, g._get_(), std::move(f.select)};
+            return {g._get_(), std::move(f._get_())};
         }
 
         template<typename G, typename F>
-        TransformGenerator<G, F> operator/(Generator<G>&& g, Transform<F>&& f)
+        TransformGenerator<G, F> operator/(Generator<G>&& g, Transformer<F>&& f)
         {
-            return {{}, std::move(g._get_()), std::move(f.select)};
+            return {std::move(g._get_()), std::move(f._get_())};
         }
 
         template<typename G, typename F>
-        TransformGenerator<G, F> operator/(Generator<G, port_t>&& g, Transform<F> const& f)
+        TransformGenerator<G, F> operator/(Generator<G>&& g, Transformer<F> const& f)
         {
-            return {{}, std::move(g._get_()), f.select};
+            return {std::move(g._get_()), f._get_()};
+        }
+
+        template<typename F>
+        auto transform(F const& f) { return pipeline::Transform<F const&>{ f}; }
+
+        template<typename F>
+        auto transform(F&& f) { return pipeline::Transform<F>{std::move(f)}; }
+
+        template<typename F>
+        auto transform(pipeline::Transformer<F>&&)
+        {
+            assert(false && "Trying to wrap already Transformer in transform!");
+        }
+
+        template<typename F>
+        auto transform(pipeline::Transformer<F> const&)
+        {
+            assert(false && "Trying to wrap already Transformer in transform!");
         }
     }
 
-    namespace transforms
-    {
-        template<typename F>
-        auto transform(F const& f) { return pipeline::Transform<F const&>{ {}, f}; }
-
-        template<typename F>
-        auto transform(F&& f) { return pipeline::Transform<F>{ {}, std::move(f)}; }
-    }
+    using pipeline::transform;
 }

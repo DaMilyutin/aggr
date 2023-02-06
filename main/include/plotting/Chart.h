@@ -5,13 +5,13 @@
 #include <agge/primitives/pipeline.h>
 #include <agge/primitives/polyline.h>
 
-#include <plotting/generators/PointsGenerator.h>
-#include <plotting/generators/Filter.h>
+#include <plotting/primitives/PointsGenerator.h>
+#include <plotting/generators/filter.h>
 
 namespace plotting
 {
     template<typename E>
-    agge::polyline& operator<<(agge::polyline& ret, pipeline::PointsGenerator<E, port_t> const& gen)
+    agge::polyline& operator<<(agge::polyline& ret, pipeline::Generator<E> const& gen)
     {
         for(auto&& p: gen._get_())
             ret.line_to(p);
@@ -19,14 +19,14 @@ namespace plotting
     }
 
     template<typename E>
-    agge::polyline& operator<<(agge::polyline& ret, pipeline::PointsGenerator<E, port_t>&& gen)
+    agge::polyline& operator<<(agge::polyline& ret, pipeline::Generator<E>&& gen)
     {
         for(auto&& p: gen._get_())
             ret.line_to(p);
         return ret;
     }
 
-    struct Function: public pipeline::PointsGenerator<Function, repr_t>
+    struct Function: public pipeline::Generator<Function>
     {
         double a    =-5.;
         double b    = 5.;
@@ -53,7 +53,7 @@ namespace plotting
         std::function<double(double)> f;
     };
 
-    struct ChartData: public pipeline::PointsGenerator<ChartData, repr_t>
+    struct ChartData: public pipeline::Generator<ChartData>
     {
         std::vector<repr_t> data;
 

@@ -8,7 +8,7 @@ namespace plotting
     namespace pipeline
     {
         template <typename... T>
-        class zip_helper: public Generator<zip_helper<T...>>
+        class ZipGenerator: public Generator<ZipGenerator<T...>>
         {
         public:
             class Iterator;
@@ -63,7 +63,7 @@ namespace plotting
                 auto operator*() const { return deref(std::index_sequence_for<T...>{}); }
             };
 
-            zip_helper(T&&... seqs)
+            ZipGenerator(T&&... seqs)
                 : _seqs(std::forward<T>(seqs))
             {}
 
@@ -76,7 +76,7 @@ namespace plotting
 
 
         template <typename... T>
-        class zip_helper<T const&...>
+        class ZipGenerator<T const&...>
         {
         public:
             class Sentinel
@@ -130,7 +130,7 @@ namespace plotting
                 auto operator*() const { return deref(std::index_sequence_for<T...>{}); }
             };
 
-            zip_helper(T const&... seqs)
+            ZipGenerator(T const&... seqs)
                 : begin_{std::make_tuple(seqs.begin()...)}
                 , end_{std::make_tuple(seqs.end()...)}
             {
@@ -148,8 +148,17 @@ namespace plotting
         template <typename... T>
         auto zip(Generator<T>&&... seqs)
         {
-            return zip_helper<decltype(FWD(seqs._get_()))>{FWD(seqs._get_())};
+            return ZipGenerator<T...>{FWD(seqs._get_())};
+        }
+
+        // Sequences must be the same length.
+        template <typename... T>
+        auto zip(Generator<T> const&... seqs)
+        {
+            return ZipGenerator<T const&...>{FWD(seqs._get_())};
         }
 
      }
+
+     using pipeline::zip;
 }

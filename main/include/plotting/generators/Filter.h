@@ -1,7 +1,7 @@
 #pragma once
 #include <utility>
 
-#include <plotting/generators/PointsGenerator.h>
+#include <plotting/primitives/PointsGenerator.h>
 #include <agge/primitives/pipeline.h>
 #include <agge/types.h>
 
@@ -12,13 +12,21 @@ namespace plotting
     namespace pipeline
     {
         template<typename Func>
-        struct Filter: agge::pipeline::terminal<Func>
+        struct Filterer: agge::pipeline::terminal<Func>
+        {};
+
+        template<typename Func>
+        struct Filter: public Filterer<Filter<Func>>
         {
+            template<typename F>
+            Filter(F&& f) : select(std::forward<F>(f)) {}
+
+            bool operator()(auto const& x) const { return select(x); }
             Func select;
         };
 
         template<typename G, typename F>
-        class FilterGenerator: public PointsGenerator<FilterGenerator<G, F>, agge::point_r>
+        class FilterGenerator: public Generator<FilterGenerator<G, F>>
         {
             using UnderlyingIterator = std::remove_cv_t<decltype(std::begin(std::declval<G>()))>;
             using UnderlyingSentinel = std::remove_cv_t<decltype(std::end(std::declval<G>()))>;
@@ -28,6 +36,9 @@ namespace plotting
                 "generator from must generate port_t (aka agge::point_r) or ref of port_t");
         public:
             struct Sentinel {};
+
+            template<typename TG, typename TF>
+            FilterGenerator(TG&& g, TF&& f): gen(std::forward<TG>(g)), select(std::forward<TF>(f)) {}
 
             class Iterator
             {
@@ -55,7 +66,7 @@ namespace plotting
 
                 UnderlyingIterator         _it;
                 UnderlyingSentinel         _end;
-                FilterGenerator const&     ref;
+                FilterGenerator   const&   ref;
                 agge::point_r     mutable  cached {};
             };
 
@@ -67,39 +78,54 @@ namespace plotting
         };
 
         template<typename G, typename F>
-        FilterGenerator<G const&, F> operator/(PointsGenerator<G, port_t> const& g, Filter<F> const& f)
+        FilterGenerator<G const&, F> operator/(Generator<G> const& g, Filterer<F> const& f)
         {
-            return {{}, g._get_(), f.select};
+            return {g._get_(), f._get_()};
         }
 
         template<typename G, typename F>
-        FilterGenerator<G const&, F> operator/(PointsGenerator<G, port_t> const& g, Filter<F>&& f)
+        FilterGenerator<G const&, F> operator/(Generator<G> const& g, Filterer<F>&& f)
         {
-            return {{}, g._get_(), std::move(f.select)};
+            return {g._get_(), std::move(f._get_())};
         }
 
         template<typename G, typename F>
-        FilterGenerator<G, F> operator/(PointsGenerator<G, port_t>&& g, Filter<F>&& f)
+        FilterGenerator<G, F> operator/(Generator<G>&& g, Filterer<F>&& f)
         {
-            return {{}, std::move(g._get_()), std::move(f.select)};
+            return {std::move(g._get_()), std::move(f._get_())};
         }
 
         template<typename G, typename F>
-        FilterGenerator<G, F> operator/(PointsGenerator<G, port_t>&& g, Filter<F> const& f)
+        FilterGenerator<G, F> operator/(Generator<G>&& g, Filterer<F> const& f)
         {
-            return {{}, std::move(g._get_()), f.select};
+            return {std::move(g._get_()), f._get_()};
+        }
+
+        template<typename F>
+        auto filter(F const& f) { return pipeline::Filter<F const&>{f}; }
+
+        template<typename F>
+        auto filter(F&& f) { return pipeline::Filter<F>{ std::move(f)}; }
+
+        template<typename F>
+        auto filter(pipeline::Filterer<F>&&)
+        {
+            assert(false && "Trying to wrap already Filterer in filter!");
+        }
+
+        template<typename F>
+        auto filter(pipeline::Filterer<F> const&)
+        {
+            assert(false && "Trying to wrap already Filterer in filter!");
         }
     }
 
+    using pipeline::filter;
+
+
     namespace filters
     {
-        template<typename F>
-        auto filter(F const& f) { return pipeline::Filter<F const&>{ {}, f}; }
-
-        template<typename F>
-        auto filter(F&& f) { return pipeline::Filter<F>{ {}, std::move(f)}; }
-
-        struct FarEnough
+        struct FarEnough: public pipeline::Filterer<FarEnough>
         {
             bool operator()(agge::point_r const& cur) const
             {
@@ -114,8 +140,10 @@ namespace plotting
                                        -std::numeric_limits<agge::real_t>::infinity()};
         };
 
-        struct FarEnough_TimeSeries
+        struct FarEnough_TimeSeries: public pipeline::Filterer<FarEnough_TimeSeries>
         {
+            FarEnough_TimeSeries(agge::real_t eps) : eps(eps) {}
+
             bool operator()(agge::point_r const& cur) const
             {
                 bool far = fabs(cur.x - prev.x) + fabs(cur.y - prev.y) > eps;
@@ -129,8 +157,12 @@ namespace plotting
                                        -std::numeric_limits<agge::real_t>::infinity()};
         };
 
-        struct SkipOverPeriod
+        struct SkipOverPeriod: public pipeline::Filterer<SkipOverPeriod>
         {
+            SkipOverPeriod(int p, int o = 0): period(p), offset(o) {}
+            SkipOverPeriod(SkipOverPeriod&&) = default;
+            SkipOverPeriod(SkipOverPeriod const&) = default;
+
             int const   period = 10;
             int mutable offset = 0;
 
