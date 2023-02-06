@@ -121,10 +121,9 @@ namespace
             //        points1.line_to(cur.x, cur.y);
             //    }
             //}
-            points1.clear() << gen/axes.coordinates;
-            points2.clear() << plotting::repr_t{-5., 10.}/axes.coordinates
-                            << plotting::repr_t{5., -10.}/axes.coordinates;
-
+            points1 << agge::clear << gen/axes.coordinates/filter(plotting::filters::FarEnough{50.0f});
+            points2 << agge::clear << plotting::repr_t{-5., 10.}/axes.coordinates
+                                   << plotting::repr_t{5., -10.}/axes.coordinates;
         }
 
     private:

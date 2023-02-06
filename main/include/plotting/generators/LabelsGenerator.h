@@ -1,9 +1,9 @@
 #pragma once
-#include <plotting/generators/EntitiesGen.h>
+#include <plotting/generators/EntitiesGenerator.h>
 #include <plotting/primitives/Text.h>
 #include <functional>
 
-#include "PointsGen.h"
+#include "PointsGenerator.h"
 
 namespace plotting
 {

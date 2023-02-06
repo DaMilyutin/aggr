@@ -1,6 +1,6 @@
 #pragma once
-#include "EntitiesGen.h"
-#include "PointsGen.h"
+#include "EntitiesGenerator.h"
+#include "PointsGenerator.h"
 
 namespace plotting
 {

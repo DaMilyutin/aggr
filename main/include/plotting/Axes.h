@@ -10,8 +10,8 @@
 #include <agge.text/font.h>
 
 #include <plotting/primitives/Canvas.h>
-#include <plotting/generators/LinesGen.h>
-#include <plotting/generators/LabelsGen.h>
+#include <plotting/generators/LinesGenerator.h>
+#include <plotting/generators/LabelsGenerator.h>
 
 #include <plotting/primitives/Colored.h>
 
