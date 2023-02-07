@@ -45,6 +45,16 @@ namespace plotting
         std::function<double(double)> funcion;
     };
 
+    struct FunctionXY: public pipeline::Transformer<FunctionXY>
+    {
+        template<typename F, typename G>
+        FunctionXY(F&& f, G&& g): X(FWD(f)), Y(FWD(g)) {}
+
+        repr_t operator()(double t) const { return {X(t), Y(t)}; }
+        std::function<double(double)> X;
+        std::function<double(double)> Y;
+    };
+
     struct ChartData: public pipeline::Generator<ChartData>
     {
         std::vector<repr_t> data;
