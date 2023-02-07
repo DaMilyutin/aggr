@@ -30,19 +30,19 @@ namespace plotting
     struct FunctionY: public pipeline::Transformer<FunctionY>
     {
         template<typename F>
-        FunctionY(F&& f): funcion(FWD(f)) {}
+        FunctionY(F&& f): Y(FWD(f)) {}
 
-        repr_t operator()(double x) const { return {x, funcion(x)}; }
-        std::function<double(double)> funcion;
+        repr_t operator()(double t) const { return {t, Y(t)}; }
+        std::function<double(double)> Y;
     };
 
     struct FunctionX: public pipeline::Transformer<FunctionX>
     {
         template<typename F>
-        FunctionX(F&& f): funcion(FWD(f)) {}
+        FunctionX(F&& f): X(FWD(f)) {}
 
-        repr_t operator()(double y) const { return {funcion(y), y}; }
-        std::function<double(double)> funcion;
+        repr_t operator()(double t) const { return {X(t), t}; }
+        std::function<double(double)> X;
     };
 
     struct FunctionXY: public pipeline::Transformer<FunctionXY>
@@ -60,7 +60,7 @@ namespace plotting
         std::vector<repr_t> data;
 
         template<typename G>
-        void from(pipeline::Generator<G> const& g)
+        void operator<<(pipeline::Generator<G> const& g)
         {
             data.clear();
             for(auto&& p: g._get_())
@@ -70,6 +70,4 @@ namespace plotting
         auto begin() const { return std::begin(data); }
         auto end() const { return std::end(data); }
     };
-
-
 }
