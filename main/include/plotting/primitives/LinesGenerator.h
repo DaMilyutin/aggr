@@ -1,5 +1,6 @@
 #pragma once
-#include "EntitiesGenerator.h"
+
+#include <plotting/generators/transform.h>
 
 namespace plotting
 {
@@ -9,59 +10,31 @@ namespace plotting
         agge::point_r end{};
     };
 
-    struct ParallelLinesMaker
+    struct LinesInDirection: public pipeline::Transformer<LinesInDirection>
     {
+        LinesInDirection(agge::vector_r v): direction(v) {}
+
         LineData operator()(agge::point_r const& p) const { return { p, p + direction }; };
         agge::vector_r  direction{};
     };
 
-    template<typename PointsGenerator>
-    struct ParallelLinesGenerator
+
+
+
+    struct SimpleLineMaker: public pipeline::Transformer<SimpleLineMaker>
     {
-        PointsGenerator     points;
-        ParallelLinesMaker  make;
+        SimpleLineMaker() = default;
 
-        using Sentinel = PointsGenerator::Sentinel;
-
-        class Iterator
-        {
-        public:
-            Iterator(ParallelLinesGenerator const& ref)
-                : _it(ref.points.begin()), ref(ref)
-            {}
-
-            LineData operator*() const
-            {
-                return ref.make(*_it);
-            }
-
-            Iterator& operator++()
-            {
-                ++_it;
-                return *this;
-            }
-
-            bool operator!=(Sentinel const& s) const { return _it != s; }
-            bool operator==(Sentinel const& s) const { return _it != s; }
-        private:
-            PointsGenerator::Iterator       _it;
-            ParallelLinesGenerator const&   ref;
-        };
-        Iterator begin() const { return Iterator(*this); }
-        Sentinel end()   const { return points.end(); }
-    };
-
-
-    struct SimpleLineMaker
-    {
         agge::line operator()(LineData const& l) const
         {
             return agge::line(l.start.x, l.start.y, l.end.x, l.end.y);
         }
     };
 
-    struct StylishLineMaker
+    struct StylishLineMaker: public pipeline::Transformer<StylishLineMaker>
     {
+        StylishLineMaker(agge::stroke& s): style(s) {}
+
         agge::stroke& style;
         auto operator()(LineData const& l) const
         {
@@ -69,8 +42,10 @@ namespace plotting
         }
     };
 
-    struct FancyLineMaker
+    struct FancyLineMaker: public pipeline::Transformer<FancyLineMaker>
     {
+        FancyLineMaker(agge::dash& d, agge::stroke& s): dash(d), style(s) {}
+
         agge::dash& dash;
         agge::stroke& style;
         auto operator()(LineData const& l) const

@@ -48,32 +48,30 @@ namespace
             axes.properties.y2.tickSteps = 5;
             axes.properties.y2.tickGap = 10;
 
-            //auto t = std::chrono::system_clock::now();
-            //std::chrono::time_point days = std::chrono::round<std::chrono::days>(t);
+            auto t = std::chrono::system_clock::now();
+            std::chrono::time_point days = std::chrono::round<std::chrono::days>(t);
             //axes.properties.x2.tickSteps = 20;
             //axes.properties.x2.tickGap = 120;
             axes.properties.x2.labels.base.vertical(agge::align_far);
-            //axes.properties.x2.labels.format = [days, p = std::chrono::days(std::numeric_limits<std::chrono::days::rep>::min())](double x) mutable
-            //{
-            //    std::chrono::time_point t = days + std::chrono::round<std::chrono::seconds>(std::chrono::duration<double>(x*86400.*0.125));
-            //    auto c = std::chrono::floor<std::chrono::days>(t.time_since_epoch());
-            //    std::string ret;
-            //    constexpr auto undef = std::chrono::days(std::numeric_limits<std::chrono::days::rep>::min());
-            //    if(c == p /*|| p == undef*/)
-            //        ret = std::format("{:%T}", t);
-            //    else
-            //        ret = std::format("{:%T\n%F}", t);
-            //    p = c;
-            //    return ret;
-            //};
+            axes.properties.x2.labels.format = [days, p = std::chrono::days(std::numeric_limits<std::chrono::days::rep>::min())](double x) mutable
+            {
+                std::chrono::time_point t = days + std::chrono::round<std::chrono::seconds>(std::chrono::duration<double>(x*86400.*0.125));
+                auto c = std::chrono::floor<std::chrono::days>(t.time_since_epoch());
+                std::string ret;
+                constexpr auto undef = std::chrono::days(std::numeric_limits<std::chrono::days::rep>::min());
+                if(c == p /*|| p == undef*/)
+                    ret = std::format("{:%T}", t);
+                else
+                    ret = std::format("{:%T\n%F}", t);
+                p = c;
+                return ret;
+            };
 
             axes.properties.x2.grid.color = agge::color{255, 255, 0, 128};
 
 
             auto const F = [](double t) { return sin(t/(t*t+1.e-2))*exp(0.5*t); };
-            plotting::Function gen{{}, -5., 5., 1.e-2, {F}};
-            chart.from(gen);
-
+            chart.from(plotting::linrange(-5., 5., 1.e-2)/plotting::FunctionX(F));
         }
     private:
 
@@ -117,11 +115,11 @@ namespace
                                      std::max((float)height-100.0f, 45.0f)});
 
             points1 << agge::clear << chart/axes.coordinates.repr2port
-                                           /plotting::filters::FarEnough{{},5.0f};
+                                           /plotting::filters::FarEnough{{},0.5f};
 
             points2 << agge::clear << chart/plotting::transform([](plotting::repr_t p){ return plotting::repr_t{-p.x, -p.y}; })
                                            /axes.coordinates.repr2port
-                                           /plotting::filters::FarEnough{{},5.0f};
+                                           /plotting::filters::FarEnough{{},50.0f};
 
             //points2 << agge::clear << plotting::repr_t{-5., 10.}/axes.coordinates.repr2port
             //                       << plotting::repr_t{5., -10.}/axes.coordinates.repr2port

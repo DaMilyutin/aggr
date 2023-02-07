@@ -20,6 +20,7 @@ namespace plotting
             return dest;
         }
     }
+
     struct TextProperties
     {
         agge::font_descriptor _font = agge::font_descriptor::create("Fira Code", 20);

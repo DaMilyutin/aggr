@@ -11,28 +11,17 @@
 
 #include <plotting/primitives/Canvas.h>
 
-#include <plotting/generators/Generator.h>
+#include <plotting/generators/generator.h>
 
 namespace plotting
 {
-    template<typename GeneratorT, typename MakerT>
-    class EntitiesGenerator: public pipeline::Generator<EntitiesGenerator<GeneratorT, MakerT>>
-    {
-    public:
-        template<typename G, typename M>
-        EntitiesGenerator(G&& g, M&& m): gen(std::forward<G>(g)), maker(std::forward<M>(m)) {}
-
-        GeneratorT   gen;
-        MakerT       maker;
-    };
-
-    template<typename S, typename Rn, typename Rs, typename Generator, typename Maker>
+    template<typename S, typename Rn, typename Rs, typename G>
     plotting::Canvas<S, Rn, Rs>& operator<<(plotting::Canvas<S, Rn, Rs>& c,
-        EntitiesGenerator<Generator, Maker> const& entities)
+                                pipeline::Generator<G> const& entities)
     {
         c << reset;
-        for(auto&& l : entities.gen)
-            c << entities.maker(l);
+        for(auto&& l : entities._get_())
+            c << l;
         return c;
     }
 }

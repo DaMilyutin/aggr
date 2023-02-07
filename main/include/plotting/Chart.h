@@ -5,7 +5,9 @@
 #include <agge/primitives/pipeline.h>
 #include <agge/primitives/polyline.h>
 
-#include <plotting/generators/Generator.h>
+#include <plotting/generators/generator.h>
+#include <plotting/generators/iota.h>
+#include <plotting/generators/transform.h>
 
 namespace plotting
 {
@@ -25,42 +27,33 @@ namespace plotting
         return ret;
     }
 
-    struct Function: public pipeline::Generator<Function>
+    struct FunctionY: public pipeline::Transformer<FunctionY>
     {
-        double a    =-5.;
-        double b    = 5.;
-        double step = 0.1;
+        template<typename F>
+        FunctionY(F&& f): funcion(FWD(f)) {}
 
-        int counts() const { return int(floor((b-a)/step)); }
+        repr_t operator()(double x) const { return {x, funcion(x)}; }
+        std::function<double(double)> funcion;
+    };
 
-        class Iterator
-        {
-        public:
-            Iterator(double t, Function const& ref): t(t), ref(ref) {}
+    struct FunctionX: public pipeline::Transformer<FunctionX>
+    {
+        template<typename F>
+        FunctionX(F&& f): funcion(FWD(f)) {}
 
-            Iterator& operator++() { t+= ref.step; return *this; }
-            repr_t operator*() const { return {t, ref.f(t)}; }
-            bool operator != (Iterator const& rhs) const { return t <= rhs.t; }
-        private:
-            double          t;
-            Function const& ref;
-        };
-
-        Iterator begin() const { return {a, *this}; }
-        Iterator end() const   { return {b, *this}; }
-
-        std::function<double(double)> f;
+        repr_t operator()(double y) const { return {funcion(y), y}; }
+        std::function<double(double)> funcion;
     };
 
     struct ChartData: public pipeline::Generator<ChartData>
     {
         std::vector<repr_t> data;
 
-        void from(Function const& f)
+        template<typename G>
+        void from(pipeline::Generator<G> const& g)
         {
-            data.reserve(f.counts());
             data.clear();
-            for(auto&& p: f)
+            for(auto&& p: g._get_())
                 data.emplace_back(std::move(p));
         }
 

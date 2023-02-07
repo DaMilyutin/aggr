@@ -16,12 +16,12 @@
 #include <plotting/primitives/LinesGenerator.h>
 #include <plotting/primitives/LabelsGenerator.h>
 
-
 #include <plotting/primitives/Colored.h>
 
 #include <functional>
 #include <string>
 #include <format>
+
 
 namespace plotting
 {
@@ -109,9 +109,23 @@ namespace plotting
             return step_repr;
         }
 
+        inline int digits(double inc)
+        {
+            double const ref = log(fabs(inc))/log(10.);
+            if(ref >= 0.)
+                return 1;
+            int const d = int(floor(ref-0.1));
+            return d < 0 ? -d : 1;
+        }
+
         inline auto make_formatter(int digits)
         {
             return [digits](double x) { return std::format("{:+.{}f}", x, digits); };
+        }
+
+        inline std::function<std::string(double)> make_formatter(Axes::LabelProperties const& prop, double inc)
+        {
+            return prop.format? prop.format : make_formatter(digits(inc));
         }
 
         inline double grow_step(float step, float min_resolution = 100.0f)
@@ -119,28 +133,11 @@ namespace plotting
             return ceil(min_resolution/fabs(step));
         }
 
-        inline int digits(double inc)
-        {
-            double const ref = log(fabs(inc))/log(10.);
-            if(ref >= 0.)
-                return 1;
-            int const d = int(floor(ref-0.1));
-            return d < 0? -d: 1;
-        }
-
         struct AxesArea
         {
             Axes const&   axes;
             agge::stroke& line_style;
         };
-
-        using MajorPoints = pipeline::Iota<port_t, port_diff_t, size_t>;
-        using MinorPoints = pipeline::FilterGenerator<pipeline::Iota<port_t, port_diff_t, size_t>, filters::SkipOverPeriod>;
-
-        using MajorLines = EntitiesGenerator<ParallelLinesGenerator<MajorPoints>, StylishLineMaker>;
-        using GridLines = EntitiesGenerator<ParallelLinesGenerator<MajorPoints>,  FancyLineMaker>;
-        using MinorLines = EntitiesGenerator<ParallelLinesGenerator<MinorPoints>, StylishLineMaker>;
-        using MajorLabels = EntitiesGenerator<ParallelLabelsGenerator, LabelMaker>;
 
         struct AxisXTicksMaker
         {
@@ -191,34 +188,36 @@ namespace plotting
                 select.offset = select.offset % select.period;
                 return iota(port_t{from, Y}, port_diff_t{inc, 0.0f},
                            (size_t)ceil((pa.x2 - 0.1 - from)/inc))
-                        / std::move(select);
+                            /std::move(select);
             }
 
             auto major(agge::real_t Y, agge::real_t dir) const
             {
                 line_style.width(prop.tick[0].width);
-                return MajorLines{ParallelLinesGenerator<MajorPoints>{major_points(Y), {0, dir*prop.tick[0].length}},
-                                  StylishLineMaker{line_style}}/prop.tick[0].color;
+                return major_points(Y)/LinesInDirection{{0, dir*prop.tick[0].length}}
+                            /StylishLineMaker{line_style}/prop.tick[0].color;
             }
 
             auto medium(agge::real_t Y, agge::real_t dir) const
             {
                 line_style.width(prop.tick[1].width);
-                return MajorLines{ParallelLinesGenerator<MajorPoints>{medium_points(Y), {0, dir*prop.tick[1].length}},
-                                  StylishLineMaker{line_style}}/prop.tick[1].color;
+                return medium_points(Y)/LinesInDirection{{0, dir*prop.tick[1].length}}
+                            /StylishLineMaker{line_style}/prop.tick[1].color;
             }
 
             auto minor(agge::real_t Y, agge::real_t dir) const
             {
                 line_style.width(prop.tick[2].width);
-                return MinorLines{ParallelLinesGenerator<MinorPoints>{minor_points(Y), {0, dir*prop.tick[2].length}}
-                                 , StylishLineMaker{line_style}}/prop.tick[2].color;
+                return minor_points(Y)/LinesInDirection{{0, dir*prop.tick[2].length}}
+                            /StylishLineMaker{line_style}
+                            /prop.tick[2].color;
             }
 
             auto grid(agge::real_t Y1, agge::real_t Y2) const
             {
-                return GridLines{ParallelLinesGenerator<MajorPoints>{major_points(Y1), {0, Y2-Y1}},
-                                 FancyLineMaker{prop.grid.dash, prop.grid.line_style}}/prop.grid.color;
+                return major_points(Y1)/LinesInDirection{{0, Y2-Y1}}
+                            /FancyLineMaker{prop.grid.dash, prop.grid.line_style}
+                            /prop.grid.color;
             }
 
             auto labels(agge::real_t Y, agge::real_t dir) const
@@ -230,13 +229,10 @@ namespace plotting
                 double const initial = axes.coordinates.port2repr.x(from);
                 double const inc = double(step)*axes.coordinates.port2repr.scale.x;
 
-                LabelMaker labelMaker{prop.labels.format
-                                        ? prop.labels.format
-                                        : make_formatter(digits(inc)),
-                                      prop.labels.base};
-                return MajorLabels{ParallelLabelsGenerator{major_points(Y+prop.labels.offset*dir),
-                                                           iota(initial, inc, pipeline::Infinite{})},
-                                   labelMaker};
+                return zip(major_points(Y+prop.labels.offset*dir),
+                           iota(initial, inc)/transform([fmt = make_formatter(prop.labels, inc)](double x)
+                                                           { return fmt(x); }))
+                              /LabelMaker(prop.labels.base);
             }
 
             Axes                 const& axes;
@@ -295,35 +291,39 @@ namespace plotting
                 select.offset = select.offset % select.period;
                 return iota(port_t{X, from}, port_diff_t{0.0f, inc},
                             (size_t)ceil((pa.y2 - 0.1 - from)/inc))
-                        /  select;
+                                /std::move(select);
             }
 
 
             auto major(agge::real_t X, agge::real_t dir) const
             {
                 line_style.width(prop.tick[0].width);
-                return MajorLines{ParallelLinesGenerator<MajorPoints>{major_points(X), {dir*prop.tick[0].length, 0}},
-                                  StylishLineMaker{line_style}}/prop.tick[0].color;
+                return major_points(X)/LinesInDirection{{dir*prop.tick[0].length, 0}}
+                                /StylishLineMaker{line_style}
+                                /prop.tick[0].color;
             }
 
             auto medium(agge::real_t X, agge::real_t dir) const
             {
                 line_style.width(prop.tick[1].width);
-                return MajorLines{ParallelLinesGenerator<MajorPoints>{medium_points(X), {dir*prop.tick[1].length, 0}},
-                                  StylishLineMaker{line_style}}/prop.tick[1].color;
+                return medium_points(X)/LinesInDirection{{dir*prop.tick[1].length, 0}}
+                                /StylishLineMaker{line_style}
+                                /prop.tick[1].color;
             }
 
             auto minor(agge::real_t X, agge::real_t dir) const
             {
                 line_style.width(prop.tick[2].width);
-                return MinorLines{ParallelLinesGenerator<MinorPoints>{minor_points(X), {dir*prop.tick[2].length, 0}}
-                                 , StylishLineMaker{line_style}}/prop.tick[2].color;
+                return minor_points(X)/LinesInDirection{{dir*prop.tick[2].length, 0}}
+                    /StylishLineMaker{line_style}
+                /prop.tick[2].color;
             }
 
             auto grid(agge::real_t X1, agge::real_t X2) const
             {
-                return GridLines{ParallelLinesGenerator<MajorPoints>{major_points(X1), {X2-X1, 0}},
-                                 FancyLineMaker{prop.grid.dash, prop.grid.line_style}}/prop.grid.color;
+                return major_points(X1)/LinesInDirection{{X2-X1, 0}}
+                                /FancyLineMaker{prop.grid.dash, prop.grid.line_style}
+                                /prop.grid.color;
             }
 
             auto labels(agge::real_t X, agge::real_t dir) const
@@ -335,13 +335,10 @@ namespace plotting
                 double const initial = axes.coordinates.port2repr.y(from);
                 double const inc = double(step)*axes.coordinates.port2repr.scale.y;
 
-                LabelMaker labelMaker{prop.labels.format
-                                        ? prop.labels.format
-                                        : make_formatter(digits(inc)),
-                                      prop.labels.base};
-                return MajorLabels{ParallelLabelsGenerator{major_points(X+prop.labels.offset*dir),
-                                                           iota(initial, inc, pipeline::Infinite{})},
-                                   labelMaker};
+                return zip(major_points(X+prop.labels.offset*dir),
+                           iota(initial, inc)/transform([fmt = make_formatter(prop.labels, inc)](double x)
+                                                           { return fmt(x); }))
+                                /LabelMaker(prop.labels.base);
             }
 
             Axes                 const& axes;

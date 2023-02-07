@@ -2,7 +2,7 @@
 #include <utility>
 #include <assert.h>
 
-#include <plotting/generators/Generator.h>
+#include <plotting/generators/generator.h>
 
 namespace plotting
 {

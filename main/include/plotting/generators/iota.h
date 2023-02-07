@@ -1,6 +1,6 @@
 #pragma once
 
-#include <plotting/generators/Generator.h>
+#include <plotting/generators/generator.h>
 
 namespace plotting
 {
@@ -20,27 +20,29 @@ namespace plotting
         template<typename T, typename D = difference_type<T>, typename I = size_t>
         class Iota: public Generator<Iota<T>>
         {
-            T start;
-            D inc;
-            I count;
+            T _start;
+            D _inc;
+            I _count;
         public:
             Iota(Iota&&) = default;
             Iota(Iota const&) = default;
 
             template<typename TT, typename DD, typename II>
-            Iota(TT&& t, DD&& d, II& i): start(FWD(t)), inc(FWD(d)), count(FWD(i)) {}
+            Iota(TT&& t, DD&& d, II&& i): _start(FWD(t)), _inc(FWD(d)), _count(FWD(i)) {}
 
             struct Sentinel {};
+
+            I count() const { return _count; }
 
             class Iterator
             {
                 friend class Iota;
-                Iterator(Iota const& i): value(i.start), inc(i.inc), count(i.count) {}
+                Iterator(Iota const& i): value(i._start), inc(i._inc), count(i._count) {}
                 T value;
                 D inc;
                 I count;
             public:
-                T operator*() const { return value; }
+                T const& operator*() const { return value; }
                 Iterator& operator++() { --count; value += inc; return *this; }
                 bool operator==(Sentinel) const { return !count; }
                 bool operator!=(Sentinel) const { return !!count; }
@@ -57,10 +59,22 @@ namespace plotting
         return pipeline::Iota<T, D, I>{t, d, i};
     }
 
+    template<typename T, typename D>
+    auto iota(T t, D d)
+    {
+        return pipeline::Iota<T, D, pipeline::Infinite>(t, d, pipeline::Infinite());
+    }
+
     template<typename T, typename I>
-    auto linspace(T&& s, T&& e, I&& i)
+    auto linspace(T b, T e, I i)
     {
         static_assert(std::is_integral_v<I>, "type must be integral!");
-        return pipeline::Iota<T, pipeline::difference_type<T>, I>{s, (e-s)/(i), i+1};
+        return pipeline::Iota<T, pipeline::difference_type<T>, I>{b, (e-b)/(i), i+1};
+    }
+
+    template<typename T>
+    auto linrange(T b, T e, T step)
+    {
+        return pipeline::Iota<T, pipeline::difference_type<T>, size_t>{b, step, size_t((e-b)/(step))};
     }
 }
