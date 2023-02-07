@@ -73,8 +73,16 @@ namespace plotting
     }
 
     template<typename T>
-    auto linrange(T b, T e, T step)
+    auto range(T b, T e, T step)
     {
+        assert(step != T() && (e-b)/step >= T());
         return pipeline::Iota<T, pipeline::difference_type<T>, size_t>{b, step, size_t((e-b)/(step))};
+    }
+
+    template<typename T>
+    auto range(T b, T e)
+    {
+        assert(e >= b);
+        return pipeline::Iota<T, pipeline::difference_type<T>, size_t>{b, T(1), size_t(e-b)};
     }
 }

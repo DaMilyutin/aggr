@@ -70,8 +70,11 @@ namespace
             axes.properties.x2.grid.color = agge::color{255, 255, 0, 128};
 
 
-            auto const F = [](double t) { return sin(t/(t*t+1.e-2))*exp(0.5*t); };
-            chart.from(plotting::linrange(-5., 5., 1.e-2)/plotting::FunctionX(F));
+            //auto const F = [](double t) { return sin(t/(t*t+1.e-2))*exp(0.5*t); };
+            //chart.from(plotting::range(-5., 5., 1.e-2)/plotting::FunctionX(F));
+
+            chart.from(plotting::range(0., 50., 1.e-2)/plotting::FunctionXY([](double t){return 0.01*t*sin(t)+3.; },
+                                                                               [](double t){return 0.02*t*cos(t)+1; }));
         }
     private:
 
