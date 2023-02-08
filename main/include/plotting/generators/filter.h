@@ -19,7 +19,7 @@ namespace plotting
             Filter(F&& f) : select(std::forward<F>(f)) {}
 
             bool operator()(auto const& x) const { return select(x); }
-            Func    select;
+            Func  mutable select;
         };
 
         template<typename G, typename F>
@@ -68,8 +68,8 @@ namespace plotting
             Iterator begin() const { return Iterator(*this); }
             Sentinel end() const { return {}; }
 
-            G     gen;
-            F     select;
+            G           gen;
+            F  mutable  select;
         };
 
         template<typename G, typename F>
@@ -132,6 +132,14 @@ namespace plotting
                 return far;
             }
 
+            bool operator()(agge::polyline::Item const& cur) const
+            {
+                bool const far = fabs(cur.point.x - prev.x) + fabs(cur.point.y - prev.y) > eps;
+                if(far)
+                    prev = cur.point;
+                return far;
+            }
+
             agge::real_t  const   eps {0.5f};
             agge::point_r mutable prev{-std::numeric_limits<agge::real_t>::infinity(),
                                        -std::numeric_limits<agge::real_t>::infinity()};
@@ -146,6 +154,14 @@ namespace plotting
                 bool far = fabs(cur.x - prev.x) + fabs(cur.y - prev.y) > eps;
                 if(far)
                     prev = cur;
+                return far;
+            }
+
+            bool operator()(agge::polyline::Item const& cur) const
+            {
+                bool const far = fabs(cur.point.x - prev.x) + fabs(cur.point.y - prev.y) > eps;
+                if(far)
+                    prev = cur.point;
                 return far;
             }
 

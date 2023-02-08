@@ -18,7 +18,7 @@ namespace plotting
             Transform(F&& f): transform(std::forward<F>(f)) {}
 
             auto operator()(auto x) const { return transform(x); }
-            Func transform;
+            Func mutable transform;
         };
 
         template<typename G, typename F>
