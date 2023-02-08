@@ -15,7 +15,7 @@ namespace plotting
     agge::polyline& operator<<(agge::polyline& ret, pipeline::Generator<E> const& gen)
     {
         for(auto&& p: gen._get_())
-            ret.line_to(p);
+            ret << p;
         return ret;
     }
 
@@ -23,7 +23,7 @@ namespace plotting
     agge::polyline& operator<<(agge::polyline& ret, pipeline::Generator<E>&& gen)
     {
         for(auto&& p: gen._get_())
-            ret.line_to(p);
+            ret << p;
         return ret;
     }
 

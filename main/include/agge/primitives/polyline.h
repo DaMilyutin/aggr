@@ -57,8 +57,9 @@ namespace agge
         }
 
         polyline& operator<<(agge::point_r p) { return line_to(p); }
+        polyline& operator<<(Item i) { _items.push_back(i); return *this; }
 
-        void push_back(Item const& item) { _items.push_back(item); }
+        void push_back(Item item) { _items.push_back(item); }
         void stop()
         {
             _items.push_back(Item{0.0f, 0.0f, agge::path_command_stop});
