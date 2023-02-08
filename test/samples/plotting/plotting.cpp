@@ -86,7 +86,7 @@ namespace
 
             chart << plotting::range(0., 50., 1.e-4)
                         /plotting::FunctionXY([](double t){return 0.01*t*sin(t)+3.; },
-                                              [](double t){return 0.02*t*cos(t)+1; });
+                                              [](double t){return 0.01*t*cos(t)+1; });
         }
     private:
 
