@@ -20,6 +20,7 @@
 #include <agge.text/limit.h>
 
 #include <samples/common/shell.h>
+#include <samples/common/timing.h>
 
 #include <algorithm>
 #include <chrono>
@@ -90,10 +91,12 @@ namespace
         }
     private:
 
-        virtual void draw(agge::platform_bitmap& surface, timings&/*timings*/)
+        virtual void draw(agge::platform_bitmap& surface, timings& timings)
         {
+            stopwatch(_counter);
             fill(surface, mkrect<int>(0, 0, surface.width(), surface.height()),
                  agge::platform_blender_solid_color(agge::color::make(10, 10, 10)));
+            timings.clearing = stopwatch(_counter);
 
             auto canvas = plotting::make_canvas(surface, ren, ras);
 
@@ -108,16 +111,20 @@ namespace
             canvas << plotting::reset
                 << agge::polyline_adaptor(points2)/line_style
                 << agge::color::make(0, 255, 0, 128);
+            timings.rendition = stopwatch(_counter);
+            timings.stroking = _timingOfUpdate;
         }
 
         void update_data()
         {
+            stopwatch(_counter);
             points1 << agge::clear << chart/axes.coordinates.repr2port
                 /plotting::filters::FarEnough{{},0.5f};
 
             points2 << agge::clear << chart/plotting::transform([](plotting::repr_t p) { return plotting::repr_t{-p.x, -p.y}; })
                 /axes.coordinates.repr2port
                 /plotting::filters::FarEnough{{},50.0f};
+            _timingOfUpdate = stopwatch(_counter);
         }
 
         virtual void resize(int width, int height)
@@ -137,22 +144,26 @@ namespace
 
             if(input.vWheel != 0)
             {
-                agge::point_r zoom_pt{(float)input.position.x, (float)input.position.y};
-                if(in_area(axes.coordinates.port_area, zoom_pt))
+                agge::point_r ref_point{(float)input.position.x, (float)input.position.y};
+                if(in_area(axes.coordinates.port_area, ref_point))
                 {
                     auto n = axes.coordinates.repr_area;
-                    auto orig = axes.coordinates.port2repr(zoom_pt);
+                    auto orig = axes.coordinates.port2repr(ref_point);
                     plotting::zoom(n, orig, exp(-log(1.5)*input.vWheel/120.));
                     axes.coordinates.update(n);
                 }
             }
             if(input.mouse.pressed[system_input::MouseButtons::Left])
             {
-                agge::vector_r shift_repr{-(float)input.move.x, -(float)input.move.y};
-                auto n = axes.coordinates.repr_area;
-                auto shift = axes.coordinates.port2repr(shift_repr);
-                plotting::shift(n, shift);
-                axes.coordinates.update(n);
+                agge::point_r ref_point{(float)input.position.x, (float)input.position.y};
+                if(in_area(axes.coordinates.port_area, ref_point))
+                {
+                    agge::vector_r shift_repr{-(float)input.move.x, -(float)input.move.y};
+                    auto n = axes.coordinates.repr_area;
+                    auto shift = axes.coordinates.port2repr(shift_repr);
+                    plotting::shift(n, shift);
+                    axes.coordinates.update(n);
+                }
             }
 
             //plotting::Text hello(agge::font_descriptor::create("Times New Roman", 25,
@@ -177,6 +188,9 @@ namespace
 
         plotting::ChartData        chart;
         float                      scale = 1.0f;
+
+        long long                   _counter = 0;
+        double                      _timingOfUpdate = 0.;
     };
 }
 
