@@ -4,6 +4,8 @@
 
 struct services;
 
+#include "input_events.h"
+
 struct application : agge::noncopyable
 {
 	struct timings
@@ -15,10 +17,18 @@ struct application : agge::noncopyable
 		double blitting;
 	};
 
+
+    system_input::EventAggregator events;
+
 	virtual ~application();
 
 	virtual void draw(agge::platform_bitmap &surface, timings &timings_) = 0;
 	virtual void resize(int width, int height);
+
+    virtual void consume_events() {}
+
+    //virtual void mouse_button(KeyMouseEvents::MousePosition , KeyMouseEvents::MouseButton) {}
+    //virtual void put_keyboard(KeyMouseEvents::MousePosition, KeyMouseEvents::MouseButton) {}
 };
 
 

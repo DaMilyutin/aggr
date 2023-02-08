@@ -21,7 +21,8 @@
 #include <plotting/common/services.h>
 #include <samples/common/shell.h>
 #include <samples/common/timing.h>
-
+#include <format>
+#include <set>
 
 #include "../../shell-inline.h"
 
@@ -31,6 +32,7 @@
 #include <tchar.h>
 #include <tests/common/scoped_ptr.h>
 #include <windows.h>
+#include <windowsx.h>
 
 using namespace std;
 
@@ -116,6 +118,8 @@ namespace
 
 	uintptr_t MainDialog::windowProc(unsigned int message, uintptr_t wparam, uintptr_t lparam)
 	{
+        auto position = [lparam]() { return system_input::Position{GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam)}; };
+
 		switch (message)
 		{
 		case WM_SIZE:
@@ -135,7 +139,36 @@ namespace
 				destroy();
 			}
 			return 0;
-
+        case WM_LBUTTONDOWN:
+            return _application.events.mouse_button(position(), system_input::MouseButtons::Left, true), _application.consume_events(), 0;
+        case WM_LBUTTONUP:
+            return _application.events.mouse_button(position(), system_input::MouseButtons::Left, false), _application.consume_events(), 0;
+        case WM_RBUTTONDOWN:
+            return _application.events.mouse_button(position(), system_input::MouseButtons::Right, true), _application.consume_events(), 0;
+        case WM_RBUTTONUP:
+            return _application.events.mouse_button(position(), system_input::MouseButtons::Right, false), _application.consume_events(), 0;
+        case WM_MBUTTONDOWN:
+            return _application.events.mouse_button(position(), system_input::MouseButtons::Middle, true), _application.consume_events(), 0;
+        case WM_MBUTTONUP:
+            return _application.events.mouse_button(position(), system_input::MouseButtons::Middle, false), _application.consume_events(), 0;
+        case WM_MOUSEMOVE:
+            return _application.events.mouse_move(position()), _application.consume_events(), 0;
+        case WM_KEYDOWN:
+        {
+            if(!(HIWORD(lparam) & KF_REPEAT))
+                _application.events.key(uint8_t(wparam), true), _application.consume_events();
+            return 0;
+        }
+        case WM_KEYUP:
+        {
+            _application.events.key(uint8_t(wparam), false);
+            _application.consume_events();
+            return 0;
+        }
+        case WM_MOUSEWHEEL:
+            return _application.events.mouse_wheel(position(), GET_WHEEL_DELTA_WPARAM(wparam)), _application.consume_events(), 0;
+        case WM_MOUSEHWHEEL:
+            return _application.events.mouse_wheel(position(), 0, GET_WHEEL_DELTA_WPARAM(wparam)), _application.consume_events(), 0;
 		case WM_PAINT:
 			{
 				PAINTSTRUCT ps;
@@ -192,13 +225,33 @@ namespace
 		}
 	}
 
+    void put_message(MSG const& msg)
+    {
+        std::puts(std::format("{} {}: pt({}, {})",
+                                msg.time, /*msg.hwnd,*/ msg.message,
+                                //msg.wParam, msg.lParam,
+                                msg.pt.x, msg.pt.y).c_str());
+
+        //if(msg.message == WM_LBUTTONDOWN)
+        {
+            std::puts(std::format("lp({} {})",
+                GET_X_LPARAM(msg.lParam), GET_Y_LPARAM(msg.lParam)).c_str());
+        }
+        std::puts("\n");
+    }
+
 	void MainDialog::PumpMessages()
 	{
 		MSG msg;
 
+
+        std::set<int> skip{15, 275, 512};
+
 		while (::GetMessage(&msg, NULL, 0, 0))
 		{
 			::TranslateMessage(&msg);
+            //if(skip.find(msg.message) == skip.end())
+            //    put_message(msg);
 			::DispatchMessage(&msg);
 		}
 	}

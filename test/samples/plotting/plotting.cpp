@@ -23,6 +23,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <optional>
 
 namespace
 {
@@ -32,6 +33,11 @@ namespace
         return {x1, y1, x2, y2};
     }
 
+    inline bool in_area(agge::rect_r const& a, agge::point_r const& p)
+    {
+        return (a.x1 < p.x && p.x < a.x2) && (a.y1 < p.y && p.y < a.y2);
+    }
+
     class Plotting: public application
     {
     public:
@@ -39,8 +45,13 @@ namespace
             : application()
         {
             axes.coordinates.repr_area = mkrect(-5., 2.0, 5., -2.0);
+            origin = axes.coordinates.repr_area;
             line_style.set_cap(agge::caps::butt());
             line_style.set_join(agge::joins::bevel());
+            line_style.width(2.0f);
+            dash_style.remove_all_dashes();
+            dash_style.add_dash(10.0f, 1.0f);
+            dash_style.dash_start(0.5f);
 
             axes.properties.y1.tickSteps = 5;
             axes.properties.y1.tickGap = 10;
@@ -97,41 +108,66 @@ namespace
             canvas << plotting::reset
                 << agge::polyline_adaptor(points2)/line_style
                 << agge::color::make(0, 255, 0, 128);
+        }
 
-            plotting::Text hello(agge::font_descriptor::create("Times New Roman", 25,
-                agge::regular, false, agge::hint_none));
+        void update_data()
+        {
+            points1 << agge::clear << chart/axes.coordinates.repr2port
+                /plotting::filters::FarEnough{{},0.5f};
+
+            points2 << agge::clear << chart/plotting::transform([](plotting::repr_t p) { return plotting::repr_t{-p.x, -p.y}; })
+                /axes.coordinates.repr2port
+                /plotting::filters::FarEnough{{},50.0f};
         }
 
         virtual void resize(int width, int height)
         {
-            auto wid = float(width);
-            auto hei = float(height);
-            scale = std::min(wid/400.0f, hei/370.0f);
-
-            line_style.width(2.0f);
-            dash_style.remove_all_dashes();
-            dash_style.add_dash(10.0f, 1.0f);
-            dash_style.dash_start(0.5f);
-
             axes.position = plotting::port_area_t{10.0f, 10.0f, (float)width-10.0f, (float)height-10.0f};
-            axes.coordinates.update({100.0f, 40.0f,
-                                     std::max((float)width-120.0f, 105.0f),
-                                     std::max((float)height-100.0f, 45.0f)});
+            axes.coordinates.update(plotting::port_area_t
+                {100.0f, 40.0f,
+                 std::max((float)width-120.0f, 105.0f),
+                 std::max((float)height-100.0f, 45.0f)});
 
-            points1 << agge::clear << chart/axes.coordinates.repr2port
-                                           /plotting::filters::FarEnough{{},0.5f};
+            update_data();
+        }
 
-            points2 << agge::clear << chart/plotting::transform([](plotting::repr_t p){ return plotting::repr_t{-p.x, -p.y}; })
-                                           /axes.coordinates.repr2port
-                                           /plotting::filters::FarEnough{{},50.0f};
+        virtual void consume_events() override
+        {
+            auto const input = events.read();
 
-            //points2 << agge::clear << plotting::repr_t{-5., 10.}/axes.coordinates.repr2port
-            //                       << plotting::repr_t{5., -10.}/axes.coordinates.repr2port
-            //                       << plotting::repr_t{7., 0.}/axes.coordinates.repr2port;
+            if(input.vWheel != 0)
+            {
+                agge::point_r zoom_pt{(float)input.position.x, (float)input.position.y};
+                if(in_area(axes.coordinates.port_area, zoom_pt))
+                {
+                    auto n = axes.coordinates.repr_area;
+                    auto orig = axes.coordinates.port2repr(zoom_pt);
+                    plotting::zoom(n, orig, exp(-log(1.5)*input.vWheel/120.));
+                    axes.coordinates.update(n);
+                }
+            }
+            if(input.mouse.pressed[system_input::MouseButtons::Left])
+            {
+                agge::vector_r shift_repr{-(float)input.move.x, -(float)input.move.y};
+                auto n = axes.coordinates.repr_area;
+                auto shift = axes.coordinates.port2repr(shift_repr);
+                plotting::shift(n, shift);
+                axes.coordinates.update(n);
+            }
+
+            //plotting::Text hello(agge::font_descriptor::create("Times New Roman", 25,
+            //    agge::regular, false, agge::hint_none));
+            //hello.position({agge::real_t(input.position.x), agge::real_t(input.position.y)});
+            //hello.text(std::format("({},{})", input.position.x, input.position.y));
+            //hello.color(input.mouse.pressed[system_input::MouseButtons::Left]
+            //    ? agge::color{255, 0, 0, 255} : agge::color{128, 128, 128, 128});
+
+            update_data();
         }
 
     private:
         plotting::Axes             axes;
+        plotting::repr_area_t      origin;
         plotting::rasterizer       ras;
         agge::renderer             ren;
         agge::stroke               line_style;

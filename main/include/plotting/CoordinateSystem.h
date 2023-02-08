@@ -46,7 +46,11 @@ namespace plotting
 
         repr_t operator()(port_t const& t) const
         {
-            return {agge::real_t(offset.x + scale.x*t.x), agge::real_t(offset.y + scale.y*t.y)};
+            return {(offset.x + scale.x*t.x), (offset.y + scale.y*t.y)};
+        }
+        repr_diff_t operator()(port_diff_t const& t) const
+        {
+            return {(scale.x*t.dx), (scale.y*t.dy)};
         }
 
         double x(agge::real_t v) const
@@ -70,6 +74,13 @@ namespace plotting
             : repr_area{r}
         {}
 
+        void update(repr_area_t const& p)
+        {
+            repr_area = p;
+            repr2port.from(repr_area, port_area);
+            port2repr.from(port_area, repr_area);
+        }
+
         void update(port_area_t const& p)
         {
             port_area = p;
@@ -88,5 +99,17 @@ namespace plotting
     inline port_t operator/(repr_t const& f, ReprToPort const& c)
     {
         return c(f);
+    }
+
+    inline void shift(repr_area_t& a, repr_diff_t const& v)
+    {
+        a.x1 += v.dx; a.x2 += v.dx;
+        a.y1 += v.dy; a.y2 += v.dy;
+    }
+
+    inline void zoom(repr_area_t& a, repr_t const& p, double f)
+    {
+        a.x1 = p.x + f*(a.x1 - p.x); a.x2 = p.x + f*(a.x2 - p.x);
+        a.y1 = p.y + f*(a.y1 - p.y); a.y2 = p.y + f*(a.y2 - p.y);
     }
 }
