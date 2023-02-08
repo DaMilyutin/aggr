@@ -19,7 +19,7 @@ namespace plotting
             Filter(F&& f) : select(std::forward<F>(f)) {}
 
             bool operator()(auto const& x) const { return select(x); }
-            Func select;
+            Func    select;
         };
 
         template<typename G, typename F>
@@ -47,7 +47,7 @@ namespace plotting
                 }
             public:
 
-                agge::point_r const& operator*() const { return cached; }
+                from_t const& operator*() const { return cached; }
                 Iterator& operator++() { if(_it!=_end) ++_it; next(); return *this; }
 
                 bool operator!=(Sentinel) const { return _it != _end; }
@@ -62,7 +62,7 @@ namespace plotting
                 UnderlyingIterator         _it;
                 UnderlyingSentinel         _end;
                 FilterGenerator   const&   ref;
-                agge::point_r     mutable  cached {};
+                from_t           mutable   cached {};
             };
 
             Iterator begin() const { return Iterator(*this); }
@@ -122,6 +122,8 @@ namespace plotting
     {
         struct FarEnough: public pipeline::Filterer<FarEnough>
         {
+            FarEnough(agge::real_t eps): eps(eps) {}
+
             bool operator()(agge::point_r const& cur) const
             {
                 bool const far = fabs(cur.x - prev.x) + fabs(cur.y - prev.y) > eps;
