@@ -128,16 +128,16 @@ namespace
             points1 << agge::clear;
 
             unsigned cmd      = agge::path_command_move_to;
-            unsigned cmd_next = agge::path_command_line_to;
-            points1 << chart/plotting::filter([&](plotting::repr_t const& x)
+            points1 << chart/plotting::filter([&, cmd_next = unsigned(agge::path_command_line_to) ] (plotting::repr_t const& x) mutable
                                                 {  bool const b = in_area(axes.coordinates.repr_area, x);
                                                    if(!b) cmd_next = agge::path_command_move_to;
                                                    cmd = cmd_next;
+                                                   if(b) cmd_next = agge::path_command_line_to;
                                                    return b; })
                             /axes.coordinates.repr2port
                             /plotting::filters::FarEnough{0.5f}
                             /plotting::transform([&](plotting::port_t const& x)
-                                                 { return cmd_next = agge::path_command_line_to, agge::polyline::Item{x, cmd}; });
+                                                 {  return agge::polyline::Item{x, cmd}; });
             //unsigned cmd = agge::path_command_move_to;
             //plotting::filters::FarEnough farenough{0.5f};
             //for(auto&& p: chart)
