@@ -46,6 +46,35 @@ namespace
         return (a.x1 < p.x && p.x < a.x2) && (a.y1 < p.y && p.y < a.y2);
     }
 
+    class ReprAreaToViewPortClipper: public plotting::pipeline::TransformDroper<ReprAreaToViewPortClipper>
+    {
+        unsigned mutable cmd = agge::path_command_line_to;
+        unsigned mutable next = agge::path_command_line_to;
+        plotting::repr_area_t const& area;
+        plotting::ReprToPort  const& transform;
+    public:
+        ReprAreaToViewPortClipper(plotting::repr_area_t const& area,
+                                  plotting::ReprToPort  const& transform)
+            : area(area), transform(transform)
+        {}
+
+        ReprAreaToViewPortClipper(plotting::CoordinateSystem const& sys)
+            : area(sys.repr_area), transform(sys.repr2port)
+        {}
+
+        std::optional<agge::polyline::Item> operator()(plotting::repr_t const& r) const
+        {
+            if(!in_area(area, r))
+            {
+                cmd = next = agge::path_command_move_to;
+                return std::optional<agge::polyline::Item>();
+            }
+            cmd = next;
+            next = agge::path_command_line_to;
+            return agge::polyline::Item{transform(r), cmd};
+        }
+    };
+
     class Plotting: public application
     {
     public:
@@ -130,15 +159,7 @@ namespace
             points1 << agge::clear;
 
 
-            points1 << chart/plotting::transform_or([&, cmd = unsigned(agge::path_command_line_to), cmd_next = unsigned(agge::path_command_line_to)]
-                                                        (plotting::repr_t const& x) mutable
-                                                   {  bool const b = in_area(axes.coordinates.repr_area, x);
-                                                      if(!b) { cmd = cmd_next = agge::path_command_move_to; return std::optional<agge::polyline::Item>(); }
-                                                      cmd = cmd_next;
-                                                      cmd_next = agge::path_command_line_to;
-                                                      auto n = axes.coordinates.repr2port(x);
-                                                      return std::make_optional(agge::polyline::Item{n, cmd}); })
-                                                    /plotting::filters::FarEnough{0.5f};
+            points1 << chart/ReprAreaToViewPortClipper(axes.coordinates)/plotting::filters::FarEnough{0.5f};
 
 
 
