@@ -30,7 +30,7 @@ namespace plotting
         struct LabelProperties
         {
             using Formatter = std::function<std::string(double)>;
-            Formatter      format;
+            Formatter      format = [](double t) { return std::format("{:0.2f}", t); };
             TextProperties base{};
             agge::real_t   offset = 1.0f;
         };
@@ -412,7 +412,7 @@ namespace plotting
         c.ras.set_clipping(axes.position);
         {
             inner::AxisXTicksMaker xTicks{axes, axes.properties.x1, line_style};
-            c << xTicks.major(axes.coordinates.port_area.y1,-1);
+            c << xTicks.major(axes.coordinates.port_area.y1, -1);
             c << xTicks.medium(axes.coordinates.port_area.y1, -1);
             c << xTicks.minor(axes.coordinates.port_area.y1, -1);
 

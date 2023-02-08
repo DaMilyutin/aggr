@@ -67,19 +67,19 @@ namespace plotting
         template<typename G, typename F>
         TransformGenerator<G const&, F> operator/(Generator<G> const& g, Transformer<F>&& f)
         {
-            return {g._get_(), std::move(f._get_())};
+            return {g._get_(), std::move(f)._get_()};
         }
 
         template<typename G, typename F>
         TransformGenerator<G, F> operator/(Generator<G>&& g, Transformer<F>&& f)
         {
-            return {std::move(g._get_()), std::move(f._get_())};
+            return {std::move(g)._get_(), std::move(f)._get_()};
         }
 
         template<typename G, typename F>
         TransformGenerator<G, F> operator/(Generator<G>&& g, Transformer<F> const& f)
         {
-            return {std::move(g._get_()), f._get_()};
+            return {std::move(g)._get_(), f._get_()};
         }
 
         template<typename F>

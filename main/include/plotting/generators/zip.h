@@ -99,7 +99,7 @@ namespace plotting
         template <typename... T>
         auto zip(Generator<T>&&... seqs)
         {
-            return ZipGenerator<T...>(std::make_tuple(FWD(seqs._get_())...));
+            return ZipGenerator<T...>(std::make_tuple(std::move(seqs)._get_()...));
         }
 
      }

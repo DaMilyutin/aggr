@@ -81,19 +81,19 @@ namespace plotting
         template<typename G, typename F>
         FilterGenerator<G const&, F> operator/(Generator<G> const& g, Filterer<F>&& f)
         {
-            return {g._get_(), std::move(f._get_())};
+            return {g._get_(), std::move(f)._get_()};
         }
 
         template<typename G, typename F>
         FilterGenerator<G, F> operator/(Generator<G>&& g, Filterer<F>&& f)
         {
-            return {std::move(g._get_()), std::move(f._get_())};
+            return {std::move(g)._get_(), std::move(f)._get_()};
         }
 
         template<typename G, typename F>
         FilterGenerator<G, F> operator/(Generator<G>&& g, Filterer<F> const& f)
         {
-            return {std::move(g._get_()), f._get_()};
+            return {std::move(g)._get_(), f._get_()};
         }
 
         template<typename F>
