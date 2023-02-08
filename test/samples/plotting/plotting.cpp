@@ -34,6 +34,11 @@ namespace
         return {x1, y1, x2, y2};
     }
 
+    inline bool in_area(plotting::repr_area_t const& a, plotting::repr_t const& p)
+    {
+        return (a.x1 < p.x && p.x < a.x2) && (a.y2 < p.y && p.y < a.y1);
+    }
+
     inline bool in_area(agge::rect_r const& a, agge::point_r const& p)
     {
         return (a.x1 < p.x && p.x < a.x2) && (a.y1 < p.y && p.y < a.y2);
@@ -46,6 +51,8 @@ namespace
             : application()
         {
             axes.coordinates.repr_area = mkrect(-5., 2.0, 5., -2.0);
+
+            //axes.coordinates.repr_area = mkrect(-5.e-5, 2.e-5, 5.e-5, -2.e-5);
             origin = axes.coordinates.repr_area;
             line_style.set_cap(agge::caps::butt());
             line_style.set_join(agge::joins::bevel());
@@ -118,12 +125,45 @@ namespace
         void update_data()
         {
             stopwatch(_counter);
-            points1 << agge::clear << chart/axes.coordinates.repr2port
-                /plotting::filters::FarEnough{{},0.5f};
+            points1 << agge::clear;
 
-            points2 << agge::clear << chart/plotting::transform([](plotting::repr_t p) { return plotting::repr_t{-p.x, -p.y}; })
-                /axes.coordinates.repr2port
-                /plotting::filters::FarEnough{{},50.0f};
+            unsigned cmd      = agge::path_command_move_to;
+            unsigned cmd_next = agge::path_command_line_to;
+            points1 << chart/plotting::filter([&](plotting::repr_t const& x)
+                                                {  bool const b = in_area(axes.coordinates.repr_area, x);
+                                                   if(!b) cmd_next = agge::path_command_move_to;
+                                                   cmd = cmd_next;
+                                                   return b; })
+                            /axes.coordinates.repr2port
+                            /plotting::filters::FarEnough{0.5f}
+                            /plotting::transform([&](plotting::port_t const& x)
+                                                 { return cmd_next = agge::path_command_line_to, agge::polyline::Item{x, cmd}; });
+            //unsigned cmd = agge::path_command_move_to;
+            //plotting::filters::FarEnough farenough{0.5f};
+            //for(auto&& p: chart)
+            //{
+            //    if(!in_area(axes.coordinates.repr_area, p))
+            //    {
+            //        cmd = agge::path_command_move_to;
+            //        continue;
+            //    }
+            //    auto n = axes.coordinates.repr2port(p);
+            //    if(!farenough(n))
+            //        continue;
+            //    points1.push_back({n, cmd});
+            //    cmd = agge::path_command_line_to;
+            //}
+
+            //points1 << chart/plotting::filter([&](plotting::repr_t const& x)
+            //                                    { return in_area(axes.coordinates.repr_area, x); })
+            //                /axes.coordinates.repr2port
+            //                /plotting::filters::FarEnough{0.5f};
+
+
+            //points2 << agge::clear
+            //        << chart/plotting::transform([](plotting::repr_t p) { return plotting::repr_t{-p.x, -p.y}; })
+            //            /axes.coordinates.repr2port
+            //            /plotting::filters::FarEnough{{},50.0f};
             _timingOfUpdate = stopwatch(_counter);
         }
 
