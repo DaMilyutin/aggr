@@ -9,13 +9,24 @@ namespace plotting
         struct TransformDroper: public agge::pipeline::terminal<E> {};
 
         template<typename Func>
-        struct TransformOr: public TransformDroper<Transform<Func>>
+        struct TransformOr: public TransformDroper<TransformOr<Func>>
         {
             template<typename F>
             TransformOr(F&& f): transform(std::forward<F>(f)) {}
 
             auto operator()(auto x) const { return transform(x); }
             Func mutable transform;
+        };
+
+        template<typename Sel, typename Trans>
+        struct TransformOr2: public TransformDroper<TransformOr2<Sel, Trans>>
+        {
+            template<typename F, typename G>
+            TransformOr2(F&& f, G&& g): select(FWD(f)), trans(FWD(g)) {}
+
+            auto operator()(auto x) const { return select(x)? std::make_optional(trans(x)): std::nullopt; }
+            Sel   mutable select;
+            Trans mutable trans;
         };
 
         template<typename G, typename F>
@@ -98,6 +109,9 @@ namespace plotting
 
         template<typename F>
         auto transform_or(F&& f) { return pipeline::TransformOr<F>{std::move(f)}; }
+
+        template<typename F, typename G>
+        auto transform_or(F&& f, G&& g) { return pipeline::TransformOr2<F, G>{FWD(f), FWD(g)}; }
 
         template<typename F>
         auto transform_or(pipeline::Transformer<F>&&)
