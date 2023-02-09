@@ -16,6 +16,8 @@
 #include <plotting/primitives/Text.h>
 #include <plotting/Chart.h>
 
+#include <plotting/chain-helpers/transformers.h>
+
 #include <agge.text/layout.h>
 #include <agge.text/limit.h>
 
@@ -24,9 +26,6 @@
 
 #include <algorithm>
 #include <chrono>
-#include <optional>
-
-#include <plotting/generators/transform_or.h>
 
 namespace
 {
@@ -36,44 +35,7 @@ namespace
         return {x1, y1, x2, y2};
     }
 
-    inline bool in_area(plotting::repr_area_t const& a, plotting::repr_t const& p)
-    {
-        return (a.x1 < p.x && p.x < a.x2) && (a.y2 < p.y && p.y < a.y1);
-    }
 
-    inline bool in_area(agge::rect_r const& a, agge::point_r const& p)
-    {
-        return (a.x1 < p.x && p.x < a.x2) && (a.y1 < p.y && p.y < a.y2);
-    }
-
-    class ReprAreaToViewPortClipper: public plotting::pipeline::TransformOr<ReprAreaToViewPortClipper>
-    {
-        unsigned mutable cmd = agge::path_command_line_to;
-        unsigned mutable next = agge::path_command_line_to;
-        plotting::repr_area_t const& area;
-        plotting::ReprToPort  const& transform;
-    public:
-        ReprAreaToViewPortClipper(plotting::repr_area_t const& area,
-                                  plotting::ReprToPort  const& transform)
-            : area(area), transform(transform)
-        {}
-
-        ReprAreaToViewPortClipper(plotting::CoordinateSystem const& sys)
-            : area(sys.repr_area), transform(sys.repr2port)
-        {}
-
-        std::optional<agge::polyline::Item> operator()(plotting::repr_t const& r) const
-        {
-            if(!in_area(area, r))
-            {
-                cmd = next = agge::path_command_move_to;
-                return std::optional<agge::polyline::Item>();
-            }
-            cmd = next;
-            next = agge::path_command_line_to;
-            return agge::polyline::Item{transform(r), cmd};
-        }
-    };
 
     class Plotting: public application
     {
@@ -159,7 +121,8 @@ namespace
             points1 << agge::clear;
 
 
-            points1 << chart/ReprAreaToViewPortClipper(axes.coordinates)/plotting::filters::FarEnough{0.5f};
+            points1 << chart/clip_rect2port(axes.coordinates)
+                            /plotting::filters::FarEnough{0.5f};
 
 
 
@@ -219,6 +182,7 @@ namespace
         virtual void consume_events() override
         {
             auto const input = events.read();
+            using plotting::in_area;
 
             if(input.vWheel != 0)
             {
