@@ -5,24 +5,35 @@ namespace plotting
 {
     namespace pipeline
     {
-        template<typename Y, typename L>
-        class YieldLink: Yield<YieldLink<Y, L>>
+        template<typename Y, typename L, typename tag = void>
+        struct YieldLink: Yield<YieldLink<Y, L, tag>, tag>
         {
-        public:
             template<typename TY, typename TL>
             YieldLink(TY&& y, TL&& l): yield(FWD(y)), link(FWD(l)) {}
 
-            // this is base helper class
-            // all functions to be in derived
+            auto begin() const { return link.begin(yield); }
+            auto end()   const { return link.end(yield); }
 
             Y yield;
             L link;
         };
 
-        template<typename L1, typename L2>
-        class LinkLink: Link<LinkLink<L1, L2>>
+        template<typename L, typename S, typename tag = void>
+        struct LinkSink: Sink<LinkSink<L, S, tag>, tag>
         {
-        public:
+            template<typename TL, typename TS>
+            LinkSink(TL&& l, TS&& s): link(FWD(l)), sink(FWD(s)) {}
+
+            template<typename E>
+            bool operator()(E&& e) { return link.feed(sink, e); }
+
+            L link;
+            S sink;
+        };
+
+        template<typename L1, typename L2, typename tag = void>
+        struct LinkLink: Link<LinkLink<L1, L2, tag>, tag>
+        {
             template<typename T1, typename T2>
             LinkLink(T1&& l1, T2&& l2): link1(FWD(l1)), link2(FWD(l2)) {}
 
@@ -37,57 +48,95 @@ namespace plotting
             L2 link2;
         };
 
-        template<typename L, typename S>
-        class LinkSink: Sink<LinkSink<L, S>>
-        {
-        public:
-            template<typename TL, typename TS>
-            LinkSink(TL&& l, TS&& s): link(FWD(l)), sink(FWD(s)) {}
 
-            template<typename E>
-            bool operator()(E&& e) { return link.feed(sink, e); }
-
-            L link;
-            S sink;
-        };
-
-        template<typename Y, typename L>
-        YieldLink<Y, L> perfection(Yield<Y>&& y, Link<L>&& l)
+        // binary operations
+        template<typename Y, typename L, typename tag>
+        YieldLink<Y, L, tag> perfection(Yield<Y, tag>&& y, Link<L, tag>&& l)
         {
             return {FWD(y)._get_(), FWD(l)._get_()};
         }
 
-        template<typename L1, typename L2>
-        LinkLink<L1, L2> perfection(Link<L1>&& l1, Link<L2>&& l2)
+        template<typename Y, typename L, typename tag>
+        YieldLink<Y const&, L, tag> perfection(Yield<Y, tag> const& y, Link<L, tag>&& l)
+        {
+            return {y._get_(), FWD(l)._get_()};
+        }
+
+        template<typename Y, typename L, typename tag>
+        YieldLink<Y, L const&, tag> perfection(Yield<Y, tag>&& y, Link<L, tag> const& l)
+        {
+            return {FWD(y)._get_(), l._get_()};
+        }
+
+        template<typename Y, typename L, typename tag>
+        YieldLink<Y const&, L const&, tag> perfection(Yield<Y, tag> const& y, Link<L, tag> const& l)
+        {
+            return {y._get_(), l._get_()};
+        }
+
+
+
+
+
+        template<typename L1, typename L2, typename tag>
+        LinkLink<L1, L2, tag> perfection(Link<L1, tag>&& l1, Link<L2, tag>&& l2)
         {
             return {FWD(l1)._get_(), FWD(l2)._get_()};
         }
 
-        template<typename L, typename S>
-        LinkSink<L, S> perfection(Link<L>&& l, Sink<S>&& s)
+        template<typename L, typename S, typename tag>
+        LinkSink<L, S, tag> perfection(Link<L, tag>&& l, Sink<S, tag>&& s)
         {
             return {FWD(l)._get_(), FWD(s)._get_()};
         }
 
-        template<typename L1, typename L2, typename S>
-        LinkSink<L1, LinkSink<L2, S>> perfection(LinkLink<L1, L2>&& ll, Sink<S>&& s)
-        {
-            return LinkSink<L1, LinkSink<L2, S>>{FWD(ll).link1, LinkSink<L2, S>(FWD(ll).link2, FWD(s)._get_())}
-        }
-
-        template<typename Y, typename L, typename S>
-        bool perfection(YieldLink<Y, L>&& yl, Sink<S>&& s)
-        {
-            return perfection(yl.yield, LinkSink<L, S>(yl.link, FWD(s)._get_()));
-        }
-
-        template<typename Y, typename S>
-        bool perfection(Yield<Y>&& yield, Sink<S>&& sink)
+        // Yield + Sink => system closed and ready to run
+        template<typename Y, typename S, typename tag>
+        bool perfection(Yield<Y, tag>&& yield, Sink<S, tag>&& sink)
         {
             for(auto&& e: FWD(yield)._get_())
-               if(!sink(e))
+                if(!sink(e))
                     return false; // if sink forced to stop
             return true;
         }
+
+        // reorganize pipeline around sink
+        template<typename L1, typename L2, typename S, typename tag>
+        LinkSink<L1, LinkSink<L2, S, tag>, tag> perfection(LinkLink<L1, L2, tag>&& ll, Sink<S, tag>&& s)
+        {
+            return perfection(FWD(ll).link1, perfection(FWD(ll).link2, FWD(s)));
+        }
+
+        // reorganize pipeline around sink
+        template<typename Y, typename L, typename S, typename tag>
+        bool perfection(YieldLink<Y, L, tag>&& yl, Sink<S, tag>&& sink)
+        {
+            return perfection(FWD(yl).yield, perfection(FWD(yl).link, FWD(sink)));
+        }
+
+        template<typename Y, typename L>
+        auto operator/(Yield<Y>&& y, Link<L>&& l)
+        {
+            return perfection(FWD(y), FWD(l));
+        }
+
+        template<typename Y, typename L>
+        auto operator/(Yield<Y> const& y, Link<L> const& l)
+        {
+            return perfection(FWD(y), FWD(l));
+        }
+
+        template<typename Y, typename L>
+        auto operator/(Yield<Y> const& y, Link<L>&& l)
+        {
+            return perfection(y, FWD(l));
+        }
+
+        template<typename Y, typename L>
+        auto operator/(Yield<Y>&& y, Link<L> const& l)
+        {
+            return perfection(FWD(y), l);
+        }
+
     }
 }

@@ -7,16 +7,65 @@ namespace plotting
     namespace pipeline
     {
         template<typename E>
-        struct TransformOr: public Link<E> {};
+        struct TransformOr: public Link<E>
+        {
+            template<typename Y>
+            struct YieldDescriptor
+            {
+                using UnderlyingIterator = std::remove_cv_t<decltype(std::begin(std::declval<Y>()))>;
+                using UnderlyingSentinel = std::remove_cv_t<decltype(std::end(std::declval<Y>()))>;
+
+                using from_t = std::remove_cvref_t<decltype(*std::begin(std::declval<Y>()))>;
+                using to_t = std::remove_cvref_t<decltype(std::declval<E>()(std::declval<from_t>()))>;
+                using unwrapped_t = std::remove_cvref_t<decltype(*std::declval<to_t>())>;
+
+                struct Sentinel {};
+
+                class Iterator
+                {
+                public:
+                    Iterator(Y const& y, E const& l)
+                        : _it(std::begin(y))
+                        , _end(std::end(y))
+                        , _transform(l)
+                    {
+                        next();
+                    }
+
+                    unwrapped_t const& operator*() const { return *_cached; }
+                    Iterator& operator++() { if(_it!=_end) ++_it; next(); return *this; }
+
+                    bool operator!=(Sentinel) const { return _it != _end; }
+                    bool operator==(Sentinel) const { return _it == _end; }
+                private:
+                    void next()
+                    {
+                        while(_it!=_end && !(_cached = _transform(*_it)))
+                            ++_it;
+                    }
+
+                    UnderlyingIterator           _it;
+                    UnderlyingSentinel           _end;
+                    E                  const&    _transform;
+                    to_t              mutable    _cached{};
+                };
+
+                static auto begin(Y const& y, E const& l) { return Iterator(y, l); }
+                static auto end(Y const&, E const&) { return Sentinel{}; }
+            };
+
+            template<typename Y> auto begin(Y const& y) const { return YieldDescriptor<Y>::begin(y, this->_get_()); }
+            template<typename Y> auto end(Y const& y) const { return YieldDescriptor<Y>::end(y, this->_get_()); }
+        };
 
         template<typename Func>
         struct TransformOrWrap: public TransformOr<TransformOrWrap<Func>>
         {
             template<typename F>
-            TransformOrWrap(F&& f): transform(std::forward<F>(f)) {}
+            TransformOrWrap(F&& f): transform(FWD(f)) {}
 
             auto operator()(auto x) const { return transform(x); }
-            Func mutable transform;
+            Func   transform;
         };
 
         template<typename Sel, typename Trans>
@@ -29,81 +78,6 @@ namespace plotting
             Sel   mutable select;
             Trans mutable trans;
         };
-
-        template<typename G, typename F>
-        class TransformOrGenerator: public Yield<TransformOrGenerator<G, F>>
-        {
-            using UnderlyingIterator = std::remove_cv_t<decltype(std::begin(std::declval<G>()))>;
-            using UnderlyingSentinel = std::remove_cv_t<decltype(std::end(std::declval<G>()))>;
-
-            using from_t = std::remove_cvref_t<decltype(*std::begin(std::declval<G>()))>;
-            using to_t = std::remove_cvref_t<decltype(std::declval<F>()(std::declval<from_t>()))>;
-            using unwrapped_t = std::remove_cvref_t<decltype(*std::declval<to_t>())>;
-        public:
-            struct Sentinel {};
-
-            template<typename G, typename T>
-            TransformOrGenerator(G&& g, T&& t): gen(std::forward<G>(g)), transform(std::forward<T>(t)) {}
-
-            class Iterator
-            {
-                friend class TransformOrGenerator;
-                Iterator(TransformOrGenerator const& ref)
-                    : _it(std::begin(ref.gen))
-                    , _end(std::end(ref.gen))
-                    , ref(ref)
-                {
-                    next();
-                }
-            public:
-                unwrapped_t const& operator*() const { return *cached; }
-                Iterator& operator++() { if(_it!=_end) ++_it; next(); return *this; }
-
-                bool operator!=(Sentinel) const { return _it != _end; }
-                bool operator==(Sentinel) const { return _it == _end; }
-            private:
-                void next()
-                {
-                    while(_it!=_end && !(cached = ref.transform(*_it)))
-                        ++_it;
-                }
-
-                UnderlyingIterator           _it;
-                UnderlyingSentinel           _end;
-                TransformOrGenerator const&   ref;
-                to_t              mutable     cached{};
-            };
-
-            Iterator begin() const { return Iterator(*this); }
-            Sentinel end() const { return {}; }
-
-            G     gen;
-            F     transform;
-        };
-
-        template<typename G, typename F>
-        TransformOrGenerator<G const&, F> operator/(Yield<G> const& g, TransformOr<F> const& f)
-        {
-            return {g._get_(), f._get_()};
-        }
-
-        template<typename G, typename F>
-        TransformOrGenerator<G const&, F> operator/(Yield<G> const& g, TransformOr<F>&& f)
-        {
-            return {g._get_(), std::move(f)._get_()};
-        }
-
-        template<typename G, typename F>
-        TransformOrGenerator<G, F> operator/(Yield<G>&& g, TransformOr<F>&& f)
-        {
-            return {std::move(g)._get_(), std::move(f)._get_()};
-        }
-
-        template<typename G, typename F>
-        TransformOrGenerator<G, F> operator/(Yield<G>&& g, TransformOr<F> const& f)
-        {
-            return {std::move(g)._get_(), f._get_()};
-        }
 
         template<typename F>
         auto transform_or(F const& f) { return pipeline::TransformOrWrap<F const&>{ f}; }
