@@ -83,13 +83,13 @@ namespace plotting
         template<typename F>
         auto filter(pipeline::Filter<F>&&)
         {
-            assert(false && "Trying to wrap already Filterer in filter!");
+            assert(false && "Trying to wrap Filter in filter!");
         }
 
         template<typename F>
         auto filter(pipeline::Filter<F> const&)
         {
-            assert(false && "Trying to wrap already Filterer in filter!");
+            assert(false && "Trying to wrap Filter in filter!");
         }
     }
 

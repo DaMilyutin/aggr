@@ -21,10 +21,9 @@ namespace plotting
         template<typename E, typename tag = void>
         struct Link: public _terminal_<E, tag>
         {
-            // for specific Link category (ex. Filter, Transform) one must provide
-            // `template<typename Y, typename L> struct YieldLinkDescriptor;`
-            // with `Iterator`, `Sentinel` types and
-            // with `begin(Y&&,L&&)->Iterator`, `end(Y&&,L&&)->Sentinel` methods
+            // for specific Link category (ex. Filter, Transform) one must provide methods
+            // template<typename Y> auto begin(Y const& y) const
+            // template<typename Y> auto end(Y const& y) const
         };
 
 

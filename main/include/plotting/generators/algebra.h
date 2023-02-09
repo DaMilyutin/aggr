@@ -48,7 +48,6 @@ namespace plotting
             L2 link2;
         };
 
-
         // binary operations
         template<typename Y, typename L, typename tag>
         YieldLink<Y, L, tag> perfection(Yield<Y, tag>&& y, Link<L, tag>&& l)
@@ -74,10 +73,6 @@ namespace plotting
             return {y._get_(), l._get_()};
         }
 
-
-
-
-
         template<typename L1, typename L2, typename tag>
         LinkLink<L1, L2, tag> perfection(Link<L1, tag>&& l1, Link<L2, tag>&& l2)
         {
@@ -100,6 +95,13 @@ namespace plotting
             return true;
         }
 
+        // Yield + Sink: We prefer to keep Yield simple
+        template<typename Y, typename L, typename S, typename tag>
+        bool perfection(YieldLink<Y, L, tag>&& yl, Sink<S, tag>&& sink)
+        {
+            return perfection(FWD(yl).yield, perfection(FWD(yl).link, FWD(sink)));
+        }
+
         // reorganize pipeline around sink
         template<typename L1, typename L2, typename S, typename tag>
         LinkSink<L1, LinkSink<L2, S, tag>, tag> perfection(LinkLink<L1, L2, tag>&& ll, Sink<S, tag>&& s)
@@ -107,11 +109,11 @@ namespace plotting
             return perfection(FWD(ll).link1, perfection(FWD(ll).link2, FWD(s)));
         }
 
-        // reorganize pipeline around sink
-        template<typename Y, typename L, typename S, typename tag>
-        bool perfection(YieldLink<Y, L, tag>&& yl, Sink<S, tag>&& sink)
+        // reorganize pipeline around yield
+        template<typename Y, typename L1, typename L2, typename tag>
+        YieldLink<YieldLink<Y, L1, tag>, L2, tag> perfection(Yield<Y, tag>&& y, LinkLink<L1, L2, tag>&& ll)
         {
-            return perfection(FWD(yl).yield, perfection(FWD(yl).link, FWD(sink)));
+            return perfection(perfection(FWD(y), FWD(ll).link1), FWD(ll).link2);
         }
 
         template<typename Y, typename L>
