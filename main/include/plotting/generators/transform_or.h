@@ -1,5 +1,6 @@
 #pragma once
 #include <plotting/generators/abstract.h>
+#include <optional>
 
 namespace plotting
 {
@@ -81,7 +82,7 @@ namespace plotting
         };
 
         template<typename G, typename F>
-        TransformOrGenerator<G const&, F> operator/(Generator<G> const& g, Transform<F> const& f)
+        TransformOrGenerator<G const&, F> operator/(Generator<G> const& g, TransformOr<F> const& f)
         {
             return {g._get_(), f._get_()};
         }
@@ -114,13 +115,13 @@ namespace plotting
         auto transform_or(F&& f, G&& g) { return pipeline::TransformOrWrap2<F, G>{FWD(f), FWD(g)}; }
 
         template<typename F>
-        auto transform_or(pipeline::Transform<F>&&)
+        auto transform_or(pipeline::TransformOr<F>&&)
         {
             assert(false && "Trying to wrap already Transformer in transform!");
         }
 
         template<typename F>
-        auto transform_or(pipeline::Transform<F> const&)
+        auto transform_or(pipeline::TransformOr<F> const&)
         {
             assert(false && "Trying to wrap already Transformer in transform!");
         }
