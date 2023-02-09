@@ -118,48 +118,9 @@ namespace
         void update_data()
         {
             stopwatch(_counter);
-            points1 << agge::clear;
-
-
-            points1 << chart/clip_repr2port(axes.coordinates)
+            points1 << agge::clear
+                    << chart/clip_repr2port(axes.coordinates)
                             /plotting::filters::FarEnough{0.5f};
-
-
-
-            //unsigned cmd      = agge::path_command_move_to;
-            //points1 << chart/plotting::filter([&, cmd_next = unsigned(agge::path_command_line_to) ] (plotting::repr_t const& x) mutable
-            //                                    {  bool const b = in_area(axes.coordinates.repr_area, x);
-            //                                       if(!b) cmd_next = agge::path_command_move_to;
-            //                                       cmd = cmd_next;
-            //                                       if(b) cmd_next = agge::path_command_line_to;
-            //                                       return b; })
-            //                /axes.coordinates.repr2port
-            //                /plotting::filters::FarEnough{0.5f}
-            //                /plotting::transform([&](plotting::port_t const& x)
-            //                                     {  return agge::polyline::Item{x, cmd}; });
-
-
-            //unsigned cmd = agge::path_command_move_to;
-            //plotting::filters::FarEnough farenough{0.5f};
-            //for(auto&& p: chart)
-            //{
-            //    if(!in_area(axes.coordinates.repr_area, p))
-            //    {
-            //        cmd = agge::path_command_move_to;
-            //        continue;
-            //    }
-            //    auto n = axes.coordinates.repr2port(p);
-            //    if(!farenough(n))
-            //        continue;
-            //    points1.push_back({n, cmd});
-            //    cmd = agge::path_command_line_to;
-            //}
-
-            //points1 << chart/plotting::filter([&](plotting::repr_t const& x)
-            //                                    { return in_area(axes.coordinates.repr_area, x); })
-            //                /axes.coordinates.repr2port
-            //                /plotting::filters::FarEnough{0.5f};
-
 
             points2 << agge::clear
                     << chart/plotting::transform([](plotting::repr_t p) { return plotting::repr_t{-p.x, -p.y}; })
