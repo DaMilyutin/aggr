@@ -73,14 +73,14 @@ namespace plotting
             repr_t      offset = repr_t{0., 0.};
         };
 
-        class ReprAreaToViewPortClipper: public pipeline::TransformOr<ReprAreaToViewPortClipper>
+        class ClipReprToPort: public pipeline::TransformOr<ClipReprToPort>
         {
             unsigned mutable cmd = agge::path_command_line_to;
             unsigned mutable next = agge::path_command_line_to;
             plotting::repr_area_t const& area;
             ReprToPort  const& transform;
         public:
-            ReprAreaToViewPortClipper(plotting::repr_area_t const& area,
+            ClipReprToPort(plotting::repr_area_t const& area,
                                       ReprToPort const& transform)
                 : area(area), transform(transform)
             {}

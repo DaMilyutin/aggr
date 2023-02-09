@@ -121,7 +121,7 @@ namespace
             points1 << agge::clear;
 
 
-            points1 << chart/clip_rect2port(axes.coordinates)
+            points1 << chart/clip_repr2port(axes.coordinates)
                             /plotting::filters::FarEnough{0.5f};
 
 

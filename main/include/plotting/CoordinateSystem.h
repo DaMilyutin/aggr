@@ -34,9 +34,9 @@ namespace plotting
         transformers::PortToRepr port2repr;
     };
 
-    inline auto clip_rect2port(CoordinateSystem const& c)
+    inline auto clip_repr2port(CoordinateSystem const& c)
     {
-        return transformers::ReprAreaToViewPortClipper(c.repr_area, c.repr2port);
+        return transformers::ClipReprToPort(c.repr_area, c.repr2port);
     }
 
     inline void shift(repr_area_t& a, repr_diff_t const& v)
