@@ -13,6 +13,9 @@
 #include <plotting/generators/Iota.h>
 #include <plotting/generators/filter.h>
 
+#include <plotting/chain-helpers/filters.h>
+
+
 #include <plotting/primitives/LinesGenerator.h>
 #include <plotting/primitives/LabelsGenerator.h>
 
