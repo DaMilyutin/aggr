@@ -14,28 +14,21 @@ namespace plotting
     };
 
     template<typename E>
-    struct Colored<E&>
-    {
-        E&          entity;
-        agge::color color;
-    };
-
-    template<typename E>
     inline auto operator/(Colored<E>&, agge::color) = delete;
     template<typename E>
     inline auto operator/(Colored<E>&&, agge::color) = delete;
 
 
     template<typename E>
-    inline Colored<E&> operator/(agge::pipeline::terminal<E>& e, agge::color c)
+    inline Colored<E&> operator/(E& e, agge::color c)
     {
         return {e._get_(), c};
     }
 
     template<typename E>
-    inline Colored<E> operator/(agge::pipeline::terminal<E>&& e, agge::color c)
+    inline Colored<E> operator/(E&& e, agge::color c)
     {
-        return {std::move(e._get_()), c};
+        return {std::move(e), c};
     }
 
     template<typename S, typename Rn, typename Rs, typename E>
