@@ -1,10 +1,10 @@
 #pragma once
-
 #include <plotting/generators/filter.h>
+
+#include <agge/primitives/polyline.h>
 
 namespace plotting
 {
-
     namespace filters
     {
         struct FarEnough: public pipeline::Filter<FarEnough>
