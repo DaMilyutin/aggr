@@ -1,7 +1,6 @@
 #pragma once
-#include <plotting/generators/generator.h>
-#include <tuple>
-#include <plotting/utilities/tuple_fun.h>
+#include <plotting/generators/abstract.h>
+#include <plotting/generators/utilities/tuple_fun.h>
 
 namespace plotting
 {

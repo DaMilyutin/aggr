@@ -1,6 +1,5 @@
 #pragma once
-
-#include <plotting/generators/generator.h>
+#include <plotting/generators/abstract.h>
 
 namespace plotting
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "transform.h"
+#include <plotting/generators/abstract.h>
 
 namespace plotting
 {

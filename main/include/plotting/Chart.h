@@ -5,7 +5,7 @@
 #include <agge/primitives/pipeline.h>
 #include <agge/primitives/polyline.h>
 
-#include <plotting/generators/generator.h>
+#include <plotting/generators/abstract.h>
 #include <plotting/generators/iota.h>
 #include <plotting/generators/transform.h>
 

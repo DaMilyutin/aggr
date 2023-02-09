@@ -1,7 +1,5 @@
 #pragma once
-#include <utility>
-
-#include <plotting/generators/generator.h>
+#include <plotting/generators/abstract.h>
 #include <limits>
 
 namespace plotting

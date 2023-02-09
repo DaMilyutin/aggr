@@ -11,7 +11,7 @@
 
 #include <plotting/primitives/Canvas.h>
 
-#include <plotting/generators/generator.h>
+#include <plotting/generators/abstract.h>
 
 namespace plotting
 {
