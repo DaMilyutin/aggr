@@ -7,7 +7,7 @@ namespace plotting
     namespace pipeline
     {
         template<typename E>
-        struct TransformOr: public Chain<E> {};
+        struct TransformOr: public Link<E> {};
 
         template<typename Func>
         struct TransformOrWrap: public TransformOr<TransformOrWrap<Func>>
@@ -31,7 +31,7 @@ namespace plotting
         };
 
         template<typename G, typename F>
-        class TransformOrGenerator: public Generator<TransformOrGenerator<G, F>>
+        class TransformOrGenerator: public Yield<TransformOrGenerator<G, F>>
         {
             using UnderlyingIterator = std::remove_cv_t<decltype(std::begin(std::declval<G>()))>;
             using UnderlyingSentinel = std::remove_cv_t<decltype(std::end(std::declval<G>()))>;
@@ -82,25 +82,25 @@ namespace plotting
         };
 
         template<typename G, typename F>
-        TransformOrGenerator<G const&, F> operator/(Generator<G> const& g, TransformOr<F> const& f)
+        TransformOrGenerator<G const&, F> operator/(Yield<G> const& g, TransformOr<F> const& f)
         {
             return {g._get_(), f._get_()};
         }
 
         template<typename G, typename F>
-        TransformOrGenerator<G const&, F> operator/(Generator<G> const& g, TransformOr<F>&& f)
+        TransformOrGenerator<G const&, F> operator/(Yield<G> const& g, TransformOr<F>&& f)
         {
             return {g._get_(), std::move(f)._get_()};
         }
 
         template<typename G, typename F>
-        TransformOrGenerator<G, F> operator/(Generator<G>&& g, TransformOr<F>&& f)
+        TransformOrGenerator<G, F> operator/(Yield<G>&& g, TransformOr<F>&& f)
         {
             return {std::move(g)._get_(), std::move(f)._get_()};
         }
 
         template<typename G, typename F>
-        TransformOrGenerator<G, F> operator/(Generator<G>&& g, TransformOr<F> const& f)
+        TransformOrGenerator<G, F> operator/(Yield<G>&& g, TransformOr<F> const& f)
         {
             return {std::move(g)._get_(), f._get_()};
         }

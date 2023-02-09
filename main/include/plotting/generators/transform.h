@@ -7,7 +7,7 @@ namespace plotting
     namespace pipeline
     {
         template<typename E>
-        struct Transform: public Chain<E> {};
+        struct Transform: public Link<E> {};
 
         template<typename Func>
         struct TransformWrap: public Transform<TransformWrap<Func>>
@@ -16,11 +16,18 @@ namespace plotting
             TransformWrap(F&& f): transform(std::forward<F>(f)) {}
 
             auto operator()(auto x) const { return transform(x); }
+
+            template<typename S, typename E>
+            bool feed(Sink<S>& sink, E&& e) const
+            {
+                return sink._get_().eat(transform(FWD(e)));
+            }
+
             Func mutable transform;
         };
 
         template<typename G, typename F>
-        class TransformGenerator: public Generator<TransformGenerator<G, F>>
+        class TransformGenerator: public Yield<TransformGenerator<G, F>>
         {
             using UnderlyingIterator = std::remove_cv_t<decltype(std::begin(std::declval<G>()))>;
             using UnderlyingSentinel = std::remove_cv_t<decltype(std::end(std::declval<G>()))>;
@@ -57,25 +64,25 @@ namespace plotting
         };
 
         template<typename G, typename F>
-        TransformGenerator<G const&, F> operator/(Generator<G> const& g, Transform<F> const& f)
+        TransformGenerator<G const&, F> operator/(Yield<G> const& g, Transform<F> const& f)
         {
             return {g._get_(), f._get_()};
         }
 
         template<typename G, typename F>
-        TransformGenerator<G const&, F> operator/(Generator<G> const& g, Transform<F>&& f)
+        TransformGenerator<G const&, F> operator/(Yield<G> const& g, Transform<F>&& f)
         {
             return {g._get_(), std::move(f)._get_()};
         }
 
         template<typename G, typename F>
-        TransformGenerator<G, F> operator/(Generator<G>&& g, Transform<F>&& f)
+        TransformGenerator<G, F> operator/(Yield<G>&& g, Transform<F>&& f)
         {
             return {std::move(g)._get_(), std::move(f)._get_()};
         }
 
         template<typename G, typename F>
-        TransformGenerator<G, F> operator/(Generator<G>&& g, Transform<F> const& f)
+        TransformGenerator<G, F> operator/(Yield<G>&& g, Transform<F> const& f)
         {
             return {std::move(g)._get_(), f._get_()};
         }

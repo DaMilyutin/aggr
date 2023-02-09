@@ -17,7 +17,7 @@ namespace plotting
         };
 
         template<typename T, typename D = difference_type<T>, typename I = size_t>
-        class Iota: public Generator<Iota<T>>
+        class Iota: public Yield<Iota<T>>
         {
             T _start;
             D _inc;

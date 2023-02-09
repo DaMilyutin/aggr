@@ -7,7 +7,7 @@ namespace plotting
     namespace pipeline
     {
         template<typename Func>
-        struct Filter: Chain<Func>
+        struct Filter: Link<Func>
         {};
 
         template<typename Func>
@@ -17,11 +17,20 @@ namespace plotting
             FilterWrap(F&& f) : select(std::forward<F>(f)) {}
 
             bool operator()(auto const& x) const { return select(x); }
+
+            template<typename S, typename E>
+            bool feed(Sink<S>& sink, E&& e) const
+            {
+                if(!select(e))
+                    return false;
+                return (sink._get_()) << FWD(e);
+            }
+
             Func  mutable select;
         };
 
         template<typename G, typename F>
-        class FilterGenerator: public Generator<FilterGenerator<G, F>>
+        class FilterGenerator: public Yield<FilterGenerator<G, F>>
         {
             using UnderlyingIterator = std::remove_cv_t<decltype(std::begin(std::declval<G>()))>;
             using UnderlyingSentinel = std::remove_cv_t<decltype(std::end(std::declval<G>()))>;
@@ -71,25 +80,25 @@ namespace plotting
         };
 
         template<typename G, typename F>
-        FilterGenerator<G const&, F> operator/(Generator<G> const& g, Filter<F> const& f)
+        FilterGenerator<G const&, F> operator/(Yield<G> const& g, Filter<F> const& f)
         {
             return {g._get_(), f._get_()};
         }
 
         template<typename G, typename F>
-        FilterGenerator<G const&, F> operator/(Generator<G> const& g, Filter<F>&& f)
+        FilterGenerator<G const&, F> operator/(Yield<G> const& g, Filter<F>&& f)
         {
             return {g._get_(), std::move(f)._get_()};
         }
 
         template<typename G, typename F>
-        FilterGenerator<G, F> operator/(Generator<G>&& g, Filter<F>&& f)
+        FilterGenerator<G, F> operator/(Yield<G>&& g, Filter<F>&& f)
         {
             return {std::move(g)._get_(), std::move(f)._get_()};
         }
 
         template<typename G, typename F>
-        FilterGenerator<G, F> operator/(Generator<G>&& g, Filter<F> const& f)
+        FilterGenerator<G, F> operator/(Yield<G>&& g, Filter<F> const& f)
         {
             return {std::move(g)._get_(), f._get_()};
         }

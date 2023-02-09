@@ -17,7 +17,7 @@ namespace plotting
 {
     template<typename S, typename Rn, typename Rs, typename G>
     plotting::Canvas<S, Rn, Rs>& operator<<(plotting::Canvas<S, Rn, Rs>& c,
-                                pipeline::Generator<G> const& entities)
+                                pipeline::Yield<G> const& entities)
     {
         c << reset;
         for(auto&& l : entities._get_())

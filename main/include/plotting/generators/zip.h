@@ -7,7 +7,7 @@ namespace plotting
     namespace pipeline
     {
         template <typename... T>
-        class ZipGenerator: public Generator<ZipGenerator<T...>>
+        class ZipGenerator: public Yield<ZipGenerator<T...>>
         {
             struct beginner { template<typename T> auto operator()(T const& seq) const { return std::begin(seq); } };
             struct ender    { template<typename T> auto operator()(T const& seq) const { return std::end(seq); } };
@@ -96,7 +96,7 @@ namespace plotting
         };
 
         template <typename... T>
-        auto zip(Generator<T>&&... seqs)
+        auto zip(Yield<T>&&... seqs)
         {
             return ZipGenerator<T...>(std::make_tuple(std::move(seqs)._get_()...));
         }

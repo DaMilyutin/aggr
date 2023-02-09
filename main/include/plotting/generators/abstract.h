@@ -15,11 +15,11 @@ namespace plotting
         };
 
         template<typename E>
-        struct Generator: public _terminal_<E>
+        struct Yield: public _terminal_<E>
         {};
 
         template<typename E>
-        struct Chain: public _terminal_<E>
+        struct Link: public _terminal_<E>
         {};
 
         template<typename E>

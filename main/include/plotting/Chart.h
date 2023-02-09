@@ -12,7 +12,7 @@
 namespace plotting
 {
     template<typename E>
-    agge::polyline& operator<<(agge::polyline& ret, pipeline::Generator<E> const& gen)
+    agge::polyline& operator<<(agge::polyline& ret, pipeline::Yield<E> const& gen)
     {
         for(auto&& p: gen._get_())
             ret << p;
@@ -20,7 +20,7 @@ namespace plotting
     }
 
     template<typename E>
-    agge::polyline& operator<<(agge::polyline& ret, pipeline::Generator<E>&& gen)
+    agge::polyline& operator<<(agge::polyline& ret, pipeline::Yield<E>&& gen)
     {
         for(auto&& p: gen._get_())
             ret << p;
@@ -55,12 +55,12 @@ namespace plotting
         std::function<double(double)> Y;
     };
 
-    struct ChartData: public pipeline::Generator<ChartData>
+    struct ChartData: public pipeline::Yield<ChartData>
     {
         std::vector<repr_t> data;
 
         template<typename G>
-        void operator<<(pipeline::Generator<G> const& g)
+        void operator<<(pipeline::Yield<G> const& g)
         {
             data.clear();
             for(auto&& p: g._get_())
