@@ -11,4 +11,14 @@ namespace plotting
 
     using repr_area_t = agge::rect<double>;
     using port_area_t = agge::rect<agge::real_t>;
+
+    inline bool in_area(plotting::repr_area_t const& a, plotting::repr_t const& p)
+    {
+        return (a.x1 < p.x&& p.x < a.x2) && (a.y2 < p.y&& p.y < a.y1);
+    }
+
+    inline bool in_area(agge::rect_r const& a, agge::point_r const& p)
+    {
+        return (a.x1 < p.x&& p.x < a.x2) && (a.y1 < p.y&& p.y < a.y2);
+    }
 }
