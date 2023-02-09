@@ -85,7 +85,7 @@ namespace
             //auto const F = [](double t) { return sin(t/(t*t+1.e-2))*exp(0.5*t); };
             //chart.from(plotting::range(-5., 5., 1.e-2)/plotting::FunctionX(F));
 
-            chart << plotting::range(0., 50., 1.e-4)
+            chart << plotting::range(0., 50., 1.e-4) // 1e-1 to see clip_repr2port effect
                         /plotting::FunctionXY([](double t){return 0.01*t*sin(t)+3.; },
                                               [](double t){return 0.01*t*cos(t)+1; });
         }
