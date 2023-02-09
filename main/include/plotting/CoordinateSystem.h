@@ -5,7 +5,7 @@
 
 namespace plotting
 {
-    struct ReprToPort: pipeline::Transformer<ReprToPort>
+    struct ReprToPort: pipeline::Transform<ReprToPort>
     {
         void from(repr_area_t const& repr_area, port_area_t const& port_area)
         {
@@ -34,7 +34,7 @@ namespace plotting
         repr_t      offset = repr_t{0., 0.};
     };
 
-    struct PortToRepr: pipeline::Transformer<PortToRepr>
+    struct PortToRepr: pipeline::Transform<PortToRepr>
     {
         void from(port_area_t const& port_area, repr_area_t const& repr_area)
         {

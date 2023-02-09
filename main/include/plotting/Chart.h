@@ -27,7 +27,7 @@ namespace plotting
         return ret;
     }
 
-    struct FunctionY: public pipeline::Transformer<FunctionY>
+    struct FunctionY: public pipeline::Transform<FunctionY>
     {
         template<typename F>
         FunctionY(F&& f): Y(FWD(f)) {}
@@ -36,7 +36,7 @@ namespace plotting
         std::function<double(double)> Y;
     };
 
-    struct FunctionX: public pipeline::Transformer<FunctionX>
+    struct FunctionX: public pipeline::Transform<FunctionX>
     {
         template<typename F>
         FunctionX(F&& f): X(FWD(f)) {}
@@ -45,7 +45,7 @@ namespace plotting
         std::function<double(double)> X;
     };
 
-    struct FunctionXY: public pipeline::Transformer<FunctionXY>
+    struct FunctionXY: public pipeline::Transform<FunctionXY>
     {
         template<typename F, typename G>
         FunctionXY(F&& f, G&& g): X(FWD(f)), Y(FWD(g)) {}

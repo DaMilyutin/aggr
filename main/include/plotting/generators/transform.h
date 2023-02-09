@@ -9,13 +9,13 @@ namespace plotting
     namespace pipeline
     {
         template<typename E>
-        struct Transformer: public agge::pipeline::terminal<E> {};
+        struct Transform: public Chain<E> {};
 
         template<typename Func>
-        struct Transform: public Transformer<Transform<Func>>
+        struct TransformWrap: public Transform<TransformWrap<Func>>
         {
             template<typename F>
-            Transform(F&& f): transform(std::forward<F>(f)) {}
+            TransformWrap(F&& f): transform(std::forward<F>(f)) {}
 
             auto operator()(auto x) const { return transform(x); }
             Func mutable transform;
@@ -59,43 +59,43 @@ namespace plotting
         };
 
         template<typename G, typename F>
-        TransformGenerator<G const&, F> operator/(Generator<G> const& g, Transformer<F> const& f)
+        TransformGenerator<G const&, F> operator/(Generator<G> const& g, Transform<F> const& f)
         {
             return {g._get_(), f._get_()};
         }
 
         template<typename G, typename F>
-        TransformGenerator<G const&, F> operator/(Generator<G> const& g, Transformer<F>&& f)
+        TransformGenerator<G const&, F> operator/(Generator<G> const& g, Transform<F>&& f)
         {
             return {g._get_(), std::move(f)._get_()};
         }
 
         template<typename G, typename F>
-        TransformGenerator<G, F> operator/(Generator<G>&& g, Transformer<F>&& f)
+        TransformGenerator<G, F> operator/(Generator<G>&& g, Transform<F>&& f)
         {
             return {std::move(g)._get_(), std::move(f)._get_()};
         }
 
         template<typename G, typename F>
-        TransformGenerator<G, F> operator/(Generator<G>&& g, Transformer<F> const& f)
+        TransformGenerator<G, F> operator/(Generator<G>&& g, Transform<F> const& f)
         {
             return {std::move(g)._get_(), f._get_()};
         }
 
         template<typename F>
-        auto transform(F const& f) { return pipeline::Transform<F const&>{ f}; }
+        auto transform(F const& f) { return pipeline::TransformWrap<F const&>{ f}; }
 
         template<typename F>
-        auto transform(F&& f) { return pipeline::Transform<F>{std::move(f)}; }
+        auto transform(F&& f) { return pipeline::TransformWrap<F>{std::move(f)}; }
 
         template<typename F>
-        auto transform(pipeline::Transformer<F>&&)
+        auto transform(pipeline::Transform<F>&&)
         {
             assert(false && "Trying to wrap already Transformer in transform!");
         }
 
         template<typename F>
-        auto transform(pipeline::Transformer<F> const&)
+        auto transform(pipeline::Transform<F> const&)
         {
             assert(false && "Trying to wrap already Transformer in transform!");
         }

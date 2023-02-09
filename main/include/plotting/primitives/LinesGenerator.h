@@ -10,7 +10,7 @@ namespace plotting
         agge::point_r end{};
     };
 
-    struct LinesInDirection: public pipeline::Transformer<LinesInDirection>
+    struct LinesInDirection: public pipeline::Transform<LinesInDirection>
     {
         LinesInDirection(agge::vector_r v): direction(v) {}
 
@@ -21,7 +21,7 @@ namespace plotting
 
 
 
-    struct SimpleLineMaker: public pipeline::Transformer<SimpleLineMaker>
+    struct SimpleLineMaker: public pipeline::Transform<SimpleLineMaker>
     {
         SimpleLineMaker() = default;
 
@@ -31,7 +31,7 @@ namespace plotting
         }
     };
 
-    struct StylishLineMaker: public pipeline::Transformer<StylishLineMaker>
+    struct StylishLineMaker: public pipeline::Transform<StylishLineMaker>
     {
         StylishLineMaker(agge::stroke& s): style(s) {}
 
@@ -42,7 +42,7 @@ namespace plotting
         }
     };
 
-    struct FancyLineMaker: public pipeline::Transformer<FancyLineMaker>
+    struct FancyLineMaker: public pipeline::Transform<FancyLineMaker>
     {
         FancyLineMaker(agge::dash& d, agge::stroke& s): dash(d), style(s) {}
 

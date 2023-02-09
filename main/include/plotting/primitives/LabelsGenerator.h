@@ -9,7 +9,7 @@
 
 namespace plotting
 {
-    struct LabelMaker: pipeline::Transformer<LabelMaker>
+    struct LabelMaker: pipeline::Transform<LabelMaker>
     {
         template<typename B>
         LabelMaker(B&& b): base(FWD(b)) {}

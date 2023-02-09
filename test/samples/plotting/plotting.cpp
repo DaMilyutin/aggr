@@ -46,7 +46,7 @@ namespace
         return (a.x1 < p.x && p.x < a.x2) && (a.y1 < p.y && p.y < a.y2);
     }
 
-    class ReprAreaToViewPortClipper: public plotting::pipeline::TransformDroper<ReprAreaToViewPortClipper>
+    class ReprAreaToViewPortClipper: public plotting::pipeline::TransformOr<ReprAreaToViewPortClipper>
     {
         unsigned mutable cmd = agge::path_command_line_to;
         unsigned mutable next = agge::path_command_line_to;
@@ -198,10 +198,10 @@ namespace
             //                /plotting::filters::FarEnough{0.5f};
 
 
-            //points2 << agge::clear
-            //        << chart/plotting::transform([](plotting::repr_t p) { return plotting::repr_t{-p.x, -p.y}; })
-            //            /axes.coordinates.repr2port
-            //            /plotting::filters::FarEnough{{},50.0f};
+            points2 << agge::clear
+                    << chart/plotting::transform([](plotting::repr_t p) { return plotting::repr_t{-p.x, -p.y}; })
+                        /axes.coordinates.repr2port
+                        /plotting::filters::FarEnough{50.0f};
             _timingOfUpdate = stopwatch(_counter);
         }
 
