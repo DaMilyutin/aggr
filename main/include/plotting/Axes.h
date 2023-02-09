@@ -1,5 +1,7 @@
 #pragma once
-#include "CoordinateSystem.h"
+#include <plotting/types/point_types.h>
+#include <plotting/CoordinateSystem.h>
+
 #include <agge/color.h>
 #include <agge/primitives/figures.h>
 #include <agge/primitives/stroke.h>
