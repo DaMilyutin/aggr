@@ -5,7 +5,7 @@
 
 namespace ylems
 {
-    namespace elements
+    namespace categories
     {
         template<typename F, template<typename> typename tag>
         struct Filter: rules::Link<F, tag>
@@ -54,42 +54,5 @@ namespace ylems
             template<typename Y> auto begin(Y const& y) const { return YieldDescriptor<Y>::begin(y, this->_get_()); }
             template<typename Y> auto end(Y const& y) const { return YieldDescriptor<Y>::end(y, this->_get_()); }
         };
-
-        template<typename Func, template<typename> typename tag>
-        struct FilterWrap: public Filter<FilterWrap<Func, tag>, tag>
-        {
-            template<typename F>
-            FilterWrap(F&& f) : select(std::forward<F>(f)) {}
-
-            bool operator()(auto const& x) const { return select(x); }
-
-            template<typename S, typename E>
-            bool feed(S& sink, E&& e) const
-            {
-                if(!select(e))
-                    return false;
-                return (sink._get_()) << FWD(e);
-            }
-
-            Func select;
-        };
-
-        template<template<typename> typename tag, typename F>
-        auto filter(F const& f) { return FilterWrap<F const&, tag>{f}; }
-
-        template<template<typename> typename tag, typename F>
-        auto filter(F&& f) { return FilterWrap<F, tag>{ std::move(f)}; }
-
-        template<template<typename> typename tag, typename F>
-        auto filter(Filter<F, tag>&&)
-        {
-            assert(false && "Trying to wrap Filter in filter!");
-        }
-
-        template<template<typename> typename tag, typename F>
-        auto filter(Filter<F, tag> const&)
-        {
-            assert(false && "Trying to wrap Filter in filter!");
-        }
     }
 }

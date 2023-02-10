@@ -17,6 +17,7 @@
 #include <plotting/Chart.h>
 
 #include <plotting/piping/transformers.h>
+#include <plotting/piping/filters.h>
 
 #include <agge.text/layout.h>
 #include <agge.text/limit.h>
@@ -153,6 +154,7 @@ namespace
                 if(in_area(axes.coordinates.port_area, ref_point))
                 {
                     auto n = axes.coordinates.repr_area;
+                    ref_point = ref_point + agge::vector_r{-axes.position.x1, -axes.position.y1};
                     auto orig = axes.coordinates.port2repr(ref_point);
                     plotting::zoom(n, orig, exp(-log(1.5)*input.vWheel/120.));
                     axes.coordinates.update(n);

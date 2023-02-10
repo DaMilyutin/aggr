@@ -318,8 +318,8 @@ namespace plotting
             {
                 line_style.width(prop.tick[2].width);
                 return minor_points(X)/LinesInDirection{{dir*prop.tick[2].length, 0}}
-                    /StylishLineMaker{line_style}
-                /prop.tick[2].color;
+                                /StylishLineMaker{line_style}
+                                /prop.tick[2].color;
             }
 
             auto grid(agge::real_t X1, agge::real_t X2) const

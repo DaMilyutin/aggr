@@ -4,7 +4,7 @@
 
 namespace ylems
 {
-    namespace elements
+    namespace categories
     {
         template<typename T, template<typename> typename tag>
         struct Transform: public rules::Link<T, tag>
@@ -43,43 +43,5 @@ namespace ylems
             template<typename Y> auto begin(Y const& y) const { return YieldDescriptor<Y>::begin(y, this->_get_()); }
             template<typename Y> auto end(Y const& y) const { return YieldDescriptor<Y>::end(y, this->_get_()); }
         };
-
-        template<typename Func, template<typename> typename tag>
-        struct TransformWrap: public Transform<TransformWrap<Func, tag>, tag>
-        {
-            template<typename F>
-            TransformWrap(F&& f): transform(FWD(f)) {}
-
-            TransformWrap(TransformWrap&&) = default;
-            TransformWrap(TransformWrap const&) = default;
-
-            auto operator()(auto x) const { return transform(x); }
-
-            template<typename S, typename E>
-            bool feed(S& sink, E&& e) const
-            {
-                return sink.eat(transform(FWD(e)));
-            }
-
-            Func transform;
-        };
-
-        template<template<typename> typename tag, typename F>
-        auto transform(F const& f) { return TransformWrap<F const&, tag>{ f}; }
-
-        template<template<typename> typename tag, typename F>
-        auto transform(F&& f) { return TransformWrap<F, tag>{FWD(f)}; }
-
-        template<template<typename> typename tag, typename F>
-        auto transform(Transform<F, tag>&&)
-        {
-            assert(false && "Trying to wrap already Transformer in transform!");
-        }
-
-        template<template<typename> typename tag, typename F>
-        auto transform(Transform<F, tag> const&)
-        {
-            assert(false && "Trying to wrap already Transformer in transform!");
-        }
     }
 }
