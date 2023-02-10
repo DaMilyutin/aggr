@@ -86,14 +86,26 @@ namespace ylems
         }
 
         // Yield + Sink => system closed and ready to run
+
         template<template<typename> typename tag, typename Y, typename S>
-        bool meld(Yield<Y, tag>&& yield, Sink<S, tag>&& sink)
+        bool meld(Yield<Y, tag> const& yield, Sink<S, tag>& sink)
         {
-            for(auto&& e: FWD(yield)._get_())
-                if(!sink(e))
+            auto& the_sink = sink._get_();
+            for(auto&& e: yield._get_())
+                if(!the_sink(e))
                     return false; // if sink forced to stop
             return true;
         }
+
+        template<template<typename> typename tag, typename Y, typename S>
+        bool meld(Yield<Y, tag>&& yield, Sink<S, tag>& sink) { return meld(yield._get_(), sink._get_()); }
+
+        template<template<typename> typename tag, typename Y, typename S>
+        bool meld(Yield<Y, tag> const& yield, Sink<S, tag>&& sink) { return meld(yield._get_(), sink._get_()); }
+
+        template<template<typename> typename tag, typename Y, typename S>
+        bool meld(Yield<Y, tag>&& yield, Sink<S, tag>&& sink) { return meld(yield._get_(), sink._get_()); }
+
 
         // Yield + Sink: We prefer to keep Yield simple
         template<template<typename> typename tag, typename Y, typename L, typename S>
@@ -116,11 +128,50 @@ namespace ylems
             return meld(meld(FWD(y), FWD(ll).link1), FWD(ll).link2);
         }
 
+        // helpers to kick-in ADL and static polymorphism
+        template<template<typename> typename tag, typename X, typename Y>
+        auto meld_tag(tag<X>&& x, tag<Y>&& y)
+        {
+            return meld<tag>(FWD(x)._get_(), FWD(y)._get_());
+        }
+
+        template<template<typename> typename tag, typename X, typename Y>
+        auto meld_tag(tag<X> const& x, tag<Y>&& y) // helper to kick-in ADL and static polymorphism
+        {
+            return meld<tag>(x._get_(), FWD(y)._get_());
+        }
+
+        template<template<typename> typename tag, typename X, typename Y>
+        auto meld_tag(tag<X>&& x, tag<Y> const& y) // helper to kick-in ADL and static polymorphism
+        {
+            return meld<tag>(FWD(x)._get_(), y._get_());
+        }
+
+        template<template<typename> typename tag, typename X, typename Y>
+        auto meld_tag(tag<X> const& x, tag<Y> const& y)
+        {
+            return meld<tag>(x._get_(), y._get_());
+        }
+
+        template<template<typename> typename tag, typename X, typename Y>
+        auto meld_tag(tag<X>&& x, tag<Y>& y) // helper to kick-in ADL and static polymorphism
+        {
+            return meld<tag>(FWD(x)._get_(), y._get_());
+        }
+
+        template<template<typename> typename tag, typename X, typename Y>
+        auto meld_tag(tag<X> const& x, tag<Y>& y)
+        {
+            return meld<tag>(x._get_(), y._get_());
+        }
+
     }
 }
 
 #define YLEMS_MELD_OPERATION(tag, OP) \
-template<typename L, typename R> auto OP(tag<L>&&      l, tag<R>&&      r) { return ylems::rules::meld<tag>(FWD(l)._get_(), FWD(r)._get_()); } \
-template<typename L, typename R> auto OP(tag<L> const& l, tag<R>&&      r) { return ylems::rules::meld<tag>(l._get_(),      FWD(r)._get_()); } \
-template<typename L, typename R> auto OP(tag<L>&&      l, tag<R> const& r) { return ylems::rules::meld<tag>(FWD(l)._get_(),      r._get_()); } \
-template<typename L, typename R> auto OP(tag<L> const& l, tag<R> const& r) { return ylems::rules::meld<tag>(l._get_(),           r._get_()); }
+template<typename L, typename R> auto OP(tag<L>&&      l, tag<R>&&      r) { return ylems::rules::meld_tag(FWD(l), FWD(r)); } \
+template<typename L, typename R> auto OP(tag<L> const& l, tag<R>&&      r) { return ylems::rules::meld_tag(l     , FWD(r)); } \
+template<typename L, typename R> auto OP(tag<L>&&      l, tag<R> const& r) { return ylems::rules::meld_tag(FWD(l), r     ); } \
+template<typename L, typename R> auto OP(tag<L> const& l, tag<R> const& r) { return ylems::rules::meld_tag(l     , r     ); } \
+template<typename L, typename R> auto OP(tag<L>&&      l, tag<R>&       r) { return ylems::rules::meld_tag(FWD(l), r     ); } \
+template<typename L, typename R> auto OP(tag<L> const& l, tag<R>&       r) { return ylems::rules::meld_tag(l     , r     ); }
