@@ -8,7 +8,7 @@ namespace plotting
     namespace piping
     {
         template<typename T, typename D, typename I>
-        auto iota(T t, D d, I i) { return ylems::elements::iota<terminal>(t, d, i); }
+                                         auto iota(T t, D d, I i) { return ylems::elements::iota<terminal>(t, d, i); }
         template<typename T, typename D> auto iota(T t, D d) { return ylems::elements::iota<terminal>(t, d); }
 
         template<typename T, typename I> auto linspace(T b, T e, I i) { return ylems::elements::linspace<terminal>(b, e, i); }
@@ -38,4 +38,6 @@ namespace plotting
     using piping::filter;
     using piping::transform;
     using piping::transform;
+
+    using piping::zip;
 }
