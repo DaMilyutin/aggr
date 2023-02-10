@@ -120,10 +120,8 @@ namespace
         {
             stopwatch(_counter);
             points1 << agge::clear
-                    << chart/axes.coordinates.repr2port;
-
-//                    /clip_repr2port(axes.coordinates)
-  //                          /plotting::filters::FarEnough{0.5f};
+                    << chart/clip_repr2port(axes.coordinates)
+                            /plotting::filters::FarEnough{0.5f};
 
             points2 << agge::clear
                     << chart/plotting::transform([](plotting::repr_t p) { return plotting::repr_t{-p.x, -p.y}; })
@@ -145,27 +143,32 @@ namespace
 
         virtual void consume_events() override
         {
-            auto const input = events.read();
+            _input = events.read();
             using plotting::in_area;
 
-            if(input.vWheel != 0)
+            if(_input.vWheel != 0 || _input.keys.clicked(_input.keys.Add) || _input.keys.clicked(_input.keys.Subtract))
             {
-                agge::point_r ref_point{(float)input.position.x, (float)input.position.y};
+                int shift = _input.vWheel;
+                if(_input.keys.clicked(_input.keys.Add))
+                    shift = 120;
+                else if(_input.keys.clicked(_input.keys.Subtract))
+                    shift = -120;
+                agge::point_r ref_point{(float)_input.position.x, (float)_input.position.y};
                 if(in_area(axes.coordinates.port_area, ref_point))
                 {
                     auto n = axes.coordinates.repr_area;
                     ref_point = ref_point + agge::vector_r{-axes.position.x1, -axes.position.y1};
                     auto orig = axes.coordinates.port2repr(ref_point);
-                    plotting::zoom(n, orig, exp(-log(1.5)*input.vWheel/120.));
+                    plotting::zoom(n, orig, exp(-log(1.5)*shift/120.));
                     axes.coordinates.update(n);
                 }
             }
-            if(input.mouse.pressed[system_input::MouseButtons::Left])
+            if(_input.mouse.pressed[system_input::MouseButtons::Left])
             {
-                agge::point_r ref_point{(float)input.position.x, (float)input.position.y};
+                agge::point_r ref_point{(float)_input.position.x, (float)_input.position.y};
                 if(in_area(axes.coordinates.port_area, ref_point))
                 {
-                    agge::vector_r shift_repr{-(float)input.move.x, -(float)input.move.y};
+                    agge::vector_r shift_repr{-(float)_input.move.x, -(float)_input.move.y};
                     auto n = axes.coordinates.repr_area;
                     auto shift = axes.coordinates.port2repr(shift_repr);
                     plotting::shift(n, shift);
@@ -192,6 +195,8 @@ namespace
         agge::dash                 dash_style;
         agge::polyline             points1;
         agge::polyline             points2;
+
+        system_input::EventAggregator::Summary _input;
 
         plotting::ChartData        chart;
         float                      scale = 1.0f;
