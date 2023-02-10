@@ -12,10 +12,8 @@
 #include <agge.text/font.h>
 
 #include <plotting/primitives/Canvas.h>
-#include <plotting/generators/Iota.h>
-#include <plotting/generators/filter.h>
-
-#include <plotting/chain-helpers/filters.h>
+#include <plotting/piping.h>
+#include <plotting/piping/filters.h>
 
 
 #include <plotting/primitives/LinesGenerator.h>

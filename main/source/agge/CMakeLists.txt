@@ -52,3 +52,4 @@ endif()
 
 add_library(agge STATIC ${AGGE_SOURCES})
 target_include_directories(agge PUBLIC ../../include/.)
+target_include_directories(agge PUBLIC ../../../libraries/ylems/include)

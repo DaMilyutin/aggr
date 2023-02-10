@@ -1,9 +1,6 @@
 #pragma once
-#include <plotting/generators/transform.h>
-#include <plotting/generators/transform_or.h>
-
+#include <plotting/piping.h>
 #include <plotting/types/point_types.h>
-
 #include <agge/primitives/polyline.h>
 #include <optional>
 
@@ -11,7 +8,7 @@ namespace plotting
 {
     namespace transformers
     {
-        struct ReprToPort: pipeline::Transform<ReprToPort>
+        struct ReprToPort: piping::Transform<ReprToPort>
         {
             void from(repr_area_t const& repr_area, port_area_t const& port_area)
             {
@@ -40,7 +37,7 @@ namespace plotting
             repr_t      offset = repr_t{0., 0.};
         };
 
-        struct PortToRepr: pipeline::Transform<PortToRepr>
+        struct PortToRepr: piping::Transform<PortToRepr>
         {
             void from(port_area_t const& port_area, repr_area_t const& repr_area)
             {
@@ -73,7 +70,7 @@ namespace plotting
             repr_t      offset = repr_t{0., 0.};
         };
 
-        class ClipReprToPort: public pipeline::TransformOr<ClipReprToPort>
+        class ClipReprToPort: public piping::TransformOr<ClipReprToPort>
         {
             unsigned mutable cmd = agge::path_command_line_to;
             unsigned mutable next = agge::path_command_line_to;

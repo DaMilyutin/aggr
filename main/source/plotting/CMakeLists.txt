@@ -17,4 +17,5 @@ add_library(plotting STATIC ${PLOTTING_COMMON_SOURCES})
 
 target_include_directories(plotting INTERFACE ../../include/.)
 target_include_directories(plotting INTERFACE ../../../libraries/strmd)
-target_link_libraries(plotting agge agge.text strmd)
+target_include_directories(plotting INTERFACE ../../../libraries/ylems/include)
+target_link_libraries(plotting agge agge.text strmd ylems)

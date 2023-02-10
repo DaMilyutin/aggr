@@ -11,13 +11,23 @@
 
 #include <plotting/primitives/Canvas.h>
 
-#include <plotting/generators/abstract.h>
+#include <plotting/piping.h>
 
 namespace plotting
 {
     template<typename S, typename Rn, typename Rs, typename G>
     plotting::Canvas<S, Rn, Rs>& operator<<(plotting::Canvas<S, Rn, Rs>& c,
-                                pipeline::Yield<G> const& entities)
+                                            piping::Yield<G> const& entities)
+    {
+        c << reset;
+        for(auto&& l : entities._get_())
+            c << l;
+        return c;
+    }
+
+    template<typename S, typename Rn, typename Rs, typename G>
+    plotting::Canvas<S, Rn, Rs>& operator<<(plotting::Canvas<S, Rn, Rs>& c,
+        piping::Yield<G>&& entities)
     {
         c << reset;
         for(auto&& l : entities._get_())

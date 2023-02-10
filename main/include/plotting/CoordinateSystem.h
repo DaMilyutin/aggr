@@ -1,7 +1,7 @@
 #pragma once
 
 #include <plotting/types/point_types.h>
-#include <plotting/chain-helpers/transformers.h>
+#include <plotting/piping/transformers.h>
 
 namespace plotting
 {

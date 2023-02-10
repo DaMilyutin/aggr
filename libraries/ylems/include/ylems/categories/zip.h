@@ -1,13 +1,13 @@
 #pragma once
-#include <plotting/generators/abstract.h>
-#include <plotting/generators/utilities/tuple_fun.h>
+#include <ylems/rules/abstract.h>
+#include <ylems/utilities/tuple_fun.h>
 
-namespace plotting
+namespace ylems
 {
-    namespace pipeline
+    namespace elements
     {
-        template <typename... T>
-        class ZipGenerator: public Yield<ZipGenerator<T...>>
+        template<typename tag, typename... T>
+        class ZipYield: public rules::Yield<ZipYield<tag, T...>, tag>
         {
             struct beginner { template<typename T> auto operator()(T const& seq) const { return std::begin(seq); } };
             struct ender    { template<typename T> auto operator()(T const& seq) const { return std::end(seq); } };
@@ -84,7 +84,7 @@ namespace plotting
                 auto operator*() const { return deref(std::index_sequence_for<T...>{}); }
             };
 
-            ZipGenerator(TupSeqs&& seqs)
+            ZipYield(TupSeqs&& seqs)
                 : _seqs(std::forward<TupSeqs>(seqs))
             {}
 
@@ -95,13 +95,11 @@ namespace plotting
             TupSeqs _seqs;
         };
 
-        template <typename... T>
-        auto zip(Yield<T>&&... seqs)
+        template<typename tag, typename... T>
+        auto zip(rules::Yield<T, tag>&&... seqs)
         {
-            return ZipGenerator<T...>(std::make_tuple(std::move(seqs)._get_()...));
+            return ZipYield<tag, T...>(std::make_tuple(std::move(seqs)._get_()...));
         }
 
      }
-
-     using pipeline::zip;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <plotting/generators/transform.h>
+#include <plotting/piping.h>
 
 namespace plotting
 {
@@ -10,7 +10,7 @@ namespace plotting
         agge::point_r end{};
     };
 
-    struct LinesInDirection: public pipeline::Transform<LinesInDirection>
+    struct LinesInDirection: public piping::Transform<LinesInDirection>
     {
         LinesInDirection(agge::vector_r v): direction(v) {}
 
@@ -21,7 +21,7 @@ namespace plotting
 
 
 
-    struct SimpleLineMaker: public pipeline::Transform<SimpleLineMaker>
+    struct SimpleLineMaker: public piping::Transform<SimpleLineMaker>
     {
         SimpleLineMaker() = default;
 
@@ -31,7 +31,7 @@ namespace plotting
         }
     };
 
-    struct StylishLineMaker: public pipeline::Transform<StylishLineMaker>
+    struct StylishLineMaker: public piping::Transform<StylishLineMaker>
     {
         StylishLineMaker(agge::stroke& s): style(s) {}
 
@@ -42,7 +42,7 @@ namespace plotting
         }
     };
 
-    struct FancyLineMaker: public pipeline::Transform<FancyLineMaker>
+    struct FancyLineMaker: public piping::Transform<FancyLineMaker>
     {
         FancyLineMaker(agge::dash& d, agge::stroke& s): dash(d), style(s) {}
 

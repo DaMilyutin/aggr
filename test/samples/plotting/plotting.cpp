@@ -16,7 +16,7 @@
 #include <plotting/primitives/Text.h>
 #include <plotting/Chart.h>
 
-#include <plotting/chain-helpers/transformers.h>
+#include <plotting/piping/transformers.h>
 
 #include <agge.text/layout.h>
 #include <agge.text/limit.h>
@@ -119,8 +119,10 @@ namespace
         {
             stopwatch(_counter);
             points1 << agge::clear
-                    << chart/clip_repr2port(axes.coordinates)
-                            /plotting::filters::FarEnough{0.5f};
+                    << chart/axes.coordinates.repr2port;
+
+//                    /clip_repr2port(axes.coordinates)
+  //                          /plotting::filters::FarEnough{0.5f};
 
             points2 << agge::clear
                     << chart/plotting::transform([](plotting::repr_t p) { return plotting::repr_t{-p.x, -p.y}; })

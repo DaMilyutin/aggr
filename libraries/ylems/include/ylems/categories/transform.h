@@ -1,13 +1,13 @@
 #pragma once
-#include <plotting/generators/abstract.h>
+#include <ylems/rules/abstract.h>
 #include <assert.h>
 
-namespace plotting
+namespace ylems
 {
-    namespace pipeline
+    namespace elements
     {
-        template<typename T>
-        struct Transform: public Link<T>
+        template<typename T, typename tag>
+        struct Transform: public rules::Link<T, tag>
         {
             template<typename Y>
             struct YieldDescriptor
@@ -44,8 +44,8 @@ namespace plotting
             template<typename Y> auto end(Y const& y) const { return YieldDescriptor<Y>::end(y, this->_get_()); }
         };
 
-        template<typename Func>
-        struct TransformWrap: public Transform<TransformWrap<Func>>
+        template<typename Func, typename tag>
+        struct TransformWrap: public Transform<TransformWrap<Func, tag>, tag>
         {
             template<typename F>
             TransformWrap(F&& f): transform(FWD(f)) {}
@@ -56,32 +56,30 @@ namespace plotting
             auto operator()(auto x) const { return transform(x); }
 
             template<typename S, typename E>
-            bool feed(Sink<S>& sink, E&& e) const
+            bool feed(S& sink, E&& e) const
             {
-                return sink._get_().eat(transform(FWD(e)));
+                return sink.eat(transform(FWD(e)));
             }
 
             Func transform;
         };
 
-        template<typename F>
-        auto transform(F const& f) { return pipeline::TransformWrap<F const&>{ f}; }
+        template<typename tag, typename F>
+        auto transform(F const& f) { return TransformWrap<F const&, tag>{ f}; }
 
-        template<typename F>
-        auto transform(F&& f) { return pipeline::TransformWrap<F>{FWD(f)}; }
+        template<typename tag, typename F>
+        auto transform(F&& f) { return TransformWrap<F, tag>{FWD(f)}; }
 
-        template<typename F>
-        auto transform(pipeline::Transform<F>&&)
+        template<typename tag, typename F>
+        auto transform(Transform<F, tag>&&)
         {
             assert(false && "Trying to wrap already Transformer in transform!");
         }
 
-        template<typename F>
-        auto transform(pipeline::Transform<F> const&)
+        template<typename tag, typename F>
+        auto transform(Transform<F, tag> const&)
         {
             assert(false && "Trying to wrap already Transformer in transform!");
         }
     }
-
-    using pipeline::transform;
 }

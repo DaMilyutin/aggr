@@ -5,14 +5,12 @@
 #include <agge/primitives/pipeline.h>
 #include <agge/primitives/polyline.h>
 
-#include <plotting/generators/abstract.h>
-#include <plotting/generators/iota.h>
-#include <plotting/generators/transform.h>
+#include <plotting/piping/rules.h>
 
 namespace plotting
 {
     template<typename E>
-    agge::polyline& operator<<(agge::polyline& ret, pipeline::Yield<E> const& gen)
+    agge::polyline& operator<<(agge::polyline& ret, piping::Yield<E> const& gen)
     {
         for(auto&& p: gen._get_())
             ret << p;
@@ -20,14 +18,14 @@ namespace plotting
     }
 
     template<typename E>
-    agge::polyline& operator<<(agge::polyline& ret, pipeline::Yield<E>&& gen)
+    agge::polyline& operator<<(agge::polyline& ret, piping::Yield<E>&& gen)
     {
         for(auto&& p: gen._get_())
             ret << p;
         return ret;
     }
 
-    struct FunctionY: public pipeline::Transform<FunctionY>
+    struct FunctionY: public piping::Transform<FunctionY>
     {
         template<typename F>
         FunctionY(F&& f): Y(FWD(f)) {}
@@ -36,7 +34,7 @@ namespace plotting
         std::function<double(double)> Y;
     };
 
-    struct FunctionX: public pipeline::Transform<FunctionX>
+    struct FunctionX: public piping::Transform<FunctionX>
     {
         template<typename F>
         FunctionX(F&& f): X(FWD(f)) {}
@@ -45,7 +43,7 @@ namespace plotting
         std::function<double(double)> X;
     };
 
-    struct FunctionXY: public pipeline::Transform<FunctionXY>
+    struct FunctionXY: public piping::Transform<FunctionXY>
     {
         template<typename F, typename G>
         FunctionXY(F&& f, G&& g): X(FWD(f)), Y(FWD(g)) {}
@@ -55,12 +53,12 @@ namespace plotting
         std::function<double(double)> Y;
     };
 
-    struct ChartData: public pipeline::Yield<ChartData>
+    struct ChartData: public piping::Yield<ChartData>
     {
         std::vector<repr_t> data;
 
         template<typename G>
-        void operator<<(pipeline::Yield<G> const& g)
+        void operator<<(piping::Yield<G> const& g)
         {
             data.clear();
             for(auto&& p: g._get_())

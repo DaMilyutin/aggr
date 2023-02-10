@@ -1,13 +1,13 @@
 #pragma once
-#include <plotting/generators/abstract.h>
+#include <ylems/rules/abstract.h>
 #include <optional>
 
-namespace plotting
+namespace ylems
 {
-    namespace pipeline
+    namespace elements
     {
-        template<typename E>
-        struct TransformOr: public Link<E>
+        template<typename E, typename tag>
+        struct TransformOr: public rules::Link<E, tag>
         {
             template<typename Y>
             struct YieldDescriptor
@@ -58,8 +58,8 @@ namespace plotting
             template<typename Y> auto end(Y const& y) const { return YieldDescriptor<Y>::end(y, this->_get_()); }
         };
 
-        template<typename Func>
-        struct TransformOrWrap: public TransformOr<TransformOrWrap<Func>>
+        template<typename Func, typename tag>
+        struct TransformOrWrap: public TransformOr<TransformOrWrap<Func, tag>, tag>
         {
             template<typename F>
             TransformOrWrap(F&& f): transform(FWD(f)) {}
@@ -68,8 +68,8 @@ namespace plotting
             Func   transform;
         };
 
-        template<typename Sel, typename Trans>
-        struct TransformOrWrap2: public TransformOr<TransformOrWrap2<Sel, Trans>>
+        template<typename Sel, typename Trans, typename tag>
+        struct TransformOrWrap2: public TransformOr<TransformOrWrap2<Sel, Trans, tag>, tag>
         {
             template<typename F, typename G>
             TransformOrWrap2(F&& f, G&& g): select(FWD(f)), trans(FWD(g)) {}
@@ -79,27 +79,25 @@ namespace plotting
             Trans mutable trans;
         };
 
-        template<typename F>
-        auto transform_or(F const& f) { return pipeline::TransformOrWrap<F const&>{ f}; }
+        template<typename tag, typename F>
+        auto transform_or(F const& f) { return TransformOrWrap<F const&, tag>{ f}; }
 
-        template<typename F>
-        auto transform_or(F&& f) { return pipeline::TransformOrWrap<F>{std::move(f)}; }
+        template<typename tag, typename F>
+        auto transform_or(F&& f) { return TransformOrWrap<F, tag>{std::move(f)}; }
 
-        template<typename F, typename G>
-        auto transform_or(F&& f, G&& g) { return pipeline::TransformOrWrap2<F, G>{FWD(f), FWD(g)}; }
+        template<typename tag, typename F, typename G>
+        auto transform_or(F&& f, G&& g) { return TransformOrWrap2<F, G, tag>{FWD(f), FWD(g)}; }
 
-        template<typename F>
-        auto transform_or(pipeline::TransformOr<F>&&)
+        template<typename tag, typename F>
+        auto transform_or(TransformOr<F, tag>&&)
         {
             assert(false && "Trying to wrap already Transformer in transform!");
         }
 
-        template<typename F>
-        auto transform_or(pipeline::TransformOr<F> const&)
+        template<typename tag, typename F>
+        auto transform_or(TransformOr<F, tag> const&)
         {
             assert(false && "Trying to wrap already Transformer in transform!");
         }
     }
-
-    using pipeline::transform_or;
 }

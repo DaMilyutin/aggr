@@ -3,13 +3,11 @@
 #include <plotting/primitives/Text.h>
 
 #include <functional>
-#include <plotting/generators/iota.h>
-#include <plotting/generators/zip.h>
-#include <plotting/generators/transform.h>
+#include <plotting/piping.h>
 
 namespace plotting
 {
-    struct LabelMaker: pipeline::Transform<LabelMaker>
+    struct LabelMaker: piping::Transform<LabelMaker>
     {
         template<typename B>
         LabelMaker(B&& b): base(FWD(b)) {}

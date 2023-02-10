@@ -1,5 +1,5 @@
 #pragma once
-#include <plotting/generators/filter.h>
+#include <plotting/piping.h>
 
 #include <agge/primitives/polyline.h>
 
@@ -7,7 +7,7 @@ namespace plotting
 {
     namespace filters
     {
-        struct FarEnough: public pipeline::Filter<FarEnough>
+        struct FarEnough: public piping::Filter<FarEnough>
         {
             FarEnough(agge::real_t eps): eps(eps) {}
 
@@ -32,7 +32,7 @@ namespace plotting
                                        -std::numeric_limits<agge::real_t>::infinity()};
         };
 
-        struct FarEnough_TimeSeries: public pipeline::Filter<FarEnough_TimeSeries>
+        struct FarEnough_TimeSeries: public piping::Filter<FarEnough_TimeSeries>
         {
             FarEnough_TimeSeries(agge::real_t eps): eps(eps) {}
 
@@ -57,7 +57,7 @@ namespace plotting
                                        -std::numeric_limits<agge::real_t>::infinity()};
         };
 
-        struct SkipOverPeriod: public pipeline::Filter<SkipOverPeriod>
+        struct SkipOverPeriod: public piping::Filter<SkipOverPeriod>
         {
             SkipOverPeriod(int p, int o = 0): period(p), offset(o) {}
             SkipOverPeriod(SkipOverPeriod&&) = default;

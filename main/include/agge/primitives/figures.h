@@ -2,6 +2,8 @@
 
 #include <agge/types.h>
 #include <agge/primitives/pipeline.h>
+#include <agge/primitives/path.h>
+
 
 namespace agge
 {
