@@ -11,7 +11,7 @@ namespace ylems
         using difference_type = std::remove_all_extents_t<decltype(std::declval<T>()-std::declval<T>())>;
 
 
-        template<typename T, typename D, typename I, typename tag>
+        template<typename T, typename D, typename I, template<typename> typename tag>
         class Iota: public rules::Yield<Iota<T, D, I, tag>, tag>
         {
             static_assert(std::is_integral_v<I>, "Iota: third template parameter must be integral!");
@@ -47,7 +47,7 @@ namespace ylems
             Sentinel end() const { return Sentinel{}; }
         };
 
-        template<typename T, typename D, typename tag>
+        template<typename T, typename D, template<typename> typename tag>
         class Iota<T, D, void, tag>: public rules::Yield<Iota<T, D, void, tag>, tag>
         {
             T _start;
@@ -78,32 +78,32 @@ namespace ylems
             Sentinel end()   const { return Sentinel{}; }
         };
 
-        template<typename tag, typename T, typename D, typename I>
+        template<template<typename> typename tag, typename T, typename D, typename I>
         auto iota(T t, D d, I i)
         {
             return Iota<T, D, I, tag>{t, d, i};
         }
 
-        template<typename tag, typename T, typename D>
+        template<template<typename> typename tag, typename T, typename D>
         auto iota(T t, D d)
         {
             return Iota<T, D, void, tag>(t, d);
         }
 
-        template<typename tag, typename T, typename I>
+        template<template<typename> typename tag, typename T, typename I>
         auto linspace(T b, T e, I i)
         {
             return Iota<T, difference_type<T>, I, tag>{b, (e-b)/(i), i+1};
         }
 
-        template<typename tag, typename T>
+        template<template<typename> typename tag, typename T>
         auto range(T b, T e, T step)
         {
             assert(step != T() && (e-b)/step >= T());
             return Iota<T, difference_type<T>, size_t, tag>{b, step, size_t((e-b)/(step))};
         }
 
-        template<typename tag, typename T>
+        template<template<typename> typename tag, typename T>
         auto range(T b, T e)
         {
             assert(e >= b);

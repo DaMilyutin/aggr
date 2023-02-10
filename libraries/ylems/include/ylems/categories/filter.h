@@ -7,7 +7,7 @@ namespace ylems
 {
     namespace elements
     {
-        template<typename F, typename tag>
+        template<typename F, template<typename> typename tag>
         struct Filter: rules::Link<F, tag>
         {
             template<typename Y>
@@ -55,7 +55,7 @@ namespace ylems
             template<typename Y> auto end(Y const& y) const { return YieldDescriptor<Y>::end(y, this->_get_()); }
         };
 
-        template<typename Func, typename tag>
+        template<typename Func, template<typename> typename tag>
         struct FilterWrap: public Filter<FilterWrap<Func, tag>, tag>
         {
             template<typename F>
@@ -74,19 +74,19 @@ namespace ylems
             Func select;
         };
 
-        template<typename tag, typename F>
+        template<template<typename> typename tag, typename F>
         auto filter(F const& f) { return FilterWrap<F const&, tag>{f}; }
 
-        template<typename tag, typename F>
+        template<template<typename> typename tag, typename F>
         auto filter(F&& f) { return FilterWrap<F, tag>{ std::move(f)}; }
 
-        template<typename tag, typename F>
+        template<template<typename> typename tag, typename F>
         auto filter(Filter<F, tag>&&)
         {
             assert(false && "Trying to wrap Filter in filter!");
         }
 
-        template<typename tag, typename F>
+        template<template<typename> typename tag, typename F>
         auto filter(Filter<F, tag> const&)
         {
             assert(false && "Trying to wrap Filter in filter!");

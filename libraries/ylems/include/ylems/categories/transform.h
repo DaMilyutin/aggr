@@ -6,7 +6,7 @@ namespace ylems
 {
     namespace elements
     {
-        template<typename T, typename tag>
+        template<typename T, template<typename> typename tag>
         struct Transform: public rules::Link<T, tag>
         {
             template<typename Y>
@@ -44,7 +44,7 @@ namespace ylems
             template<typename Y> auto end(Y const& y) const { return YieldDescriptor<Y>::end(y, this->_get_()); }
         };
 
-        template<typename Func, typename tag>
+        template<typename Func, template<typename> typename tag>
         struct TransformWrap: public Transform<TransformWrap<Func, tag>, tag>
         {
             template<typename F>
@@ -64,19 +64,19 @@ namespace ylems
             Func transform;
         };
 
-        template<typename tag, typename F>
+        template<template<typename> typename tag, typename F>
         auto transform(F const& f) { return TransformWrap<F const&, tag>{ f}; }
 
-        template<typename tag, typename F>
+        template<template<typename> typename tag, typename F>
         auto transform(F&& f) { return TransformWrap<F, tag>{FWD(f)}; }
 
-        template<typename tag, typename F>
+        template<template<typename> typename tag, typename F>
         auto transform(Transform<F, tag>&&)
         {
             assert(false && "Trying to wrap already Transformer in transform!");
         }
 
-        template<typename tag, typename F>
+        template<template<typename> typename tag, typename F>
         auto transform(Transform<F, tag> const&)
         {
             assert(false && "Trying to wrap already Transformer in transform!");

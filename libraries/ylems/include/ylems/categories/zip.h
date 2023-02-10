@@ -6,7 +6,7 @@ namespace ylems
 {
     namespace elements
     {
-        template<typename tag, typename... T>
+        template<template<typename> typename tag, typename... T>
         class ZipYield: public rules::Yield<ZipYield<tag, T...>, tag>
         {
             struct beginner { template<typename T> auto operator()(T const& seq) const { return std::begin(seq); } };
@@ -95,7 +95,7 @@ namespace ylems
             TupSeqs _seqs;
         };
 
-        template<typename tag, typename... T>
+        template<template<typename> typename tag, typename... T>
         auto zip(rules::Yield<T, tag>&&... seqs)
         {
             return ZipYield<tag, T...>(std::make_tuple(std::move(seqs)._get_()...));

@@ -80,7 +80,6 @@ namespace agge
     inline polyline& clear(polyline& p) { return p.clear(); }
     inline polyline& operator<<(polyline& p, polyline& (*f)(polyline&)) { return f(p); }
 
-
     class polyline_adaptor: public pipeline::terminal<polyline_adaptor>
     {
     public:

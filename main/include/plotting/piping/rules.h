@@ -6,13 +6,15 @@ namespace plotting
 {
     namespace piping
     {
-        struct Plotting_tag {};
+        template<typename E>
+        struct terminal: ylems::rules::_terminal_<E> {};
 
-        template<typename Y>    using Yield = ylems::rules::Yield<Y, Plotting_tag>;
-        template<typename L>    using Link  = ylems::rules::Link<L, Plotting_tag>;
-        template<typename S>    using Sink  = ylems::rules::Sink<S, Plotting_tag>;
+        template<typename Y>    using Yield = ylems::rules::Yield<Y, terminal>;
+        template<typename L>    using Link  = ylems::rules::Link<L, terminal>;
+        template<typename S>    using Sink  = ylems::rules::Sink<S, terminal>;
+
+        YLEMS_MELD_OPERATION(terminal, operator/)
+
     }
-
-    YLEMS_MELD_OPERATION(piping::Plotting_tag, operator/)
 }
 

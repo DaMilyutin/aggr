@@ -190,8 +190,8 @@ namespace plotting
                     from += inc, select.offset;
                 select.offset = select.offset % select.period;
                 return iota(port_t{from, Y}, port_diff_t{inc, 0.0f},
-                           (size_t)ceil((pa.x2 - 0.1 - from)/inc))
-                            /std::move(select);
+                           (size_t)ceil((pa.x2 - 0.1 - from)/inc));
+//                            /static_cast<filters::SkipOverPeriod&&>(std::move(select));
             }
 
             auto major(agge::real_t Y, agge::real_t dir) const
