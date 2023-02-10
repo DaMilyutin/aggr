@@ -28,8 +28,10 @@ namespace ylems
             //for specific Link category(ex.Filter, Transform) one must provide methods
             //    template<typename Y> auto begin(Y const& y) const
             //    template<typename Y> auto end(Y const& y) const
-
-            //    and method template<typename Sink, typename Elem> bool feed(Sink const&, Elem&&)
+            // for connection to Yield
+            // and method
+            //    template<typename Sink, typename Elem> bool feed(Sink const&, Elem&&)
+            // for connection to Sink
         };
 
         template<typename E, template<typename> typename tag_terminal>
