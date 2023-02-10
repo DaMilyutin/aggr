@@ -10,3 +10,6 @@
 [submodule "libraries/polyq"]
 	path = libraries/polyq
 	url = https://github.com/tyoma/polyq.git
+[submodule "libraries/ylems"]
+	path = libraries/ylems
+	url = https://github.com/DaMilyutin/ylems.git
