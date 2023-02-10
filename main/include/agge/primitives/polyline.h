@@ -65,6 +65,7 @@ namespace agge
             _items.push_back(Item{0.0f, 0.0f, agge::path_command_stop});
         }
 
+        Items const& items() const { return _items; }
     private:
         bool too_small_step(point_r const& p) const
         {
@@ -87,7 +88,7 @@ namespace agge
             : _path(path), _position(_path._items.begin())
         {}
 
-        void rewind(unsigned i)
+        void rewind(unsigned i = 0u)
         {
             _position = _path._items.begin() + i;
         }
