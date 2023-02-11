@@ -10,16 +10,35 @@ namespace plotting
     using repr_t = agge::point<double>;
     using repr_diff_t = agge::agge_vector<double>;
 
+    template<typename P>
+    struct difference_type_of
+    {};
+
+    template<typename C>
+    struct difference_type_of<agge::point<C>>
+    {
+        using type = agge::agge_vector<C>;
+    };
+
+
+
     using repr_area_t = agge::rect<double>;
     using port_area_t = agge::rect<agge::real_t>;
 
     inline bool in_area(plotting::repr_area_t const& a, plotting::repr_t const& p)
     {
-        return (a.x1 < p.x&& p.x < a.x2) && (a.y2 < p.y&& p.y < a.y1);
+        return (a.x1 < p.x && p.x < a.x2) && (a.y2 < p.y&& p.y < a.y1);
     }
 
     inline bool in_area(agge::rect_r const& a, agge::point_r const& p)
     {
         return (a.x1 < p.x&& p.x < a.x2) && (a.y1 < p.y&& p.y < a.y2);
     }
+
+    template<typename PointT>
+    struct Segment
+    {
+        PointT  start{};
+        PointT  end{};
+    };
 }
