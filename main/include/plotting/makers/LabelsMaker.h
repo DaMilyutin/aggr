@@ -1,5 +1,4 @@
 #pragma once
-#include <plotting/primitives/EntitiesGenerator.h>
 #include <plotting/primitives/Text.h>
 
 #include <functional>

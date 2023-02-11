@@ -1,6 +1,7 @@
 #pragma once
 
 #include <plotting/piping.h>
+#include <plotting/types/point_types.h>
 
 namespace plotting
 {
@@ -17,9 +18,6 @@ namespace plotting
         LineData operator()(agge::point_r const& p) const { return { p, p + direction }; };
         agge::vector_r  direction{};
     };
-
-
-
 
     struct SimpleLineMaker: public piping::Transform<SimpleLineMaker>
     {

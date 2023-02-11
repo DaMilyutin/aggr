@@ -15,9 +15,8 @@
 #include <plotting/piping.h>
 #include <plotting/piping/filters.h>
 
-
-#include <plotting/primitives/LinesGenerator.h>
-#include <plotting/primitives/LabelsGenerator.h>
+#include <plotting/makers/LinesMaker.h>
+#include <plotting/makers/LabelsMaker.h>
 
 #include <plotting/primitives/Colored.h>
 
