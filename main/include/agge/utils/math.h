@@ -36,8 +36,18 @@ namespace agge
 		return sqrt(bx * bx + by * by);
 	}
 
+    inline real_t norm(real_t bx, real_t by)
+    {
+        return sqrt(bx * bx + by * by);
+    }
+
 	inline real_t distance(const point_r &lhs, const point_r &rhs)
 	{	return distance(lhs.x, lhs.y, rhs.x, rhs.y);	}
+
+    inline real_t norm(const vector_r& v)
+    {
+        return norm(v.dx, v.dy);
+    }
 
 	template <typename CoordT>
 	inline CoordT distance(const point<CoordT> &a, const point<CoordT> &b)
@@ -57,6 +67,13 @@ namespace agge
 		const point<CoordT> result = { lhs.x + rhs.dx, lhs.y + rhs.dy };
 		return result;
 	}
+
+    template <typename CoordT>
+    inline point<CoordT> operator -(const point<CoordT>& lhs, const agge_vector<CoordT>& rhs)
+    {
+        const point<CoordT> result = {lhs.x - rhs.dx, lhs.y - rhs.dy};
+        return result;
+    }
 
     template <typename CoordT>
     inline const rect<CoordT>& operator +=(rect<CoordT>& lhs, const agge_vector<CoordT>& rhs)
@@ -84,4 +101,11 @@ namespace agge
 		const agge_vector<CoordT> result = { rhs * lhs.dx, rhs * lhs.dy };
 		return result;
 	}
+
+    template <typename CoordT>
+    inline agge_vector<CoordT>& operator*=(agge_vector<CoordT>& lhs, CoordT rhs)
+    {
+        lhs.dx *= rhs; lhs.dy *= rhs;
+        return lhs;
+    }
 }
