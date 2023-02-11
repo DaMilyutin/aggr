@@ -29,7 +29,7 @@ add_library(samples.common STATIC ${SAMPLES_COMMON_SOURCES})
 #target_include_directories(samples. PRIVATE ../../..)
 
 target_include_directories(samples.common PUBLIC ../../..)
-target_link_libraries(samples.common agge agge.text strmd plotting)
+target_link_libraries(samples.common agge agge.text strmd plotting system_events)
 
 if (APPLE)
 	target_link_libraries(samples.common "-framework Foundation -framework Cocoa")
