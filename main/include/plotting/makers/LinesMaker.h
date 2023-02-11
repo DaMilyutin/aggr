@@ -41,6 +41,7 @@ namespace plotting
         std::optional<P> mutable prev;
     };
 
+
     struct LinesMargined: public piping::TransformOr<LinesMargined>
     {
         LinesMargined() = default;
@@ -71,6 +72,33 @@ namespace plotting
                 return true;
             direction *= (l/n);
             return sink.consume(Segment<agge::point_r>{middle - direction, middle + direction});
+        };
+
+        std::optional<Segment<repr_t>> operator()(Segment<repr_t> const& s) const
+        {
+            repr_diff_t direction = (s.end - s.start)*0.5;
+            repr_t middle = s.start;
+            middle += direction;
+            auto const n = agge::norm(direction);
+            auto const l = (n-margin);
+            if(l <= 0.0)
+                return std::nullopt;
+            direction *= (l/n);
+            return Segment{middle - direction, middle + direction};
+        };
+
+        template<typename Sink>
+        bool feed(Sink& sink, Segment<repr_t> const& s) const
+        {
+            repr_diff_t direction = (s.end - s.start)*0.5;
+            repr_t middle = s.start;
+            middle += direction;
+            auto const n = agge::norm(direction);
+            auto const l = (n-margin);
+            if(l <= 0.0)
+                return true;
+            direction *= (l/n);
+            return sink.consume(Segment{middle - direction, middle + direction});
         };
 
         agge::real_t                 margin = 10.0f;

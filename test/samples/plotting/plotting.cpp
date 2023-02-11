@@ -116,8 +116,8 @@ namespace
             canvas << plotting::piping::linspace(-500., 500., 2000)
                             /plotting::FunctionY([](double x) { return 2.*sin(x); })
                             /plotting::Lines<plotting::repr_t>()
+                            /plotting::LinesMargined(0.01f)
                             /clip_repr2port(axes.coordinates)
-                            /plotting::LinesMargined(3.5f)
                             /plotting::StylishLineMaker(line_style)
                             /agge::color::make(0, 255, 0);
             canvas << points/plotting::MarkerPolygonMaker(plotting::MarkerPolygon().shape(4, 1).size(3.0f))
