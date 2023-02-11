@@ -11,8 +11,8 @@ namespace plotting
         MarkerPolygonMaker(MarkerPolygonMaker&&) = default;
         MarkerPolygonMaker(MarkerPolygonMaker const&) = default;
 
-        template<typename B>
-        MarkerPolygonMaker(B&& b): inner(FWD(b)) {}
+        MarkerPolygonMaker(MarkerPolygonProperties const& b): inner(b) {}
+        MarkerPolygonMaker(MarkerPolygonProperties&& b): inner(std::move(b)) {}
 
         MarkerPolygon mutable inner;
 
