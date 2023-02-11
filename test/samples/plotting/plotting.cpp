@@ -19,6 +19,8 @@
 #include <plotting/piping/transformers.h>
 #include <plotting/piping/filters.h>
 
+#include <plotting/makers/MarkersMaker.h>
+
 #include <agge.text/layout.h>
 #include <agge.text/limit.h>
 
@@ -104,6 +106,20 @@ namespace
             canvas << axes;
 
             canvas.ras.set_clipping(axes.coordinates.port_area);
+
+
+            canvas << plotting::piping::linspace(-5., 5., 20)
+                            /plotting::FunctionY([](double x) { return sin(x); })
+                            /axes.coordinates.repr2port
+                            /plotting::MarkerPolygonMaker(plotting::MarkerPolygon().shape(5,2).size(10.0f))
+                            /agge::color::make(255, 0, 0);
+
+            canvas << plotting::piping::linspace(-5., 5., 20)
+                            /plotting::FunctionY([](double x) { return sin(x); })
+                            /axes.coordinates.repr2port
+                            /plotting::LinesMargined()
+                            /plotting::StylishLineMaker(line_style)
+                            /agge::color::make(0, 255, 0);
 
             canvas << plotting::reset
                 << agge::polyline_adaptor(points1)/dash_style/line_style
