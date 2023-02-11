@@ -107,19 +107,21 @@ namespace
 
             canvas.ras.set_clipping(axes.coordinates.port_area);
 
+            auto points = plotting::piping::linspace(-500., 500., 2000)
+                                                    /plotting::FunctionY([](double x) { return 2.*sin(x); })
+                                                    /axes.coordinates.repr2port
+                                                    /plotting::filters::FarEnough(1.0f);
 
-            canvas << plotting::piping::linspace(-5., 5., 20)
-                            /plotting::FunctionY([](double x) { return sin(x); })
-                            /axes.coordinates.repr2port
-                            /plotting::MarkerPolygonMaker(plotting::MarkerPolygon().shape(5,2).size(10.0f))
-                            /agge::color::make(255, 0, 0);
-
-            canvas << plotting::piping::linspace(-5., 5., 20)
-                            /plotting::FunctionY([](double x) { return sin(x); })
-                            /axes.coordinates.repr2port
-                            /plotting::LinesMargined()
+            //plotting::clip_repr2port(axes.coordinates)
+            canvas << plotting::piping::linspace(-500., 500., 2000)
+                            /plotting::FunctionY([](double x) { return 2.*sin(x); })
+                            /plotting::Lines<plotting::repr_t>()
+                            /clip_repr2port(axes.coordinates)
+                            /plotting::LinesMargined(3.5f)
                             /plotting::StylishLineMaker(line_style)
                             /agge::color::make(0, 255, 0);
+            canvas << points/plotting::MarkerPolygonMaker(plotting::MarkerPolygon().shape(4, 1).size(3.0f))
+                            /agge::color::make(255, 0, 0);
 
             canvas << plotting::reset
                 << agge::polyline_adaptor(points1)/dash_style/line_style

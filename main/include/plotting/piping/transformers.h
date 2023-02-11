@@ -4,6 +4,8 @@
 #include <agge/primitives/polyline.h>
 #include <optional>
 
+#include <plotting/utilities/fast_clipping.h>
+
 namespace plotting
 {
     namespace transformers
@@ -92,6 +94,21 @@ namespace plotting
                 cmd = next;
                 next = agge::path_command_line_to;
                 return agge::polyline::Item{transform(r), cmd};
+            }
+
+            std::optional<Segment<port_t>> operator()(Segment<repr_t> r) const
+            {
+                if(algorithms::clip(r.start, r.end, {area.x1, area.y2}, {area.x2, area.y1}))
+                    return Segment<port_t>{transform(r.start), transform(r.end)};
+                return std::nullopt;
+            }
+
+            template<typename S>
+            bool feed(S& sink, Segment<repr_t> r) const
+            {
+                if(algorithms::clip(r.start, r.end, {area.x1, area.y2}, {area.x2, area.y1}))
+                    return sink.consume(Segment<port_t>{transform(r.start), transform(r.end)});
+                return true;
             }
         };
     }
