@@ -104,7 +104,8 @@ namespace plotting
         auto wrap = agge::limit::wrap(t._position.x + max_width);
         auto hw = text_engine.measure(t._text, wrap);
         auto dest = inner::text_destination(t._position, hw, t._align);
-        c << agge::rectangle(dest.x1, dest.y1, dest.x2, dest.y2) << t._fill;
+        if(t._fill.a)
+            c << agge::rectangle(dest.x1, dest.y1, dest.x2, dest.y2) << t._fill;
         layout.process(t._text, wrap, text_engine);
         text_engine.render(c.ras, layout, agge::align_center, agge::align_center, dest);
         c.ras.sort(true);
