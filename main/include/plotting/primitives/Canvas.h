@@ -5,10 +5,12 @@
 #include <agge/primitives/pipeline.h>
 #include <agge/rendering/filling_rules.h>
 
+#include <plotting/piping/rules.h>
+
 namespace plotting
 {
     template<typename SurfaceT, typename RendererT, typename RasterizerT>
-    struct Canvas
+    struct Canvas: public piping::Sink<Canvas<SurfaceT, RendererT, RasterizerT>>
     {
     public:
         SurfaceT&    surface;
@@ -80,7 +82,33 @@ namespace plotting
             return *this;
         }
 
+        template<typename E>
+        Canvas& operator<<(piping::Yield<E> const& e)
+        {
+            meld_tag<piping::terminal>(e, *this);
+            return *this;
+        }
 
+        template<typename E>
+        bool consume(E const& e)
+        {
+            *this << e;
+            return true;
+        }
+
+        template<typename E>
+        bool consume(E&& e)
+        {
+            *this << e;
+            return true;
+        }
+
+        template<typename E>
+        Canvas& operator<<(piping::Yield<E>&& e)
+        {
+            meld_tag<piping::terminal>(FWD(e), *this);
+            return *this;
+        }
 
         Canvas& operator<<(canvas_fcn f)
         {
@@ -99,6 +127,6 @@ namespace plotting
     template<typename S, typename Rd, typename Rs>
     inline Canvas<S, Rd, Rs> make_canvas(S& s, Rd& ren, Rs& ras)
     {
-        return Canvas<S, Rd, Rs>{s, ren, ras};
+        return Canvas<S, Rd, Rs>{{}, s, ren, ras};
     }
 }
