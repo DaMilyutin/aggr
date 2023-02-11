@@ -19,6 +19,31 @@ namespace plotting
         agge::vector_r  direction{};
     };
 
+    struct LinesMargined: public piping::TransformOr<LinesMargined>
+    {
+        LinesMargined() = default;
+
+        std::optional<LineData> operator()(agge::point_r const& p) const
+        {
+            if(!prev)
+                return prev = p, std::nullopt;
+            direction = (p - *prev)*0.5f;
+            middle = *prev;
+            middle += direction;
+            auto const n = agge::norm(direction);
+            direction *= ((n-margin)/n);
+            prev = p;
+            return LineData{middle - direction, middle + direction};
+        };
+
+
+        agge::real_t                 margin = 10.0f;
+
+        agge::vector_r               mutable direction{};
+        agge::point_r                mutable middle{};
+        std::optional<agge::point_r> mutable prev;
+    };
+
     struct SimpleLineMaker: public piping::Transform<SimpleLineMaker>
     {
         SimpleLineMaker() = default;
