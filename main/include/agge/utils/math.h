@@ -19,6 +19,8 @@ namespace agge
 	real_t cos(real_t a);
 	real_t acos(real_t v);
 
+    double sqrt(double x);
+
 	inline int iround(real_t v)
 	{	return static_cast<int>(v > real_t() ? v + static_cast<real_t>(0.5) : v - static_cast<real_t>(0.5));	}
 
@@ -41,10 +43,20 @@ namespace agge
         return sqrt(bx * bx + by * by);
     }
 
+    inline double norm(double bx, double by)
+    {
+        return sqrt(bx * bx + by * by);
+    }
+
 	inline real_t distance(const point_r &lhs, const point_r &rhs)
 	{	return distance(lhs.x, lhs.y, rhs.x, rhs.y);	}
 
     inline real_t norm(const vector_r& v)
+    {
+        return norm(v.dx, v.dy);
+    }
+
+    inline double norm(const agge_vector<double>& v)
     {
         return norm(v.dx, v.dy);
     }
