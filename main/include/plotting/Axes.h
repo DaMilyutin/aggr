@@ -197,28 +197,28 @@ namespace plotting
             {
                 line_style.width(prop.tick[0].width);
                 return major_points(Y)/LinesInDirection{{0, dir*prop.tick[0].length}}
-                            /StylishLineMaker{line_style}/prop.tick[0].color;
+                            /styling(line_style)/prop.tick[0].color;
             }
 
             auto medium(agge::real_t Y, agge::real_t dir) const
             {
                 line_style.width(prop.tick[1].width);
                 return medium_points(Y)/LinesInDirection{{0, dir*prop.tick[1].length}}
-                            /StylishLineMaker{line_style}/prop.tick[1].color;
+                            /styling(line_style)/prop.tick[1].color;
             }
 
             auto minor(agge::real_t Y, agge::real_t dir) const
             {
                 line_style.width(prop.tick[2].width);
                 return minor_points(Y)/LinesInDirection{{0, dir*prop.tick[2].length}}
-                            /StylishLineMaker{line_style}
+                            /styling(line_style)
                             /prop.tick[2].color;
             }
 
             auto grid(agge::real_t Y1, agge::real_t Y2) const
             {
                 return major_points(Y1)/LinesInDirection{{0, Y2-Y1}}
-                            /FancyLineMaker{prop.grid.dash, prop.grid.line_style}
+                            /styling(prop.grid.line_style, prop.grid.dash)
                             /prop.grid.color;
             }
 
@@ -301,7 +301,7 @@ namespace plotting
             {
                 line_style.width(prop.tick[0].width);
                 return major_points(X)/LinesInDirection{{dir*prop.tick[0].length, 0}}
-                                /StylishLineMaker{line_style}
+                                /styling(line_style)
                                 /prop.tick[0].color;
             }
 
@@ -309,7 +309,7 @@ namespace plotting
             {
                 line_style.width(prop.tick[1].width);
                 return medium_points(X)/LinesInDirection{{dir*prop.tick[1].length, 0}}
-                                /StylishLineMaker{line_style}
+                                /styling(line_style)
                                 /prop.tick[1].color;
             }
 
@@ -317,14 +317,14 @@ namespace plotting
             {
                 line_style.width(prop.tick[2].width);
                 return minor_points(X)/LinesInDirection{{dir*prop.tick[2].length, 0}}
-                                /StylishLineMaker{line_style}
+                                /styling(line_style)
                                 /prop.tick[2].color;
             }
 
             auto grid(agge::real_t X1, agge::real_t X2) const
             {
                 return major_points(X1)/LinesInDirection{{X2-X1, 0}}
-                                /FancyLineMaker{prop.grid.dash, prop.grid.line_style}
+                                /styling(prop.grid.line_style, prop.grid.dash)
                                 /prop.grid.color;
             }
 

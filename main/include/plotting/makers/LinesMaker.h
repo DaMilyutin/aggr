@@ -114,9 +114,9 @@ namespace plotting
         }
     };
 
-    struct StylishLineMaker: public piping::Transform<StylishLineMaker>
+    struct StylingStroke: public piping::Transform<StylingStroke>
     {
-        StylishLineMaker(agge::stroke& s): style(s) {}
+        StylingStroke(agge::stroke& s): style(s) {}
 
         agge::stroke& style;
         auto operator()(Segment<port_t> const& l) const
@@ -125,15 +125,19 @@ namespace plotting
         }
     };
 
-    struct FancyLineMaker: public piping::Transform<FancyLineMaker>
+    struct StylingStrokeDash: public piping::Transform<StylingStrokeDash>
     {
-        FancyLineMaker(agge::dash& d, agge::stroke& s): dash(d), style(s) {}
+        StylingStrokeDash(agge::stroke& s, agge::dash& d): style(s), dash(d) {}
 
-        agge::dash& dash;
         agge::stroke& style;
+        agge::dash&   dash;
+
         auto operator()(Segment<port_t> const& l) const
         {
             return agge::line(l.start.x, l.start.y, l.end.x, l.end.y)/dash/style;
         }
     };
+
+    inline auto styling(agge::stroke& s)                { return StylingStroke(s); }
+    inline auto styling(agge::stroke& s, agge::dash& d) { return StylingStrokeDash(s, d); }
 }

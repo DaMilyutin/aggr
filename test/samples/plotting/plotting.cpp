@@ -118,7 +118,7 @@ namespace
                             /plotting::Lines<plotting::repr_t>()
                             /plotting::LinesMargined(0.01f)
                             /clip_repr2port(axes.coordinates)
-                            /plotting::StylishLineMaker(line_style)
+                            /plotting::styling(line_style)
                             /agge::color::make(0, 255, 0);
             canvas << points/plotting::MarkerPolygonMaker(plotting::MarkerPolygon().shape(4, 1).size(3.0f))
                             /agge::color::make(255, 0, 0);
