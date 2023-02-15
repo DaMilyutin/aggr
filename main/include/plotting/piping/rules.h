@@ -1,6 +1,7 @@
 #pragma once
 #include <ylems/rules.h>
 #include <ylems/categories.h>
+#include <ylems/elements/yield.h>
 
 namespace plotting
 {
@@ -15,6 +16,7 @@ namespace plotting
 
         YLEMS_MELD_OPERATION(terminal, operator/)
 
+        YLEMS_MELD_RANGE_OPERATION(terminal, operator/)
     }
 }
 
