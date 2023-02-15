@@ -108,6 +108,7 @@ namespace
             canvas.ras.set_clipping(axes.coordinates.port_area);
 
             auto points = plotting::piping::linspace(-500., 500., 2000)
+                                                    /plotting::take(1000)
                                                     /plotting::FunctionY([](double x) { return 2.*sin(x); })
                                                     /axes.coordinates.repr2port
                                                     /plotting::filters::FarEnough(1.0f);

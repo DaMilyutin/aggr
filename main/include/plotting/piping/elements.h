@@ -29,6 +29,9 @@ namespace plotting
         template<typename F, typename G> auto transform_or(F&& f, G&& g) { return ylems::elements::transform_or<terminal>(FWD(f), FWD(g)); }
 
         template<typename... T> auto zip(T&&... f) { return ylems::elements::zip<terminal>(FWD(f)...); }
+
+        template<typename I> auto take(I i) { return ylems::elements::take<terminal>(i); }
+        template<typename I> auto drop(I i) { return ylems::elements::drop<terminal>(i); }
     }
 
     using piping::iota;
@@ -40,4 +43,7 @@ namespace plotting
     using piping::transform;
 
     using piping::zip;
+
+    using piping::take;
+    using piping::drop;
 }
