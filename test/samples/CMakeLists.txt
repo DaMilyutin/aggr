@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 
 add_subdirectory(common/src)
-link_libraries(samples.common)
-
-
 
 if (WIN32 OR APPLE OR ANDROID)
 	add_custom_command(OUTPUT arial-1000.fnt COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/text/assets/arial-1000.fnt "$<TARGET_FILE_DIR:text>")
@@ -13,7 +10,6 @@ if (WIN32 OR APPLE OR ANDROID)
 		add_executable(figures figures/figures.cpp)
 		add_executable(lines lines/lines.cpp)
 		add_executable(piechart piechart/piechart.cpp)
-		add_executable(plotting_sample plotting/plotting.cpp)
 		add_executable(rasterizer rasterizer/rasterizer.cpp)
 		add_executable(sandbox sandbox/sandbox.cpp)
 		add_executable(text text/text.cpp arial-1000.fnt)

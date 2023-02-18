@@ -12,3 +12,5 @@ struct services
 {
 	virtual stream *open_file(const char *path) = 0;
 };
+
+services& get_services();

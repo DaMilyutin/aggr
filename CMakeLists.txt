@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 3.13)
 
-project(AGGE)
+project(agge)
 
 enable_testing()
 
 option(AGGE_NO_TESTS "Do not build test modules." OFF)
 option(AGGE_NO_EXTENSIONS "Do not build/test extensions (like async)." OFF)
 option(AGGE_NO_SAMPLES "Do not build sample applications." OFF)
+
+option(AGGE_NO_SAMPLES_COMMON "Do not build samples.common library." OFF)
 
 set (CMAKE_CXX_STANDARD          20)
 
@@ -43,7 +45,6 @@ if (NOT TARGET utfia)
 endif()
 
 add_subdirectory(main/source/agge)
-add_subdirectory(main/source/plotting)
 add_subdirectory(main/source/agge.text)
 if (NOT AGGE_NO_EXTENSIONS AND (NOT MSVC_VERSION OR (MSVC_VERSION GREATER_EQUAL 1600)))
 	if (NOT TARGET polyq)
@@ -67,6 +68,12 @@ if (NOT AGGE_NO_TESTS)
 		add_utee_test(agge.async.tests)
 	endif()
 endif()
+
+if (NOT AGGE_NO_SAMPLES_COMMON)
+    add_subdirectory(libraries/system_events)
+    add_subdirectory(test/samples/common/src)
+endif()
+
 if (NOT AGGE_NO_SAMPLES)
 	if (NOT TARGET strmd)
 		set(STRMD_NO_TESTS ON)
@@ -76,8 +83,8 @@ if (NOT AGGE_NO_SAMPLES)
 		set(YLEMS_NO_TESTS ON)
 		add_subdirectory(libraries/ylems)
 	endif()
+    add_subdirectory(libraries/system_events)
 	add_subdirectory(test/samples)
-    if (NOT TARGET system_events)
-        add_subdirectory(libraries/system_events)
-    endif()
 endif()
+
+

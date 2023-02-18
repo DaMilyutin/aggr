@@ -18,8 +18,8 @@
 //	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //	THE SOFTWARE.
 
-#include <plotting/common/services.h>
 #include <samples/common/shell.h>
+#include <samples/common/services.h>
 #include <samples/common/timing.h>
 #include <format>
 #include <set>

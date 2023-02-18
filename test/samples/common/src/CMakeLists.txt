@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
+project(samples.common)
 
 if (WIN32)
 	set(SAMPLES_COMMON_SOURCES ${SAMPLES_COMMON_SOURCES}
@@ -6,6 +7,7 @@ if (WIN32)
 		platform/win32/font.cpp
 		platform/win32/shell.cpp
 		platform/win32/timing.cpp
+        platform/win32/services.cpp
 	)
 elseif(APPLE)
 	enable_language(OBJCXX)
@@ -29,7 +31,7 @@ add_library(samples.common STATIC ${SAMPLES_COMMON_SOURCES})
 #target_include_directories(samples. PRIVATE ../../..)
 
 target_include_directories(samples.common PUBLIC ../../..)
-target_link_libraries(samples.common agge agge.text strmd plotting system_events)
+target_link_libraries(samples.common agge agge.text strmd system_events)
 
 if (APPLE)
 	target_link_libraries(samples.common "-framework Foundation -framework Cocoa")
