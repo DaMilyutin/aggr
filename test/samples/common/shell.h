@@ -25,7 +25,7 @@ struct application : agge::noncopyable
 	virtual void draw(agge::platform_bitmap &surface, timings &timings_) = 0;
 	virtual void resize(int width, int height);
 
-    virtual void consume_events() {}
+    virtual bool consume_events() { return false; }
 
     //virtual void mouse_button(KeyMouseEvents::MousePosition , KeyMouseEvents::MouseButton) {}
     //virtual void put_keyboard(KeyMouseEvents::MousePosition, KeyMouseEvents::MouseButton) {}
