@@ -8,18 +8,20 @@ namespace agge
 		: _dash_start(0.0f), _state(initial)
 	{	}
 
-	void dash::remove_all_dashes()
-	{	_pattern.clear(); }
+    dash& dash::dash_start(real_t offset)
+    {
+        _pattern.clear();
+        _dash_start = offset;
+        return *this;
+    }
 
-	void dash::add_dash(real_t dash_length, real_t gap_length)
+    dash& dash::add_dash(real_t dash_length, real_t gap_length)
 	{
 		dash_gap dg = { dash_length, gap_length };
 
 		_pattern.push_back(dg);
+        return *this;
 	}
-
-	void dash::dash_start(real_t offset)
-	{	_dash_start = offset;	}
 
 	void dash::remove_all()
 	{

@@ -11,9 +11,9 @@ namespace agge
         dash();
 
         // Setup
-        void remove_all_dashes();
-        void add_dash(real_t dash_length, real_t gap_length);
-        void dash_start(real_t offset);
+        dash& dash_start(real_t offset = 0.f); // clears and starts new
+        dash& add_dash(real_t dash_length, real_t gap_length);
+
 
         // Vertex population
         void remove_all();

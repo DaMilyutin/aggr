@@ -72,9 +72,9 @@ namespace
 
 			line_style.width(1.0f*scale);
 			line_style.set_cap(caps::butt());
-			dash_style.remove_all_dashes();
-			dash_style.add_dash(1.0f*scale, 1.0f*scale);
 			dash_style.dash_start(0.5f*scale);
+			dash_style.add_dash(1.0f*scale, 1.0f*scale);
+			
 			add_path(ras,
             assist(assist(line(19.5f*scale, 300.5f*scale, 319.5f*scale, 300.5f*scale), dash_style), line_style));
 

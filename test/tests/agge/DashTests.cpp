@@ -89,7 +89,7 @@ namespace agge
 				assert_equal(reference2, result2);
 
 				// INIT / ACT
-				d.remove_all_dashes();
+				d.dash_start();
 				d.add_dash(sqrt(2.0f), 10.0f);
 
 				// ACT
@@ -140,7 +140,7 @@ namespace agge
 				assert_equal(reference1, result1);
 
 				// INIT
-				d.remove_all_dashes();
+				d.dash_start();
 				d.add_dash(5.0f, 7.0f);
 				d.remove_all();
 
