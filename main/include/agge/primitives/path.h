@@ -86,19 +86,20 @@ namespace agge
     };
 
 
-
-    template <typename SourceT, typename GeneratorT>
-    path_generator_adapter<SourceT, GeneratorT> operator/(const pipeline::terminal<SourceT>& source, pipeline::terminal<GeneratorT>& generator)
+    namespace pipeline //ADL
     {
-        return path_generator_adapter<SourceT, GeneratorT>(source._get_(), generator._get_());
-    }
+        template <typename SourceT, typename GeneratorT>
+        path_generator_adapter<SourceT, GeneratorT> operator/(const terminal<SourceT>& source, terminal<GeneratorT>& generator)
+        {
+            return path_generator_adapter<SourceT, GeneratorT>(source._get_(), generator._get_());
+        }
 
-    template <typename SourceT, typename GeneratorT>
-    path_generator_adapter<SourceT, GeneratorT> operator/(pipeline::terminal<SourceT>&& source, pipeline::terminal<GeneratorT>& generator)
-    {
-        return path_generator_adapter<SourceT, GeneratorT>(std::move(source._get_()), generator._get_());
+        template <typename SourceT, typename GeneratorT>
+        path_generator_adapter<SourceT, GeneratorT> operator/(terminal<SourceT>&& source, terminal<GeneratorT>& generator)
+        {
+            return path_generator_adapter<SourceT, GeneratorT>(std::move(source._get_()), generator._get_());
+        }
     }
-
     //template <typename PathIterator1T, typename PathIterator2T>
     //join<PathIterator1T, PathIterator2T> join(const PathIterator1T &path1, const PathIterator2T &path2)
     //{	return join<PathIterator1T, PathIterator2T>(path1, path2);	}

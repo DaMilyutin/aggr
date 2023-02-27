@@ -1,23 +1,29 @@
 cmake_minimum_required(VERSION 3.13)
 
-add_subdirectory(common/src)
+
+macro(add_executable_with_links exe_name cpp_list)
+add_executable(${exe_name} ${cpp_list})
+target_link_libraries(${exe_name} agge agge.text samples.common)
+endmacro(add_executable_with_links)
 
 if (WIN32 OR APPLE OR ANDROID)
 	add_custom_command(OUTPUT arial-1000.fnt COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/text/assets/arial-1000.fnt "$<TARGET_FILE_DIR:text>")
 
 	if (WIN32 OR APPLE)
-		add_executable(balls balls/balls.cpp balls/balls_data.cpp)
-		add_executable(figures figures/figures.cpp)
-		add_executable(lines lines/lines.cpp)
-		add_executable(piechart piechart/piechart.cpp)
-		add_executable(rasterizer rasterizer/rasterizer.cpp)
-		add_executable(sandbox sandbox/sandbox.cpp)
-		add_executable(text text/text.cpp arial-1000.fnt)
-		add_executable(balls-async balls-async/balls-async.cpp balls-async/balls_data.cpp)
+		add_executable_with_links(balls "balls/balls.cpp;balls/balls_data.cpp")
+		add_executable_with_links(figures figures/figures.cpp)
+		add_executable_with_links(lines lines/lines.cpp)
+
+		add_executable_with_links(piechart piechart/piechart.cpp)
+		add_executable_with_links(rasterizer rasterizer/rasterizer.cpp)
+		add_executable_with_links(sandbox sandbox/sandbox.cpp)
+		add_executable_with_links(text "text/text.cpp;arial-1000.fnt")
+		add_executable_with_links(balls-async "balls-async/balls-async.cpp;balls-async/balls_data.cpp")
         target_link_libraries(balls-async polyq)
 
+
 		if (WIN32)
-			add_executable(text-gdi text-gdi/text-gdi.cpp)
+			add_executable_with_links(text-gdi text-gdi/text-gdi.cpp)
 		endif()
 
 		if (0)

@@ -35,8 +35,10 @@ namespace
             x += dx;
             y += dy;
 			add_path(ras,
-                    assist(cbezier(x - 25.0f*scale, y - 15.0f*scale, x + 80.0f*scale, y + 200.0f*scale,
-				                              x - 80.0f*scale, y + 200.0f*scale, x + 25.0f, y - 15.0f*scale, 0.01f*scale), line_style));
+                    Interval(0.01f*scale)
+                        /cbezier_interp({x - 25.0f*scale, y - 15.0f*scale}, {x + 80.0f*scale, y + 200.0f*scale},
+                                                         {x - 80.0f*scale, y + 200.0f*scale}, {x + 25.0f, y - 15.0f*scale})
+                        /line_style);
 		}
 
 		virtual void draw(platform_bitmap &surface, timings &/*timings*/)
@@ -74,9 +76,8 @@ namespace
 			line_style.set_cap(caps::butt());
 			dash_style.dash_start(0.5f*scale);
 			dash_style.add_dash(1.0f*scale, 1.0f*scale);
-			
-			add_path(ras,
-            assist(assist(line(19.5f*scale, 300.5f*scale, 319.5f*scale, 300.5f*scale), dash_style), line_style));
+
+			add_path(ras, line(19.5f*scale, 300.5f*scale, 319.5f*scale, 300.5f*scale)/dash_style/line_style);
 
 			ras.sort();
 

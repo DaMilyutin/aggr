@@ -45,36 +45,32 @@ namespace agge
 			const real_t dx = (v1.x - v0.x) * d, d2x = c_qarc_bezier_k * dx;
 			const real_t dy = (v1.y - v0.y) * d, d2y = c_qarc_bezier_k * dy;
 
-			real_t xb = v0.x - dy, yb = v0.y + dx;
+            cbezier_interp interp;
+            interp._b = {v0.x - dy, v0.y + dx};
+            interp._c1 = {interp._b.x - d2x, interp._b.y - d2y};
+            interp._e = {v0.x - dx, v0.y - dy};
+            interp._c2 = {interp._e.x - d2y, interp._e.y + d2x};
 
-			output.push_back(create_point(xb, yb));
 
-			real_t xc1 = xb - d2x, yc1 = yb - d2y;
-			real_t xe = v0.x - dx, ye = v0.y - dy;
-			real_t xc2 = xe - d2y, yc2 = ye + d2x;
+            output.push_back(interp._b);
+			for (real_t t = step; t < 1.0f; t += step)
+			{
+				point_r p = interp.at(t);
+				output.push_back(p);
+			}
+			output.push_back(interp._e);
+
+            interp._b = interp._e;
+            interp._c1 = {interp._b.x + d2y, interp._b.y - d2x};
+            interp._e = {v0.x + dy, v0.y - dx};
+            interp._c2 = {interp._e.x - d2x, interp._e.y - d2y};
 
 			for (real_t t = step; t < 1.0f; t += step)
 			{
-				point_r p;
-
-				cbezier::calculate(&p.x, &p.y, xb, yb, xc1, yc1, xc2, yc2, xe, ye, t);
+				point_r p = interp.at(t);
 				output.push_back(p);
 			}
-			output.push_back(create_point(xe, ye));
-
-			xb = xe, yb = ye;
-			xc1 = xb + d2y, yc1 = yb - d2x;
-			xe = v0.x + dy, ye = v0.y - dx;
-			xc2 = xe - d2x, yc2 = ye - d2y;
-
-			for (real_t t = step; t < 1.0f; t += step)
-			{
-				point_r p;
-
-				cbezier::calculate(&p.x, &p.y, xb, yb, xc1, yc1, xc2, yc2, xe, ye, t);
-				output.push_back(p);
-			}
-			output.push_back(create_point(xe, ye));
+			output.push_back(interp._e);
 		}
 	}
 

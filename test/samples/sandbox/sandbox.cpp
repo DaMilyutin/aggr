@@ -93,7 +93,7 @@ namespace
 				_stroke2.set_join(joins::bevel());
 
 				_spiral_flattened.clear();
-				flatten<real_t>(_spiral_flattened, assist(polyline_adaptor(_spiral), _stroke1));
+				flatten<real_t>(_spiral_flattened, polyline_adaptor(_spiral)/_stroke1);
 //				flatten<real_t>(_spiral_flattened, assist(assist(agg_path_adaptor(_spiral), _dash), _stroke1));
 //				flatten<real_t>(_spiral_flattened, assist(assist(agg_path_adaptor(_spiral), _stroke1), _stroke2));
 //				flatten<real_t>(_spiral_flattened, assist(assist(assist(agg_path_adaptor(_spiral), _dash), _stroke1), _stroke2));

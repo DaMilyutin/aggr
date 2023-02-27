@@ -4,7 +4,7 @@
 #include <agge.text/layout.h>
 #include <agge.text/limit.h>
 #include <map>
-#include <plotting/common/font_loader.h>
+#include <samples/common/font_loader.h>
 #include <samples/common/lipsum.h>
 #include <samples/common/platform/win32/dc.h>
 #include <samples/common/platform/win32/font_accessor.h>
@@ -26,7 +26,7 @@ namespace demo
 			: _text_engine(_font_loader)
 			, _text(font_style_annotation())
 		{
-			font_style_annotation a = {	font_descriptor::create("Times New Roman", 25, regular, false, hint_none),	};
+			font_style_annotation a = {	font_descriptor::create("Times New Roman", 25, agge::regular, false, agge::hint_none),	};
 
 			_text.set_base_annotation(a);
 			_text << c_text_long.c_str();

@@ -5,98 +5,86 @@
 
 namespace agge
 {
-	qbezier::qbezier(real_t xb, real_t yb, real_t xc, real_t yc, real_t xe, real_t ye, real_t step)
-		: _xb(xb), _yb(yb), _xc(xc), _yc(yc), _xe(xe), _ye(ye), _t(0.0f), _step(step), _stage(path_command_move_to)
-	{	}
+	//qbezier::qbezier(point_r b, point_r c, point_r e, real_t step)
+	//	: qbezier_interp(b, c, e), _t(0.0f), _step(step), _stage(path_command_move_to)
+	//{	}
 
-	void qbezier::rewind(unsigned /*id*/)
-	{
-		_t = 0.0f;
-		_stage = path_command_move_to;
-	}
+	//void qbezier::rewind(unsigned /*id*/)
+	//{
+	//	_t = 0.0f;
+	//	_stage = path_command_move_to;
+	//}
 
-	int qbezier::vertex(real_t *x, real_t *y)
-	{
-		int stage = _stage;
+ //   int qbezier::vertex(point_r* p)
+ //   {
+ //       int stage = _stage;
 
-		switch (stage)
-		{
-		case path_command_move_to:
-			*x = _xb, *y = _yb;
-			_stage = path_command_line_to;
-			_t = _step;
-			break;
+ //       switch(stage)
+ //       {
+ //       case path_command_move_to:
+ //           *p = _b;
+ //           _stage = path_command_line_to;
+ //           _t = _step;
+ //           break;
 
-		case path_command_line_to:
-			if (_t < 1.0f)
-			{
-				const real_t _1_t = 1.0f - _t;
-				const real_t c[] = { _1_t * _1_t, 2.0f * _1_t * _t, _t * _t, };
+ //       case path_command_line_to:
+ //           if(_t < 1.0f)
+ //           {
+ //               *p = at(_t);
+ //               _t += _step;
+ //           }
+ //           else
+ //           {
+ //               *p = _e;
+ //               _stage = path_command_stop;
+ //           }
+ //           break;
+ //       }
+ //       return stage;
+ //   }
 
-				*x = _xb * c[0] + _xc * c[1] + _xe * c[2];
-				*y = _yb * c[0] + _yc * c[1] + _ye * c[2];
-				_t += _step;
-			}
-			else
-			{
-				*x = _xe, *y = _ye;
-				_stage = path_command_stop;
-			}
-			break;
-		}
-		return stage;
-	}
+	//cbezier::cbezier(point_r b, point_r c1, point_r c2, point_r e, real_t step)
+	//	: cbezier_interp(b, c1, c2, e), _step(step)
+ //       , _stage(path_command_move_to)
+	//{}
+
+	//void cbezier::rewind(unsigned /*id*/)
+	//{
+	//	_t = 0.0f;
+	//	_stage = path_command_move_to;
+	//}
+
+ //   int cbezier::vertex(point_r* p)
+ //   {
+ //       int stage = _stage;
+
+ //       switch(stage)
+ //       {
+ //       case path_command_move_to:
+ //           *p = _b;
+ //           _stage = path_command_line_to;
+ //           _t = _step;
+ //           break;
+
+ //       case path_command_line_to:
+ //           if(_t < 1.0f)
+ //           {
+ //               *p = at(_t);
+ //               _t += _step;
+ //           }
+ //           else
+ //           {
+ //               *p = _e;
+ //               _stage = path_command_stop;
+ //           }
+ //           break;
+ //       }
+ //       return stage;
+ //   }
 
 
-	cbezier::cbezier(real_t xb, real_t yb, real_t xc1, real_t yc1, real_t xc2, real_t yc2, real_t xe, real_t ye, real_t step)
-		: _xb(xb), _yb(yb), _xc1(xc1), _yc1(yc1), _xc2(xc2), _yc2(yc2), _xe(xe), _ye(ye), _t(0.0f), _step(step),
-			_stage(path_command_move_to)
-	{	}
 
-	void cbezier::rewind(unsigned /*id*/)
-	{
-		_t = 0.0f;
-		_stage = path_command_move_to;
-	}
 
-	int cbezier::vertex(real_t *x, real_t *y)
-	{
-		int stage = _stage;
-
-		switch (stage)
-		{
-		case path_command_move_to:
-			*x = _xb, *y = _yb;
-			_stage = path_command_line_to;
-			_t = _step;
-			break;
-
-		case path_command_line_to:
-			if (_t < 1.0f)
-			{
-				calculate(x, y, _xb, _yb, _xc1, _yc1, _xc2, _yc2, _xe, _ye, _t);
-				_t += _step;
-			}
-			else
-			{
-				*x = _xe, *y = _ye;
-				_stage = path_command_stop;
-			}
-			break;
-		}
-		return stage;
-	}
-
-	void cbezier::calculate(real_t *x, real_t *y, real_t xb, real_t yb, real_t xc1, real_t yc1, real_t xc2, real_t yc2,
-		real_t xe, real_t ye, real_t t)
-	{
-		const real_t _1_t = 1.0f - t;
-		const real_t tm = 3.0f * t * _1_t;
-		const real_t c[] = { _1_t * _1_t * _1_t, tm * _1_t, tm * t, t * t * t, };
-
-		*x = xb * c[0] + xc1 * c[1] + xc2 * c[2] + xe * c[3];
-		*y = yb * c[0] + yc1 * c[1] + yc2 * c[2] + ye * c[3];
-	}
 
 
 	arc::arc(real_t cx, real_t cy, real_t r, real_t start, real_t end, real_t /*da*/)
@@ -127,4 +115,36 @@ namespace agge
 		_a += _step;
 		return stage;
 	}
+
+
+    Interval::Interval(real_t step)
+        : _t(0.0f), _step(step), _stage(path_command_move_to)
+    {}
+
+    int Interval::vertex(real_t* t)
+    {
+        int stage = _stage;
+        switch(stage)
+        {
+        case path_command_move_to:
+            *t = 0.0f;
+            _stage = path_command_line_to;
+            _t = _step;
+            break;
+        case path_command_line_to:
+            if(_t < 1.0f)
+            {
+                *t = _t;
+                _t += _step;
+            }
+            else
+            {
+                *t = 1.0f;
+                _stage = path_command_stop;
+            }
+            break;
+        }
+        return stage;
+    }
+
 }

@@ -4,7 +4,7 @@
 #include <agge/rendering/renderer_parallel.h>
 #include <agge.text/layout.h>
 #include <agge.text/limit.h>
-#include <plotting/common/font_loader.h>
+#include <samples/common/font_loader.h>
 #include <samples/common/lipsum.h>
 #include <samples/common/shell.h>
 #include <samples/common/timing.h>
@@ -26,7 +26,7 @@ namespace demo
             , _text(font_style_annotation())
             , _ddx(0.0f)
 		{
-			font_style_annotation a = {	font_descriptor::create("Arial", 30, regular, false, hint_none),	};
+			font_style_annotation a = {	font_descriptor::create("Arial", 30, agge::regular, false, agge::hint_none),	};
             a.foreground = agge::color{255,0,0,200};
 			_text.set_base_annotation(a);
 			_text << c_text_long.c_str();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math.h"
+#include <agge/utils/math.h>
 #include "vector_rasterizer.h"
 
 namespace agge

@@ -91,7 +91,9 @@ namespace agge
 			setup_bezier(_state = left | top), cmd = path_command_move_to;
 		}
 
-		cbezier::calculate(x, y, _xb, _yb, _xc1, _yc1, _xc2, _yc2, _xe, _ye, _t);
+        point_r p = _interp.at(_t);
+        *x = p.x, *y = p.y;
+
 		_t += _step;
 		if (_t > 1.0f)
 		{
@@ -125,31 +127,31 @@ namespace agge
 		switch (state)
 		{
 		case left | top:
-			_xb = _points[0].x, _yb = _points[0].y + _ry;
-			_xc1 = _points[0].x, _yc1 = _points[0].y + k_ * _ry;
-			_xc2 = _points[0].x + k_ * _rx, _yc2 = _points[0].y;
-			_xe = _points[0].x + _rx, _ye = _points[0].y;
+            _interp._b = {_points[0].x, _points[0].y + _ry};
+            _interp._c1 = {_points[0].x, _points[0].y + k_ * _ry};
+            _interp._c2 = {_points[0].x + k_ * _rx, _points[0].y};
+            _interp._e = {_points[0].x + _rx, _points[0].y};
 			break;
 
 		case right | top:
-			_xb = _points[1].x - _rx, _yb = _points[0].y;
-			_xc1 = _points[1].x - k_ * _rx, _yc1 = _points[0].y;
-			_xc2 = _points[1].x, _yc2 = _points[0].y + k_ * _ry;
-			_xe = _points[1].x, _ye = _points[0].y + _rx;
+            _interp._b = {_points[1].x - _rx, _points[0].y};
+            _interp._c1 = {_points[1].x - k_ * _rx, _points[0].y};
+            _interp._c2 = {_points[1].x, _points[0].y + k_ * _ry};
+            _interp._e = {_points[1].x, _points[0].y + _rx};
 			break;
 
 		case right | bottom:
-			_xb = _points[1].x, _yb = _points[1].y - _ry;
-			_xc1 = _points[1].x, _yc1 = _points[1].y - k_ * _ry;
-			_xc2 = _points[1].x - k_ * _rx, _yc2 = _points[1].y;
-			_xe = _points[1].x - _rx, _ye = _points[1].y;
+            _interp._b = {_points[1].x, _points[1].y - _ry};
+            _interp._c1 = {_points[1].x,  _points[1].y - k_ * _ry};
+            _interp._c2 = {_points[1].x - k_ * _rx, _points[1].y};
+            _interp._e = {_points[1].x - _rx, _points[1].y};
 			break;
 
 		case left | bottom:
-			_xb = _points[0].x + _rx, _yb = _points[1].y;
-			_xc1 = _points[0].x + k_ * _rx, _yc1 = _points[1].y;
-			_xc2 = _points[0].x, _yc2 = _points[1].y - k_ * _ry;
-			_xe = _points[0].x, _ye = _points[1].y - _ry;
+            _interp._b  = {_points[0].x + _rx, _points[1].y};
+            _interp._c1 = {_points[0].x + k_ * _rx, _points[1].y};
+            _interp._c2 = {_points[0].x, _points[1].y - k_ * _ry};
+            _interp._e  = {_points[0].x, _points[1].y - _ry};
 			break;
 		}
 		_t = 0.0f;

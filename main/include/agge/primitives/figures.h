@@ -4,6 +4,7 @@
 #include <agge/primitives/pipeline.h>
 #include <agge/primitives/path.h>
 
+#include <agge/utils/bezier.h>
 
 namespace agge
 {
@@ -51,7 +52,7 @@ namespace agge
 
     private:
         real_t _t, _step;
-        real_t _xb, _yb, _xc1, _yc1, _xc2, _yc2, _xe, _ye;
+        cbezier_interp _interp;
         real_t _rx, _ry;
         point_r _points[2];
         unsigned _state;

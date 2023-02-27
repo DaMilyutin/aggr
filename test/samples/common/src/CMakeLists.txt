@@ -26,6 +26,11 @@ elseif(ANDROID)
 	)
 endif()
 
+	set(SAMPLES_COMMON_SOURCES ${SAMPLES_COMMON_SOURCES}
+		font_loader.cpp
+        truetype.cpp
+	)
+
 add_library(samples.common STATIC ${SAMPLES_COMMON_SOURCES})
 
 #target_include_directories(samples. PRIVATE ../../..)
