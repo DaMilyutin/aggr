@@ -1,6 +1,6 @@
-#include <agge/stroke.h>
+#include <agge/primitives/stroke.h>
 
-#include <agge/stroke_features.h>
+#include <agge/primitives/stroke_features.h>
 
 #include "helpers.h"
 #include "mocks.h"
@@ -331,7 +331,7 @@ namespace agge
 				assert_equal(reference2, points2);
 			}
 
-			
+
 			test( TwoOutlinesAreGeneratedForPolygons )
 			{
 				// INIT
@@ -414,7 +414,7 @@ namespace agge
 				assert_equal(reference2, points2);
 			}
 
-			
+
 			test( TwoOutlinesAreGeneratedForEmbeddedClose )
 			{
 				// INIT
@@ -653,7 +653,7 @@ namespace agge
 
 				// ACT
 				s.remove_all();
-				
+
 				// ASSERT
 				move_to(s, 2.0f, 5.0f);
 				line_to(s, 0.3f, 19.2f);

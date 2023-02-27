@@ -1,4 +1,4 @@
-#include <agge/path.h>
+#include <agge/primitives/path.h>
 
 #include "mocks.h"
 
@@ -14,7 +14,7 @@ namespace agge
 	{
 		namespace
 		{
-			class passthrough_generator : public mocks::path
+			class passthrough_generator : public agge::pipeline::terminal<passthrough_generator>, public mocks::path
 			{
 			public:
 				passthrough_generator()
@@ -51,7 +51,7 @@ namespace agge
 				real_t x, y;
 
 				// INIT / ACT
-				path_generator_adapter<mocks::path, passthrough_generator> pg = assist(empty, g);
+				path_generator_adapter<mocks::path, passthrough_generator> pg(empty, g);
 
 				// ACT / ASSERT
 				assert_equal(path_command_stop, (int)pg.vertex(&x, &y));
@@ -84,8 +84,8 @@ namespace agge
 				passthrough_generator g1(2.0f, 1.0f);
 				passthrough_generator g2(1.0f, 2.0f);
 
-				path_generator_adapter<mocks::path, passthrough_generator> pg1 = assist(p1, g1);
-				path_generator_adapter<mocks::path, passthrough_generator> pg2 = assist(p2, g2);
+				path_generator_adapter<mocks::path, passthrough_generator> pg1(p1, g1);
+				path_generator_adapter<mocks::path, passthrough_generator> pg2(p2, g2);
 
 				// ACT
 				mocks::path::point points1[] = { vertex(pg1), vertex(pg1), vertex(pg1), vertex(pg1), vertex(pg1), };
@@ -131,7 +131,7 @@ namespace agge
 				mocks::path p1(input1);
 				passthrough_generator g;
 
-				path_generator_adapter<mocks::path, passthrough_generator> pg1 = assist(p1, g);
+				path_generator_adapter<mocks::path, passthrough_generator> pg1(p1, g);
 
 				// ACT
 				mocks::path::point points1[] = { vertex(pg1), vertex(pg1), };
@@ -175,7 +175,7 @@ namespace agge
 				};
 				mocks::path p2(input2);
 
-				path_generator_adapter<mocks::path, passthrough_generator> pg2 = assist(p2, g);
+				path_generator_adapter<mocks::path, passthrough_generator> pg2(p2, g);
 
 				// ACT
 				mocks::path::point points3[] = {
@@ -210,7 +210,7 @@ namespace agge
 				};
 				mocks::path p(input);
 				passthrough_generator g;
-				path_generator_adapter<mocks::path, passthrough_generator> pg = assist(p, g);
+				path_generator_adapter<mocks::path, passthrough_generator> pg(p, g);
 
 				g.points.resize(3); // Resize to check if its cleared.
 

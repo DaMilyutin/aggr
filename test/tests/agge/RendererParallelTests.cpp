@@ -1,4 +1,4 @@
-#include <agge/renderer_parallel.h>
+#include <agge/rendering/renderer_parallel.h>
 
 #include "helpers.h"
 #include "mocks.h"
@@ -49,7 +49,7 @@ namespace agge
 					if (*p & mask)
 					{
 						int pixel_threadnum = *p >> offset;
-						
+
 						if (threadnum == -1)
 							threadnum = pixel_threadnum;
 						assert_equal(threadnum, pixel_threadnum);

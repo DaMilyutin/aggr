@@ -1,4 +1,4 @@
-#include <agge/filling_rules.h>
+#include <agge/rendering/filling_rules.h>
 
 #include <ut/assert.h>
 #include <ut/test.h>

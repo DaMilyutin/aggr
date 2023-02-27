@@ -1,4 +1,4 @@
-#include <agge/scanline.h>
+#include <agge/rendering/scanline.h>
 
 #include "helpers.h"
 #include "mocks.h"

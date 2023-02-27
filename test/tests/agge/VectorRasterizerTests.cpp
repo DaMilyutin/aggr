@@ -1,4 +1,4 @@
-#include <agge/vector_rasterizer.h>
+#include <agge/rendering/vector_rasterizer.h>
 
 #include "helpers.h"
 

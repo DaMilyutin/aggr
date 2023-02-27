@@ -1,4 +1,4 @@
-#include <agge/dash.h>
+#include <agge/primitives/dash.h>
 
 #include "mocks.h"
 

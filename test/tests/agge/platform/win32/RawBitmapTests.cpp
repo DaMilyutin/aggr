@@ -1,4 +1,4 @@
-#include <agge/platform/bitmap.h>
+#include <agge/rendering/platform/bitmap.h>
 
 #include "surface.h"
 
@@ -32,7 +32,7 @@ namespace agge
 					const raw_bitmap b1(10, 100, bpp32);
 					const raw_bitmap b2(171, 731, bpp16);
 					const raw_bitmap b3(17, 19, bpp24);
-					
+
 					// ACT / ASSERT
 					assert_equal(10u, b1.width());
 					assert_equal(100u, b1.height());
@@ -276,7 +276,7 @@ namespace agge
 					// INIT
 					raw_bitmap b(10, 10, bpp32);
 					gdi_surface s(5, 5);
-					
+
 					memset(b.row_ptr(0), 0xFF, 400);
 
 					// ACT

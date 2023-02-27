@@ -1,4 +1,4 @@
-#include <agge/blenders.h>
+#include <agge/rendering/blenders.h>
 #include <agge/pixel.h>
 
 #include <ut/assert.h>

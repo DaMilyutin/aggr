@@ -1,6 +1,6 @@
-#include <agge/rasterizer.h>
+#include <agge/rendering/rasterizer.h>
 
-#include <agge/renderer.h>
+#include <agge/rendering/renderer.h>
 
 #include "helpers.h"
 #include "mocks.h"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <agge/tools.h>
+#include <agge/utils/tools.h>
 #include <agge/types.h>
 #include <agge.text/layout_primitives.h>
 #include <agge.text/richtext.h>

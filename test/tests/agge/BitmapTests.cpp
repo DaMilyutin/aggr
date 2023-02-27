@@ -1,4 +1,4 @@
-#include <agge/bitmap.h>
+#include <agge/rendering/bitmap.h>
 
 #include "helpers.h"
 #include "mocks.h"
@@ -83,7 +83,7 @@ namespace agge
 				assert_equal(7u, b4.extra_bytes);
 			}
 
-			
+
 			test( ProperBPPIsPassedToConstructor )
 			{
 				// INIT / ACT
@@ -150,7 +150,7 @@ namespace agge
 			{
 				// INIT
 				typedef bitmap<pixel32, mocks::raw_bitmap> bitmap;
-				
+
 				bitmap source(4, 5);
 				mocks::bitmap<pixel32, 0> destination(5, 6);
 				const bitmap &csource = source;
@@ -187,7 +187,7 @@ namespace agge
 			{
 				// INIT
 				typedef bitmap<uint8_t, mocks::raw_bitmap> bitmap;
-				
+
 				bitmap source(7, 5);
 				mocks::bitmap<uint8_t, 0> destination(12, 8);
 
@@ -216,7 +216,7 @@ namespace agge
 			{
 				// INIT
 				typedef bitmap<uint8_t, mocks::raw_bitmap> bitmap;
-				
+
 				bitmap source(7, 5);
 				mocks::bitmap<uint8_t, 0> destination(8, 6);
 
@@ -243,10 +243,10 @@ namespace agge
 			{
 				// INIT
 				typedef bitmap<uint8_t, mocks::raw_bitmap> bitmap;
-				
+
 				bitmap source(7, 5);
 				mocks::bitmap<uint8_t, 1> destination(3, 4);
-				
+
 				destination.data.resize(destination.data.size() + 4);
 
 				source.data = mkvector(c_small_pattern);
@@ -271,7 +271,7 @@ namespace agge
 			{
 				// INIT
 				typedef bitmap<uint8_t, mocks::raw_bitmap> bitmap;
-				
+
 				bitmap source(7, 5);
 				mocks::bitmap<uint8_t, 1> destination(12, 7);
 
@@ -338,7 +338,7 @@ namespace agge
 			{
 				// INIT
 				typedef bitmap<uint8_t, mocks::raw_bitmap> bitmap;
-				
+
 				bitmap source(7, 5);
 				mocks::bitmap<uint8_t, 1> destination(11, 7);
 
@@ -368,7 +368,7 @@ namespace agge
 			{
 				// INIT
 				typedef bitmap<uint8_t, mocks::raw_bitmap> bitmap;
-				
+
 				bitmap source(7, 5);
 				mocks::bitmap<uint8_t, 0> destination(8, 7);
 
@@ -398,13 +398,13 @@ namespace agge
 
 				// ASSERT
 				uint8_t reference2[] = {
-					0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 
-					0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 
+					0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07,
+					0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07,
 					0x07, 0x07, 0x07, 0x11, 0x11, 0x11, 0x07, 0x07,
 					0x07, 0x07, 0x07, 0x11, 0xFF, 0xFF, 0x07, 0x07,
-					0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 
-					0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 
-					0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 
+					0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07,
+					0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07,
+					0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07,
 				};
 
 				assert_equal(reference2, destination.data);

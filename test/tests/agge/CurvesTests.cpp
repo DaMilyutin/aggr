@@ -1,10 +1,10 @@
-#include <agge/curves.h>
+#include <agge/primitives/curves.h>
 
 #include "assertex.h"
 #include "mocks.h"
 
-#include <agge/math.h>
-#include <agge/path.h>
+#include <agge/utils/math.h>
+#include <agge/primitives/path.h>
 
 #include <ut/test.h>
 
@@ -16,8 +16,8 @@ namespace agge
 			test( FirstElementIsAMoveToTheStartingPoint )
 			{
 				// INIT
-				qbezier b1(13.1f, -17.2f, 1.0f, 1.0f, 2.0f, 0.0f, 1.0f);
-				qbezier b2(-122.3f, 19.4f, 1.0f, 1.0f, 2.0f, 0.0f, 1.0f);
+				qbezier b1 = agge::Interval(1.0f)/agge::qbezier_interp({13.1f, -17.2f}, {1.0f, 1.0f}, {2.0f, 0.0f});
+				qbezier b2 = agge::Interval(1.0f)/agge::qbezier_interp({-122.3f, 19.4f}, {1.0f, 1.0f}, {2.0f, 0.0f});
 
 				// ACT
 				mocks::path::point points1[] = { vertex(b1), };
@@ -35,7 +35,8 @@ namespace agge
 			test( CoarseQBezier2ProducesLine )
 			{
 				// INIT
-				qbezier b1(0.0f, 0.0f, 1.0f, 1.0f, 2.0f, 0.0f, 100.0f /* ridiculously big step */);
+				qbezier b1 = agge::Interval(100.0f /* ridiculously big step */)
+                                /agge::qbezier_interp({0.0f, 0.0f}, {1.0f, 1.0f}, {2.0f, 0.0f});
 
 				// ACT
 				mocks::path::point points1[] = { vertex(b1), vertex(b1), vertex(b1), };
@@ -46,7 +47,8 @@ namespace agge
 				assert_equal(reference1, points1);
 
 				// INIT
-				qbezier b2(10.0f, 11.0f, 1.0f, 1.0f, 13.0f, 17.0f, 100.0f /* ridiculously big step */);
+                qbezier b2 = agge::Interval(100.0f /* ridiculously big step */)
+                            /agge::qbezier_interp({10.0f, 11.0f}, {1.0f, 1.0f}, {13.0f, 17.0f});
 
 				// ACT
 				mocks::path::point points2[] = { vertex(b2), vertex(b2), vertex(b2), };
@@ -62,7 +64,7 @@ namespace agge
 			{
 				// INIT
 				real_t x, y;
-				qbezier b1(0.0f, 0.0f, 0.5f, 0.6f, 1.0f, 2.0f, 0.5f);
+				qbezier b1 = agge::Interval(0.5f)/agge::qbezier_interp({0.0f, 0.0f}, {0.5f, 0.6f}, {1.0f, 2.0f});
 
 				// ACT / ASSERT
 				assert_equal(path_command_move_to, b1.vertex(&x, &y));
@@ -71,7 +73,7 @@ namespace agge
 				assert_equal(path_command_stop, b1.vertex(&x, &y));
 
 				// INIT
-				qbezier b2(0.0f, 0.0f, 0.5f, 0.6f, 1.0f, 2.0f, 0.2f);
+				qbezier b2 = agge::Interval(0.2f)/agge::qbezier_interp({0.0f, 0.0f}, {0.5f, 0.6f}, {1.0f, 2.0f});
 
 				// ACT / ASSERT
 				assert_equal(path_command_move_to, b2.vertex(&x, &y));
@@ -87,7 +89,7 @@ namespace agge
 			test( QBezierIteratorProducesExpectedVerticesAccordinglyToParameters )
 			{
 				// INIT
-				qbezier b1(-3.5f, 7.4f, 1.0f, 2.0f, 10.1f, 3.8f, 0.111f);
+				qbezier b1 = agge::Interval(0.111f)/agge::qbezier_interp({-3.5f, 7.4f}, {1.0f, 2.0f}, {10.1f, 3.8f});
 
 				// ACT
 				mocks::path::point points1[] = {
@@ -115,7 +117,7 @@ namespace agge
 				assert_equal(reference1, points1);
 
 				// INIT
-				qbezier b2(1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.3f);
+				qbezier b2 = agge::Interval(0.3f)/agge::qbezier_interp({1.0f, 1.0f}, {0.0f, 0.0f}, {-1.0f, 1.0f});
 
 				// ACT
 				mocks::path::point points2[] = {
@@ -139,7 +141,7 @@ namespace agge
 			test( RewindingQuadraticBezierIteratorStartsOverWithPoints )
 			{
 				// INIT
-				qbezier b(1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.3f);
+				qbezier b = agge::Interval(0.3f)/agge::qbezier_interp({1.0f, 1.0f}, {0.0f, 0.0f}, {-1.0f, 1.0f});
 
 				vertex(b), vertex(b);
 
@@ -160,8 +162,8 @@ namespace agge
 			test( FirstElementIsAMoveToTheStartingPoint )
 			{
 				// INIT
-				cbezier b1(13.1f, -17.2f, 1.0f, 1.0f, 2.0f, 0.0f, 5.0f, 5.0f, 1.0f);
-				cbezier b2(-122.3f, 19.4f, 1.0f, 1.0f, 2.0f, 0.0f, 5.0f, 5.0f, 1.0f);
+				cbezier b1 = agge::Interval(1.0f)/agge::cbezier_interp({13.1f, -17.2f}, {1.0f, 1.0f}, {2.0f, 0.0f}, {5.0f, 5.0f});
+				cbezier b2 = agge::Interval(1.0f)/agge::cbezier_interp({-122.3f, 19.4f}, {1.0f, 1.0f}, {2.0f, 0.0f}, {5.0f, 5.0f});
 
 				// ACT
 				mocks::path::point points1[] = { vertex(b1), };
@@ -179,7 +181,7 @@ namespace agge
 			{
 				// INIT
 				real_t x, y;
-				cbezier c1(0.0f, 0.0f, 0.5f, 0.6f, 0.0f, 0.0f, 1.0f, 2.0f, 0.5f);
+				cbezier c1 = agge::Interval(0.5f)/agge::cbezier_interp({0.0f, 0.0f}, {0.5f, 0.6f}, {0.0f, 0.0f}, {1.0f, 2.0f});
 
 				// ACT / ASSERT
 				assert_equal(path_command_move_to, c1.vertex(&x, &y));
@@ -188,7 +190,7 @@ namespace agge
 				assert_equal(path_command_stop, c1.vertex(&x, &y));
 
 				// INIT
-				cbezier c2(0.0f, 0.0f, 0.5f, 0.6f, 0.0f, 0.0f, 1.0f, 2.0f, 0.2f);
+				cbezier c2 = agge::Interval(0.2f)/agge::cbezier_interp({0.0f, 0.0f}, {0.5f, 0.6f}, {0.0f, 0.0f}, {1.0f, 2.0f});
 
 				// ACT / ASSERT
 				assert_equal(path_command_move_to, c2.vertex(&x, &y));
@@ -204,7 +206,7 @@ namespace agge
 			test( CBezierIteratorProducesExpectedVerticesAccordinglyToParameters )
 			{
 				// INIT
-				cbezier c1(-3.5f, 7.4f, 1.0f, 2.0f, 0.2f, 0.3f, 10.1f, 3.8f, 0.111f);
+				cbezier c1 = agge::Interval(0.111f)/agge::cbezier_interp({-3.5f, 7.4f}, {1.0f, 2.0f}, {0.2f, 0.3f}, {10.1f, 3.8f});
 
 				// ACT
 				mocks::path::point points1[] = {
@@ -232,7 +234,7 @@ namespace agge
 				assert_equal(reference1, points1);
 
 				// INIT
-				cbezier c2(1.0f, 1.0f, 0.0f, 0.0f, 0.8f, 0.7f, -1.0f, 1.0f, 0.3f);
+				cbezier c2 = agge::Interval(0.3f)/agge::cbezier_interp({1.0f, 1.0f}, {0.0f, 0.0f}, {0.8f, 0.7f}, {-1.0f, 1.0f});
 
 				// ACT
 				mocks::path::point points2[] = { vertex(c2), vertex(c2), vertex(c2), vertex(c2), vertex(c2), vertex(c2), };
@@ -254,7 +256,7 @@ namespace agge
 			test( RewindingCubicBezierIteratorStartsOverWithPoints )
 			{
 				// INIT
-				cbezier c(1.0f, 1.0f, 0.0f, 0.0f, 0.8f, 0.7f, -1.0f, 1.0f, 0.3f);
+				cbezier c = agge::Interval(0.3f)/agge::cbezier_interp({1.0f, 1.0f}, {0.0f, 0.0f}, {0.8f, 0.7f}, {-1.0f, 1.0f});
 
 				vertex(c), vertex(c);
 

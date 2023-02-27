@@ -1,6 +1,7 @@
-#include <agge/pod_vector.h>
+#include <agge/utils/pod_vector.h>
 
 #include <algorithm>
+#include <functional>
 #include <ut/assert.h>
 #include <ut/test.h>
 
@@ -471,14 +472,18 @@ namespace agge
 				v2.assign(17, 'r');
 				v3.assign(29, 191);
 
+                auto make_not_equal_to = []<typename T>(T v)
+                {
+                    return [v](T x) -> bool { return v != x; };
+                };
+
 				// ASSERT
 				assert_equal(179u, v1.size());
-				assert_equal(v1.end(), find_if(v1.begin(), v1.end(), bind1st(not_equal_to<float>(), 3.3112f)));
+				assert_equal(v1.end(), find_if(v1.begin(), v1.end(), make_not_equal_to (3.3112f)));
 				assert_equal(17u, v2.size());
-				assert_equal(v2.end(), find_if(v2.begin(), v2.end(), bind1st(not_equal_to<char>(), 'r')));
+				assert_equal(v2.end(), find_if(v2.begin(), v2.end(), make_not_equal_to('r')));
 				assert_equal(29u, v3.size());
-				assert_equal(v3.end(), find_if(v3.begin(), v3.end(), bind1st(not_equal_to<unsigned char>(),
-					static_cast<unsigned char>(191))));
+				assert_equal(v3.end(), find_if(v3.begin(), v3.end(), make_not_equal_to(static_cast<unsigned char>(191))));
 
 				// ACT
 				v1.assign(5, 3.15114926f);
@@ -487,12 +492,11 @@ namespace agge
 
 				// ASSERT
 				assert_equal(5u, v1.size());
-				assert_equal(v1.end(), find_if(v1.begin(), v1.end(), bind1st(not_equal_to<float>(), 3.15114926f)));
+				assert_equal(v1.end(), find_if(v1.begin(), v1.end(), make_not_equal_to(3.15114926f)));
 				assert_equal(918u, v2.size());
-				assert_equal(v2.end(), find_if(v2.begin(), v2.end(), bind1st(not_equal_to<char>(), 'Z')));
+				assert_equal(v2.end(), find_if(v2.begin(), v2.end(), make_not_equal_to('Z')));
 				assert_equal(18u, v3.size());
-				assert_equal(v3.end(), find_if(v3.begin(), v3.end(), bind1st(not_equal_to<unsigned char>(),
-					static_cast<unsigned char>(23))));
+				assert_equal(v3.end(), find_if(v3.begin(), v3.end(), make_not_equal_to(static_cast<unsigned char>(23))));
 			}
 
 

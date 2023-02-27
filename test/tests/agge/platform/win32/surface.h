@@ -1,6 +1,7 @@
 #pragma once
 
 #include <agge/types.h>
+#include <string.h>
 
 struct HBITMAP__;
 typedef struct HBITMAP__ *HBITMAP;

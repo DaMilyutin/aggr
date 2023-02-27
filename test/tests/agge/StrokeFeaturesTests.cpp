@@ -1,4 +1,4 @@
-#include <agge/stroke_features.h>
+#include <agge/primitives/stroke_features.h>
 
 #include "assertex.h"
 #include "helpers.h"

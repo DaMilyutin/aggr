@@ -1,7 +1,7 @@
-#include <agge/math.h>
-#include <agge/memory.h>
-#include <agge/path.h>
-#include <agge/tools.h>
+#include <agge/utils/math.h>
+#include <agge/utils/memory.h>
+#include <agge/utils/tools.h>
+#include <agge/primitives/path.h>
 
 #include "helpers.h"
 

@@ -1,4 +1,4 @@
-#include <agge/blenders_generic.h>
+#include <agge/rendering/blenders_generic.h>
 
 #include <algorithm>
 #include <ut/assert.h>

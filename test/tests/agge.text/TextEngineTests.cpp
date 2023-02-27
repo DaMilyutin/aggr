@@ -5,7 +5,7 @@
 #include "mocks.h"
 #include "outlines.h"
 
-#include <agge/path.h>
+#include <agge/primitives/path.h>
 #include <agge.text/limit.h>
 #include <algorithm>
 #include <tests/common/helpers.h>
@@ -36,7 +36,7 @@ namespace agge
 		}
 
 		begin_test_suite( TextEngineTests )
-			
+
 			test( CreatingDifferentFontsReturnsDifferentObjects )
 			{
 				// INIT

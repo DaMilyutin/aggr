@@ -4,7 +4,7 @@
 #include "mocks.h"
 #include "outlines.h"
 
-#include <agge/path.h>
+#include <agge/primitives/path.h>
 #include <ut/assert.h>
 #include <ut/test.h>
 

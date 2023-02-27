@@ -31,8 +31,8 @@ namespace agge
 	{
 		namespace
 		{
-			vector<richtext_modifier_t::range> mkvector(const richtext_modifier_t &from)
-			{	return vector<richtext_modifier_t::range>(from.ranges_begin(), from.ranges_end());	}
+			vector<richtext_modifier_t::range_adapter> mkvector(const richtext_modifier_t &from)
+			{	return vector<richtext_modifier_t::range_adapter>(from.ranges_begin(), from.ranges_end());	}
 		}
 
 		begin_test_suite( RichTextTests )

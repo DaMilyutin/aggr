@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <agge/color.h>
 #include <agge/pixel.h>
-#include <agge/vector_rasterizer.h>
+#include <agge/rendering/vector_rasterizer.h>
 
 namespace agge
 {
@@ -19,7 +19,7 @@ namespace agge
 		template <typename T>
 		inline bool equal(const T &lhs, const T &rhs)
 		{	return lhs == rhs;	}
-		
+
 		template <>
 		inline bool equal(const real_t &lhs, const real_t &rhs)
 		{
@@ -28,7 +28,7 @@ namespace agge
 
 			const real_t tolerance = 2e-5f;
 			const real_t d = (lhs - rhs) / (lhs + rhs);
-			
+
 			return -tolerance <= d && d <= tolerance;
 		}
 
@@ -52,7 +52,7 @@ namespace agge
 		size_t size(T (&)[n])
 		{	return n;	}
 	}
-	
+
 	inline bool operator ==(const vector_rasterizer::cell &lhs, const vector_rasterizer::cell &rhs)
 	{	return lhs.x == rhs.x && lhs.y == rhs.y && lhs.area == rhs.area && lhs.cover == rhs.cover;	}
 

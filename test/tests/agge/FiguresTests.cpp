@@ -1,9 +1,9 @@
-#include <agge/figures.h>
+#include <agge/primitives/figures.h>
 
 #include "assertex.h"
 #include "mocks.h"
 
-#include <agge/path.h>
+#include <agge/primitives/path.h>
 
 #include <ut/test.h>
 
@@ -172,7 +172,7 @@ namespace agge
 
 				for (; path_command_line_to == (cmd = r.vertex(&x, &y)); ++n)
 				{	}
-				
+
 				assert_is_true(n >= 11);
 				assert_equal(path_command_end_poly | path_flag_close, cmd);
 				assert_equal(path_command_stop, r.vertex(&x, &y));

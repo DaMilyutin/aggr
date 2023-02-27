@@ -31,8 +31,8 @@ namespace agge
 			};
 
 			template <typename T, typename AnnotationT>
-			vector<typename annotated_string<T, AnnotationT>::range> ranges_vector(
-				const annotated_string<T, AnnotationT> &from)
+			auto ranges_vector(
+				const annotated_string<T, AnnotationT>& from)
 			{	return mkvector(from.ranges_begin(), from.ranges_end());	}
 
 			template <typename ContainerT, typename CharT>
@@ -74,6 +74,7 @@ namespace agge
 				pair<wstring, string> reference1[] = {
 					make_pair(L"Lorem ipsum dolor sit amet", string()),
 				};
+                auto v = ranges_vector(seq);
 
 				assert_equal(reference1, ranges_vector(seq));
 

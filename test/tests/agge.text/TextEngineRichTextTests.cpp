@@ -5,8 +5,8 @@
 #include "mocks.h"
 #include "outlines.h"
 
-#include <agge/clipper.h>
-#include <agge/rasterizer.h>
+#include <agge/rendering/clipper.h>
+#include <agge/rendering/rasterizer.h>
 #include <agge.text/limit.h>
 #include <ut/assert.h>
 #include <ut/test.h>

@@ -1,4 +1,4 @@
-#include <agge/parallel.h>
+#include <agge/parallel/parallel.h>
 
 #include <tests/common/mt.h>
 
@@ -12,7 +12,7 @@ namespace agge
 	namespace tests
 	{
 		begin_test_suite( ParallelExecutionTests )
-			
+
 			class thread_capture : public parallel::kernel_function
 			{
 			public:
@@ -59,7 +59,7 @@ namespace agge
 				parallel p10(10);
 			}
 
-			
+
 			test( CallsInSingleThreadedObjectAreMadeInTheCurrentThread )
 			{
 				// INIT
@@ -85,7 +85,7 @@ namespace agge
 				assert_equal(this_thread_id(), log[1].second);
 			}
 
-			
+
 			test( MultithreadedParallelObjectMakesCallInDifferentThreads )
 			{
 				// INIT
@@ -126,7 +126,7 @@ namespace agge
 				}
 			}
 
-			
+
 			test( ThreadsArePersistentInParallelObject )
 			{
 				// INIT
@@ -137,7 +137,7 @@ namespace agge
 				thread_capture tc2(log2, mtx);
 				thread_capture tc3(log3, mtx);
 				thread_capture tc4(log4, mtx);
-				
+
 				// ACT
 				p1.call(tc1);
 				p1.call(tc2);

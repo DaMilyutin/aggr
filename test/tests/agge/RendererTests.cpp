@@ -1,4 +1,4 @@
-#include <agge/renderer.h>
+#include <agge/rendering/renderer.h>
 
 #include "helpers.h"
 #include "mocks.h"
@@ -624,17 +624,17 @@ namespace agge
 				// ACT
 				r1.set_y(0);
 				r1(0, 3, covers1);
-				
+
 				r1.set_y(1);
 				r1(0, 2, covers1);
-				
+
 				r1.set_y(4);
 				r1(3, 4, covers1);
 
 				r2.set_y(2);
 				r2(4, 1, covers2);
 				r2(1, 3, covers2);
-				
+
 				r2.set_y(3);
 				r2(2, 3, covers2);
 
@@ -670,11 +670,11 @@ namespace agge
 				r.set_y(0);
 				r(-2, 3, covers);
 				r(5, 5, covers);
-				
+
 				r.set_y(1);
 				r(-5, 5, covers);
 				r(8, 5, covers);
-				
+
 				r.set_y(2);
 				r(-3, 5, covers);
 				r(7, 4, covers);
@@ -729,10 +729,10 @@ namespace agge
 				// ACT
 				r1.set_y(-1);
 				r1(-2, 3, covers);
-				
+
 				r1.set_y(1);
 				r1(0, 2, covers);
-				
+
 				r1.set_y(2);
 				r1(1, 3, covers);
 
@@ -785,7 +785,7 @@ namespace agge
 				// ACT
 				r1.set_y(0);
 				r1(0, 5, covers);
-				
+
 				r1.set_y(1);
 				r1(-1, 5, covers);
 
@@ -831,7 +831,7 @@ namespace agge
 				// ACT
 				r1.set_y(0);
 				r1(1, 5, covers);
-				
+
 				r2.set_y(1);
 				r2(3, 2, covers);
 

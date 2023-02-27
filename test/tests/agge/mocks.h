@@ -2,8 +2,8 @@
 
 #include "helpers.h"
 
-#include <agge/path.h>
-#include <agge/tools.h>
+#include <agge/primitives/path.h>
+#include <agge/utils/tools.h>
 #include <tests/common/helpers.h>
 
 #include <ut/assert.h>
@@ -22,7 +22,7 @@ namespace agge
 				int cover;
 			};
 
-			class path
+			class path: agge::pipeline::terminal<path>
 			{
 			public:
 				struct point

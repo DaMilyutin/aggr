@@ -1,4 +1,4 @@
-#include <agge/path.h>
+#include <agge/primitives/path.h>
 
 #include "assertex.h"
 #include "mocks.h"
