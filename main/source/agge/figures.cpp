@@ -13,6 +13,14 @@ namespace agge
 		_points[1].x = x2, _points[1].y = y2;
 	}
 
+    line::line(Point_r p1, Point_r p2)
+        : _step(0)
+    {
+        _points[0] = p1;
+        _points[1] = p2;
+    }
+
+
 	void line::rewind(unsigned /*id*/)
 	{	_step = 0;	}
 
@@ -42,7 +50,15 @@ namespace agge
 		_points[1].x = x2, _points[1].y = y2;
 	}
 
-	void rectangle::rewind(unsigned /*id*/)
+
+    rectangle::rectangle(Point_r min, Point_r max)
+        : _step(0)
+    {
+        _points[0] = min;
+        _points[1] = max;
+    }
+
+    void rectangle::rewind(unsigned /*id*/)
 	{	_step = 0;	}
 
 	int rectangle::vertex(real_t *x, real_t *y)
@@ -91,7 +107,7 @@ namespace agge
 			setup_bezier(_state = left | top), cmd = path_command_move_to;
 		}
 
-        point_r p = _interp.at(_t);
+        Point_r p = _interp.at(_t);
         *x = p.x, *y = p.y;
 
 		_t += _step;

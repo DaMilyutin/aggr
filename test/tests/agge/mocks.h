@@ -25,12 +25,12 @@ namespace agge
 			class path: agge::pipeline::terminal<path>
 			{
 			public:
-				struct point
+				struct Point
 				{
 					real_t x, y;
 					int command;
 
-					bool operator ==(const point &rhs) const
+					bool operator ==(const Point &rhs) const
 					{
 						if (command != rhs.command)
 							return false;
@@ -64,7 +64,7 @@ namespace agge
 				}
 
 			public:
-				std::vector<point> points;
+				std::vector<Point> points;
 				size_t position;
 			};
 
@@ -298,28 +298,28 @@ namespace agge
 		}
 
 
-		inline mocks::path::point moveto(real_t x, real_t y)
+		inline mocks::path::Point moveto(real_t x, real_t y)
 		{
-			mocks::path::point p = { x, y, path_command_move_to };
+			mocks::path::Point p = { x, y, path_command_move_to };
 			return p;
 		}
 
-		inline mocks::path::point lineto(real_t x, real_t y)
+		inline mocks::path::Point lineto(real_t x, real_t y)
 		{
-			mocks::path::point p = { x, y, path_command_line_to };
+			mocks::path::Point p = { x, y, path_command_line_to };
 			return p;
 		}
 
-		inline mocks::path::point stop()
+		inline mocks::path::Point stop()
 		{
-			mocks::path::point p = { 0.0f, 0.0f, path_command_stop };
+			mocks::path::Point p = { 0.0f, 0.0f, path_command_stop };
 			return p;
 		}
 
 		template <typename SourceT>
-		inline mocks::path::point vertex(SourceT &source)
+		inline mocks::path::Point vertex(SourceT &source)
 		{
-			mocks::path::point p = { };
+			mocks::path::Point p = { };
 
 			p.command = source.vertex(&p.x, &p.y);
 			return p;

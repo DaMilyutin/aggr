@@ -12,12 +12,13 @@ namespace agge
     {
     public:
         line(real_t x1, real_t y1, real_t x2, real_t y2);
+        line(Point_r p1, Point_r p2);
 
         void rewind(unsigned id);
         int vertex(real_t* x, real_t* y);
 
     private:
-        point_r _points[2];
+        Point_r _points[2];
         unsigned _step;
     };
 
@@ -26,12 +27,13 @@ namespace agge
     {
     public:
         rectangle(real_t x1, real_t y1, real_t x2, real_t y2);
+        rectangle(Point_r min, Point_r max);
 
         void rewind(unsigned id);
         int vertex(real_t* x, real_t* y);
 
     private:
-        point_r _points[2];
+        Point_r _points[2];
         unsigned _step;
     };
 
@@ -54,7 +56,7 @@ namespace agge
         real_t _t, _step;
         cbezier_interp _interp;
         real_t _rx, _ry;
-        point_r _points[2];
+        Point_r _points[2];
         unsigned _state;
     };
 }

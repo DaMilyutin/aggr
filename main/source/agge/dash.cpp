@@ -67,7 +67,7 @@ namespace agge
 			return path_command_move_to;
 
 		case emit_source:
-			*x = _j->point.x, *y = _j->point.y;
+			*x = _j->Point.x, *y = _j->Point.y;
 			_t -= _j->distance;
 			if (++_j == end())
 				_state = complete;
@@ -119,7 +119,7 @@ namespace agge
 	void dash::interpolate_current(real_t *x, real_t *y) const
 	{
 		vertex_sequence::const_iterator i = _j - 1;
-		point_r m = _j->point + (_t / i->distance) * (_j->point - i->point);
+		Point_r m = _j->Point + (_t / i->distance) * (_j->Point - i->Point);
 
 		*x = m.x, *y = m.y;
 	}

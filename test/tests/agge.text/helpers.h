@@ -58,7 +58,7 @@ namespace agge
 		{	return convert(i);	}
 	}
 
-	inline bool operator ==(const vector_r &lhs, const vector_r &rhs)
+	inline bool operator ==(const Vector_r &lhs, const Vector_r &rhs)
 	{	return tests::equal(lhs.dx, rhs.dx) && tests::equal(lhs.dy, rhs.dy);	}
 
 	inline bool operator ==(const box_r &lhs, const box_r &rhs)

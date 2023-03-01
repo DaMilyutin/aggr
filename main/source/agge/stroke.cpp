@@ -53,20 +53,20 @@ namespace agge
 			switch (_state & stage_mask)
 			{
 			case start_cap:
-				_cap->calc(_output, _width, _i->point, _i->distance, next->point);
+				_cap->calc(_output, _width, _i->Point, _i->distance, next->Point);
 				_i = next;
 				set_state(_i == last ? end_cap : outline_forward);
 				break;
 
 			case outline_forward:
-				_join->calc(_output, _width, prev->point, prev->distance, _i->point, _i->distance, next->point);
+				_join->calc(_output, _width, prev->Point, prev->distance, _i->Point, _i->distance, next->Point);
 				_i = next;
 				if (_i == last)
 					set_state(end_cap);
 				break;
 
 			case outline_forward_closed:
-				_join->calc(_output, _width, prev->point, prev->distance, _i->point, _i->distance, next->point);
+				_join->calc(_output, _width, prev->Point, prev->distance, _i->Point, _i->distance, next->Point);
 				_i = next;
 				if (_i == first)
 					set_state(end_poly1);
@@ -78,13 +78,13 @@ namespace agge
 				return path_command_end_poly | path_flag_close;
 
 			case end_cap:
-				_cap->calc(_output, _width, _i->point, prev->distance, prev->point);
+				_cap->calc(_output, _width, _i->Point, prev->distance, prev->Point);
 				_i = prev;
 				set_state(_i == first ? end_poly : outline_backward);
 				break;
 
 			case outline_backward:
-				_join->calc(_output, _width, next->point, _i->distance, _i->point, prev->distance, prev->point);
+				_join->calc(_output, _width, next->Point, _i->distance, _i->Point, prev->distance, prev->Point);
 				_i = prev;
 				if (_i == first)
 					set_state(end_poly);

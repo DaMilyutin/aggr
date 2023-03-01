@@ -10,9 +10,9 @@ namespace agge
 	namespace tests
 	{
 		template <typename T>
-		inline point<T> mkpoint(T x, T y)
+		inline Point<T> mkpoint(T x, T y)
 		{
-			point<T> p = { x, y };
+			Point<T> p = { x, y };
 			return p;
 		}
 
@@ -67,10 +67,10 @@ namespace agge
 	{	return std::equal(tests::begin(lhs.components), tests::end(lhs.components), rhs.components);	}
 
 	template <typename T>
-	inline bool operator ==(const point<T> &lhs, const point<T> &rhs)
+	inline bool operator ==(const Point<T> &lhs, const Point<T> &rhs)
 	{	return tests::equal(lhs.x, rhs.x) && tests::equal(lhs.y, rhs.y);	}
 
 	template <typename T>
-	inline bool operator ==(const agge_vector<T> &lhs, const agge_vector<T> &rhs)
+	inline bool operator ==(const Vector<T> &lhs, const Vector<T> &rhs)
 	{	return tests::equal(lhs.dx, rhs.dx) && tests::equal(lhs.dy, rhs.dy);	}
 }

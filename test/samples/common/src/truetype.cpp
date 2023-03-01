@@ -81,15 +81,15 @@ namespace truetype
 							switch (seg->type)
 							{
 							case segment::line:
-								for (vector< point<int> >::const_iterator i = seg->points.begin(); i != seg->points.end(); ++i)
+								for (vector< Point<int> >::const_iterator i = seg->points.begin(); i != seg->points.end(); ++i)
 									o->push_back(path_point(path_command_line_to, fixed2real(i->x), fixed2real(i->y)));
 								break;
 
 							case segment::qspline:
 								for (size_t i = 0, count = seg->points.size(); i != count - 1; ++i)
 								{
-									const point<int> &pnt_b = seg->points[i]; // B is always the current point
-									point<int> pnt_c = seg->points[i + 1];
+									const Point<int> &pnt_b = seg->points[i]; // B is always the current Point
+									Point<int> pnt_c = seg->points[i + 1];
 
 									if (i < count - 2) // If not on last spline, compute C
 									{

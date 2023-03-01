@@ -28,7 +28,7 @@ namespace agge
 
 		private:
 			shared_ptr<font> _font;
-			vector_r _offset;
+			Vector_r _offset;
 			std::vector<positioned_glyph> _glyphs;
 			bool _check_glyph_advances;
 		};
@@ -41,7 +41,7 @@ namespace agge
 			bool operator ==(const text_line &rhs) const;
 
 		private:
-			vector_r _offset;
+			Vector_r _offset;
 			real_t _extent;
 			std::vector<ref_glyph_run> _glyph_runs;
 		};
@@ -54,7 +54,7 @@ namespace agge
 			bool operator ==(const text_line &rhs) const;
 
 		private:
-			vector_r _offset;
+			Vector_r _offset;
 		};
 
 

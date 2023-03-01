@@ -36,6 +36,6 @@ namespace truetype
 namespace agge
 {
 	template <typename ArchiveT, typename CoordT>
-	inline void serialize(ArchiveT &archive, point<CoordT> &data)
+	inline void serialize(ArchiveT &archive, Point<CoordT> &data)
 	{	archive(data.x), archive(data.y);	}
 }

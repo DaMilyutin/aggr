@@ -16,10 +16,10 @@ namespace agge
 		explicit text_engine(loader &loader_, uint8_t precision = 4);
 
 		void render_glyph(RasterizerT &target, const font &font_, glyph_index_t glyph_index, real_t x, real_t y);
-		void render(RasterizerT &target, const glyph_run &glyphs, point_r reference);
+		void render(RasterizerT &target, const glyph_run &glyphs, Point_r reference);
 
 		template <typename ContainerT>
-		void render(RasterizerT &target, const ContainerT &container, const point_r &reference);
+		void render(RasterizerT &target, const ContainerT &container, const Point_r &reference);
 
 		template <typename LayoutT>
 		void render(RasterizerT &target, const LayoutT &layout_, text_alignment halign, text_alignment valign,
@@ -64,7 +64,7 @@ namespace agge
 	{	render_glyph(target, font_, get_rasters_map(font_), glyph_index, x, y);	}
 
 	template <typename RasterizerT>
-	inline void text_engine<RasterizerT>::render(RasterizerT &target, const glyph_run &gr, point_r ref)
+	inline void text_engine<RasterizerT>::render(RasterizerT &target, const glyph_run &gr, Point_r ref)
 	{
 		const font &font_ = *gr.font_.get();
 		rasters_map &rasters = get_rasters_map(font_);
@@ -75,7 +75,7 @@ namespace agge
 
 	template <typename RasterizerT>
 	template <typename ContainerT>
-	inline void text_engine<RasterizerT>::render(RasterizerT &target, const ContainerT &container, const point_r &ref)
+	inline void text_engine<RasterizerT>::render(RasterizerT &target, const ContainerT &container, const Point_r &ref)
 	{
 		for (typename ContainerT::const_iterator i = container.begin(), end = container.end(); i != end; ++i)
 			render(target, *i, ref + i->offset);
@@ -86,13 +86,13 @@ namespace agge
 	inline void text_engine<RasterizerT>::render(RasterizerT &target, const LayoutT &layout_, text_alignment halign,
 		text_alignment valign, const rect_r &ref)
 	{
-		point_r running_ref = create_point(0.0f, align_near == valign ? ref.y1 : align_far == valign ? ref.y2 - layout_.get_box().h
-			: 0.5f * (ref.y1 + ref.y2 - layout_.get_box().h));
+		Point_r running_ref = create_point(0.0f, align_near == valign ? ref.min.y : align_far == valign ? ref.max.y - layout_.get_box().h
+			: 0.5f * (ref.min.y + ref.max.y - layout_.get_box().h));
 
 		for (typename LayoutT::const_iterator i = layout_.begin(), end = layout_.end(); i != end; ++i)
 		{
-			running_ref.x = align_near == halign ? ref.x1 : align_far == halign ? ref.x2 - i->extent
-				: 0.5f * (ref.x1 + ref.x2 - i->extent);
+			running_ref.x = align_near == halign ? ref.min.x : align_far == halign ? ref.max.x - i->extent
+				: 0.5f * (ref.min.x + ref.max.x - i->extent);
 			render(target, *i, running_ref + i->offset);
 		}
 	}

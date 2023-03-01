@@ -27,8 +27,8 @@ namespace agge
         curve_generator(TC&& c, TI&& i): curve(std::forward<TC>(c)), interval(std::forward<TI>(i)) {}
 
         void rewind(unsigned id);
-        int vertex(real_t* x, real_t* y) { point_r p; int flag = vertex(&p); *x = p.x; *y = p.y; return flag; };
-        int vertex(point_r* p)
+        int vertex(real_t* x, real_t* y) { Point_r p; int flag = vertex(&p); *x = p.x; *y = p.y; return flag; };
+        int vertex(Point_r* p)
         {
             real_t t;
             int const stage = interval.vertex(&t);
@@ -56,11 +56,11 @@ namespace agge
     //class qbezier: public pipeline::terminal<qbezier>, public qbezier_interp
     //{
     //public:
-    //    qbezier(point_r b, point_r c, point_r e, real_t step);
+    //    qbezier(Point_r b, Point_r c, Point_r e, real_t step);
 
     //    void rewind(unsigned id);
-    //    int vertex(real_t* x, real_t* y) { point_r p; int flag = vertex(&p); *x = p.x; *y = p.y; return flag; };
-    //    int vertex(point_r* p);
+    //    int vertex(real_t* x, real_t* y) { Point_r p; int flag = vertex(&p); *x = p.x; *y = p.y; return flag; };
+    //    int vertex(Point_r* p);
 
     //private:
     //    real_t _t, _step;
@@ -71,11 +71,11 @@ namespace agge
     //class cbezier: public pipeline::terminal<cbezier>, public cbezier_interp
     //{
     //public:
-    //    cbezier(point_r b, point_r c1, point_r c2, point_r e, real_t step);
+    //    cbezier(Point_r b, Point_r c1, Point_r c2, Point_r e, real_t step);
 
     //    void rewind(unsigned id);
-    //    int vertex(real_t* x, real_t* y) { point_r p; int flag = vertex(&p); *x = p.x; *y = p.y; return flag; };
-    //    int vertex(point_r* p);
+    //    int vertex(real_t* x, real_t* y) { Point_r p; int flag = vertex(&p); *x = p.x; *y = p.y; return flag; };
+    //    int vertex(Point_r* p);
 
     //private:
     //    real_t _t, _step;

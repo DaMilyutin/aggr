@@ -12,7 +12,7 @@ namespace agge
 		~renderer_parallel();
 
 		template <typename BitmapT, typename MaskT, typename BlenderT, typename AlphaFn>
-		void operator ()(BitmapT &bitmap_, vector_i offset, const rect_i *window, const MaskT &mask,
+		void operator ()(BitmapT &bitmap_, Vector_i offset, const rect_i *window, const MaskT &mask,
 			const BlenderT &blender, const AlphaFn &alpha);
 
 	private:
@@ -32,7 +32,7 @@ namespace agge
 	{	delete []_scanline_caches;	}
 
 	template <typename BitmapT, typename MaskT, typename BlenderT, typename AlphaFn>
-	void renderer_parallel::operator ()(BitmapT &bitmap_, vector_i offset, const rect_i *window,
+	void renderer_parallel::operator ()(BitmapT &bitmap_, Vector_i offset, const rect_i *window,
 		const MaskT &mask, const BlenderT &blender, const AlphaFn &alpha)
 	{
 		typedef renderer::adapter<BitmapT, BlenderT> rendition_adapter;

@@ -38,7 +38,7 @@ namespace agge
 			test( JoinedPathReturnsPointsFromOnePathIfTheOtherIsEmpty )
 			{
 				// INIT
-				mocks::path::point input[] = { moveto(10.0f, 13.0f), lineto(11.0f, 23.0f), lineto(3.0f, 7.0f), };
+				mocks::path::Point input[] = { moveto(10.0f, 13.0f), lineto(11.0f, 23.0f), lineto(3.0f, 7.0f), };
 				const mocks::path p(input);
 				const mocks::empty_path empty;
 
@@ -46,10 +46,10 @@ namespace agge
 				join<join<mocks::path>, mocks::empty_path> joined1 = joining(p) & empty;
 
 				// ACT
-				mocks::path::point points1[] = { vertex(joined1), vertex(joined1), vertex(joined1), vertex(joined1), };
+				mocks::path::Point points1[] = { vertex(joined1), vertex(joined1), vertex(joined1), vertex(joined1), };
 
 				// ASSERT
-				mocks::path::point reference1[] = { moveto(10.0f, 13.0f), lineto(11.0f, 23.0f), lineto(3.0f, 7.0f), stop(), };
+				mocks::path::Point reference1[] = { moveto(10.0f, 13.0f), lineto(11.0f, 23.0f), lineto(3.0f, 7.0f), stop(), };
 
 				assert_equal(reference1, points1);
 
@@ -57,10 +57,10 @@ namespace agge
 				join<join<mocks::empty_path>, mocks::path> joined2 = joining(empty) & p;
 
 				// ACT
-				mocks::path::point points2[] = { vertex(joined2), vertex(joined2), vertex(joined2), vertex(joined2), };
+				mocks::path::Point points2[] = { vertex(joined2), vertex(joined2), vertex(joined2), vertex(joined2), };
 
 				// ASSERT
-				mocks::path::point reference2[] = { lineto(10.0f, 13.0f), lineto(11.0f, 23.0f), lineto(3.0f, 7.0f), stop(), };
+				mocks::path::Point reference2[] = { lineto(10.0f, 13.0f), lineto(11.0f, 23.0f), lineto(3.0f, 7.0f), stop(), };
 
 				assert_equal(reference2, points2);
 			}
@@ -69,22 +69,22 @@ namespace agge
 			test( JoinedPathReturnsAllPointsFromNestedPaths )
 			{
 				// INIT
-				mocks::path::point input1[] = { moveto(10.0f, 13.0f), lineto(11.0f, 23.0f), lineto(3.0f, 7.0f), };
-				mocks::path::point input2[] = { lineto(-10.0f, -13.0f), lineto(3.0f, 7.0f), };
+				mocks::path::Point input1[] = { moveto(10.0f, 13.0f), lineto(11.0f, 23.0f), lineto(3.0f, 7.0f), };
+				mocks::path::Point input2[] = { lineto(-10.0f, -13.0f), lineto(3.0f, 7.0f), };
 				const mocks::path p1(input1), p2(input2);
 
 				// INIT / ACT
 				join<join<mocks::path>, mocks::path> joined = joining(p1) & p2;
 
 				// ACT
-				mocks::path::point points[] = {
+				mocks::path::Point points[] = {
 					vertex(joined), vertex(joined), vertex(joined),
 					vertex(joined), vertex(joined),
 					vertex(joined),
 				};
 
 				// ASSERT
-				mocks::path::point reference[] = {
+				mocks::path::Point reference[] = {
 					moveto(10.0f, 13.0f), lineto(11.0f, 23.0f), lineto(3.0f, 7.0f),
 					lineto(-10.0f, -13.0f), lineto(3.0f, 7.0f),
 					stop(),
@@ -97,20 +97,20 @@ namespace agge
 			test( SecondPathIsJoinedViaLineTo )
 			{
 				// INIT
-				mocks::path::point input1[] = { moveto(10.0f, 13.0f), lineto(11.0f, 23.0f), };
-				mocks::path::point input2[] = { moveto(-10.0f, -13.0f), lineto(3.0f, 7.0f), };
+				mocks::path::Point input1[] = { moveto(10.0f, 13.0f), lineto(11.0f, 23.0f), };
+				mocks::path::Point input2[] = { moveto(-10.0f, -13.0f), lineto(3.0f, 7.0f), };
 				const mocks::path p1(input1), p2(input2);
 				join<join<mocks::path>, mocks::path> joined = joining(p1) & p2;
 
 				// ACT
-				mocks::path::point points[] = {
+				mocks::path::Point points[] = {
 					vertex(joined), vertex(joined),
 					vertex(joined), vertex(joined),
 					vertex(joined),
 				};
 
 				// ASSERT
-				mocks::path::point reference[] = {
+				mocks::path::Point reference[] = {
 					moveto(10.0f, 13.0f), lineto(11.0f, 23.0f),
 					lineto(-10.0f, -13.0f), lineto(3.0f, 7.0f),
 					stop(),
@@ -123,8 +123,8 @@ namespace agge
 			test( RewindingPathProducesAllThePoints )
 			{
 				// INIT
-				mocks::path::point input1[] = { moveto(10.0f, 13.0f), lineto(11.0f, 23.0f), };
-				mocks::path::point input2[] = { moveto(-10.0f, -13.0f), lineto(3.0f, 7.0f), };
+				mocks::path::Point input1[] = { moveto(10.0f, 13.0f), lineto(11.0f, 23.0f), };
+				mocks::path::Point input2[] = { moveto(-10.0f, -13.0f), lineto(3.0f, 7.0f), };
 				const mocks::path p1(input1), p2(input2);
 				join<join<mocks::path>, mocks::path> joined = joining(p1) & p2;
 				real_t x, y;
@@ -133,14 +133,14 @@ namespace agge
 
 				// ACT
 				joined.rewind(0);
-				mocks::path::point points1[] = {
+				mocks::path::Point points1[] = {
 					vertex(joined), vertex(joined),
 					vertex(joined), vertex(joined),
 					vertex(joined),
 				};
 
 				// ASSERT
-				mocks::path::point reference[] = {
+				mocks::path::Point reference[] = {
 					moveto(10.0f, 13.0f), lineto(11.0f, 23.0f),
 					lineto(-10.0f, -13.0f), lineto(3.0f, 7.0f),
 					stop(),
@@ -150,7 +150,7 @@ namespace agge
 
 				// ACT
 				joined.rewind(0);
-				mocks::path::point points2[] = {
+				mocks::path::Point points2[] = {
 					vertex(joined), vertex(joined),
 					vertex(joined), vertex(joined),
 					vertex(joined),
@@ -167,13 +167,13 @@ namespace agge
 
 				// ACT
 				joined2.rewind(0);
-				mocks::path::point points3[] = {
+				mocks::path::Point points3[] = {
 					vertex(joined2), vertex(joined2),
 					vertex(joined2),
 				};
 
 				// ASSERT
-				mocks::path::point reference3[] = {
+				mocks::path::Point reference3[] = {
 					lineto(-10.0f, -13.0f), lineto(3.0f, 7.0f),
 					stop(),
 				};

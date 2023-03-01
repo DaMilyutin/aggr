@@ -74,7 +74,7 @@ namespace agge
 		{
 			if (i->extent > _box.w)
 				_box.w = i->extent;
-			_box.h = i->offset.dy + i->descent;
+			_box.h = i->offset.y + i->descent;
 		}
 	}
 

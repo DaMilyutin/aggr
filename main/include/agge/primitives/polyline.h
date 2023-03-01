@@ -19,7 +19,7 @@ namespace agge
 
         struct Item
         {
-            point_r  point;
+            Point_r  point;
             unsigned command;
         };
 
@@ -34,7 +34,7 @@ namespace agge
             return *this;
         }
 
-        polyline& move_to(agge::point_r p)
+        polyline& move_to(agge::Point_r p)
         {
             _items.push_back(Item{p, agge::path_command_move_to});
             return *this;
@@ -45,7 +45,7 @@ namespace agge
             return line_to({x, y});
         }
 
-        polyline& line_to(agge::point_r p)
+        polyline& line_to(agge::Point_r p)
         {
             if(_items.empty())
                 _items.push_back(Item{p, agge::path_command_move_to});
@@ -56,7 +56,7 @@ namespace agge
             return *this;
         }
 
-        polyline& operator<<(agge::point_r p) { return line_to(p); }
+        polyline& operator<<(agge::Point_r p) { return line_to(p); }
         polyline& operator<<(Item i) { _items.push_back(i); return *this; }
 
         void push_back(Item item) { _items.push_back(item); }
@@ -67,7 +67,7 @@ namespace agge
 
         Items const& items() const { return _items; }
     private:
-        bool too_small_step(point_r const& p) const
+        bool too_small_step(Point_r const& p) const
         {
             auto const& prev = _items.back().point;
             float const dist = fabsf(p.x - prev.x) + fabsf(p.y - prev.y);

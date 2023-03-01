@@ -5,7 +5,7 @@
 
 namespace agge
 {
-	//qbezier::qbezier(point_r b, point_r c, point_r e, real_t step)
+	//qbezier::qbezier(Point_r b, Point_r c, Point_r e, real_t step)
 	//	: qbezier_interp(b, c, e), _t(0.0f), _step(step), _stage(path_command_move_to)
 	//{	}
 
@@ -15,7 +15,7 @@ namespace agge
 	//	_stage = path_command_move_to;
 	//}
 
- //   int qbezier::vertex(point_r* p)
+ //   int qbezier::vertex(Point_r* p)
  //   {
  //       int stage = _stage;
 
@@ -43,7 +43,7 @@ namespace agge
  //       return stage;
  //   }
 
-	//cbezier::cbezier(point_r b, point_r c1, point_r c2, point_r e, real_t step)
+	//cbezier::cbezier(Point_r b, Point_r c1, Point_r c2, Point_r e, real_t step)
 	//	: cbezier_interp(b, c1, c2, e), _step(step)
  //       , _stage(path_command_move_to)
 	//{}
@@ -54,7 +54,7 @@ namespace agge
 	//	_stage = path_command_move_to;
 	//}
 
- //   int cbezier::vertex(point_r* p)
+ //   int cbezier::vertex(Point_r* p)
  //   {
  //       int stage = _stage;
 

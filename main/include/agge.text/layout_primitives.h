@@ -22,7 +22,7 @@ namespace agge
 	struct positioned_glyph
 	{
 		glyph_index_t index;
-		vector_r d;
+		Vector_r d;
 	};
 
 	struct glyph_run : range_adapter<const positioned_glyphs_container_t>
@@ -30,14 +30,14 @@ namespace agge
 		glyph_run(const positioned_glyphs_container_t &container);
 
 		shared_ptr<font> font_;
-		vector_r offset;
+		Vector_r offset;
 	};
 
 	struct text_line : range_adapter<const glyph_runs_container_t>
 	{
 		text_line(const glyph_runs_container_t &container);
 
-		vector_r offset;
+		Vector_r offset;
 		real_t extent;
 		real_t descent;
 	};

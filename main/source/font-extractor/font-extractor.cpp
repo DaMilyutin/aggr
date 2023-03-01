@@ -79,7 +79,7 @@ namespace
 					segment.type = static_cast<truetype::segment::segment_type>(curve->wType);
 					for (WORD i = 0; i != curve->cpfx; ++i)
 					{
-						point<int> pt = { real2fint(fixed2real(curve->apfx[i].x) / xfactor), fixed2fint(curve->apfx[i].y) };
+						Point<int> pt = { real2fint(fixed2real(curve->apfx[i].x) / xfactor), fixed2fint(curve->apfx[i].y) };
 						segment.points.push_back(pt);
 					}
 				}

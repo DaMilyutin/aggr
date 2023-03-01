@@ -33,7 +33,7 @@ namespace agge
 
 				void add_vertex(real_t x, real_t y, int command)
 				{
-					point p = { kx * x, ky * y, command };
+					Point p = { kx * x, ky * y, command };
 					points.push_back(p);
 				}
 
@@ -64,13 +64,13 @@ namespace agge
 			test( SinglePolylineIsPassedThroughAsIs )
 			{
 				// INIT
-				mocks::path::point input1[] = {
+				mocks::path::Point input1[] = {
 					{ 1.0f, 17.0f, path_command_move_to },
 					{ 17.1f, 19.7f, path_command_line_to },
 					{ 11.0f, 23.0f, path_command_line_to },
 					{ 2.3f, 17.3f, path_command_line_to },
 				};
-				mocks::path::point input2[] = {
+				mocks::path::Point input2[] = {
 					{ 1.0f, 17.0f, path_command_move_to },
 					{ 17.1f, 19.7f, path_command_line_to },
 					{ 11.0f, 23.0f, path_command_line_to },
@@ -88,18 +88,18 @@ namespace agge
 				path_generator_adapter<mocks::path, passthrough_generator> pg2(p2, g2);
 
 				// ACT
-				mocks::path::point points1[] = { vertex(pg1), vertex(pg1), vertex(pg1), vertex(pg1), vertex(pg1), };
-				mocks::path::point points2[] = { vertex(pg2), vertex(pg2), vertex(pg2), vertex(pg2), vertex(pg2), vertex(pg2), vertex(pg2), vertex(pg2), };
+				mocks::path::Point points1[] = { vertex(pg1), vertex(pg1), vertex(pg1), vertex(pg1), vertex(pg1), };
+				mocks::path::Point points2[] = { vertex(pg2), vertex(pg2), vertex(pg2), vertex(pg2), vertex(pg2), vertex(pg2), vertex(pg2), vertex(pg2), };
 
 				// ASSERT
-				mocks::path::point reference1[] = {
+				mocks::path::Point reference1[] = {
 					{ 2.0f, 17.0f, path_command_move_to },
 					{ 34.2f, 19.7f, path_command_line_to },
 					{ 22.0f, 23.0f, path_command_line_to },
 					{ 4.6f, 17.3f, path_command_line_to },
 					{ 0.0f, 0.0f, path_command_stop },
 				};
-				mocks::path::point reference2[] = {
+				mocks::path::Point reference2[] = {
 					{ 1.0f, 34.0f, path_command_move_to },
 					{ 17.1f, 39.4f, path_command_line_to },
 					{ 11.0f, 46.0f, path_command_line_to },
@@ -118,7 +118,7 @@ namespace agge
 			test( MultiPolylineIsPassedThroughAsIs )
 			{
 				// INIT
-				mocks::path::point input1[] = {
+				mocks::path::Point input1[] = {
 					{ 1.0f, 17.0f, path_command_move_to },
 					{ 17.1f, 19.7f, path_command_line_to },
 					{ 11.0f, 23.0f, path_command_move_to },
@@ -134,10 +134,10 @@ namespace agge
 				path_generator_adapter<mocks::path, passthrough_generator> pg1(p1, g);
 
 				// ACT
-				mocks::path::point points1[] = { vertex(pg1), vertex(pg1), };
+				mocks::path::Point points1[] = { vertex(pg1), vertex(pg1), };
 
 				// ASSERT
-				mocks::path::point reference1[] = {
+				mocks::path::Point reference1[] = {
 					{ 1.0f, 17.0f, path_command_move_to },
 					{ 17.1f, 19.7f, path_command_line_to },
 				};
@@ -145,10 +145,10 @@ namespace agge
 				assert_equal(reference1, points1);
 
 				// ACT
-				mocks::path::point points2[] = { vertex(pg1), vertex(pg1), vertex(pg1), vertex(pg1), vertex(pg1), vertex(pg1), vertex(pg1), };
+				mocks::path::Point points2[] = { vertex(pg1), vertex(pg1), vertex(pg1), vertex(pg1), vertex(pg1), vertex(pg1), vertex(pg1), };
 
 				// ASSERT
-				mocks::path::point reference2[] = {
+				mocks::path::Point reference2[] = {
 					{ 11.0f, 23.0f, path_command_move_to },
 					{ 2.3f, 17.3f, path_command_line_to },
 					{ 17.1f, 19.7f, path_command_line_to },
@@ -161,7 +161,7 @@ namespace agge
 				assert_equal(reference2, points2);
 
 				// INIT
-				mocks::path::point input2[] = {
+				mocks::path::Point input2[] = {
 					{ 1.0f, 17.0f, path_command_move_to },
 					{ 17.1f, 19.7f, path_command_line_to },
 					{ 0.0f, 0.0f, path_command_end_poly },
@@ -178,14 +178,14 @@ namespace agge
 				path_generator_adapter<mocks::path, passthrough_generator> pg2(p2, g);
 
 				// ACT
-				mocks::path::point points3[] = {
+				mocks::path::Point points3[] = {
 					vertex(pg2), vertex(pg2), vertex(pg2),
 					vertex(pg2), vertex(pg2), vertex(pg2), vertex(pg2),
 					vertex(pg2), vertex(pg2), vertex(pg2),
 				};
 
 				// ASSERT
-				mocks::path::point reference3[] = {
+				mocks::path::Point reference3[] = {
 					{ 11.0f, 23.0f, path_command_move_to },
 					{ 1.0f, 17.0f, path_command_line_to },
 					{ 3.0f, 18.0f, path_command_line_to | path_flag_close  },
@@ -199,7 +199,7 @@ namespace agge
 			test( SubpathIsFullyPassedToGenerator )
 			{
 				// INIT
-				mocks::path::point input[] = {
+				mocks::path::Point input[] = {
 					{ 2.0f, 7.0f, path_command_move_to },
 					{ 37.1f, 19.7f, path_command_line_to },
 					{ 11.0f, 23.0f, path_command_move_to },
@@ -218,7 +218,7 @@ namespace agge
 				vertex(pg);
 
 				// ASSERT
-				mocks::path::point reference1[] = {
+				mocks::path::Point reference1[] = {
 					{ 2.0f, 7.0f, path_command_move_to },
 					{ 37.1f, 19.7f, path_command_line_to },
 				};
@@ -238,7 +238,7 @@ namespace agge
 				vertex(pg);
 
 				// ASSERT
-				mocks::path::point reference2[] = {
+				mocks::path::Point reference2[] = {
 					{ 11.0f, 23.0f, path_command_move_to },
 					{ 2.3f, 7.3f, path_command_line_to },
 					{ 171.1f, 19.7f, path_command_line_to },
@@ -254,34 +254,34 @@ namespace agge
 			public:
 				void move_to(real_t x, real_t y)
 				{
-					mocks::path::point p = { x, y, path_command_move_to };
+					mocks::path::Point p = { x, y, path_command_move_to };
 					points.push_back(p);
 				}
 
 				void line_to(real_t x, real_t y)
 				{
-					mocks::path::point p = { x, y, path_command_line_to };
+					mocks::path::Point p = { x, y, path_command_line_to };
 					points.push_back(p);
 				}
 
 				void close_polygon()
 				{
-					mocks::path::point p = { 0.0f, 0.0f, path_flag_close };
+					mocks::path::Point p = { 0.0f, 0.0f, path_flag_close };
 					points.push_back(p);
 				}
 
 			public:
-				vector<mocks::path::point> points;
+				vector<mocks::path::Point> points;
 			};
 
 			test( AddingPathToSinkTranslateMoves )
 			{
 				// INIT
-				mocks::path::point input1[] = {
+				mocks::path::Point input1[] = {
 					{ 2.0f, 7.0f, path_command_move_to },
 					{ 11.0f, 23.0f, path_command_move_to },
 				};
-				mocks::path::point input2[] = {
+				mocks::path::Point input2[] = {
 					{ 17.0f, 13.0f, path_command_move_to },
 					{ 3.0f, 7.0f, path_command_move_to },
 					{ 29.0f, 19.0f, path_command_move_to },
@@ -309,7 +309,7 @@ namespace agge
 			test( AddingPathToSinkTranslateLineTo )
 			{
 				// INIT
-				mocks::path::point input[] = {
+				mocks::path::Point input[] = {
 					{ 2.0f, 7.0f, path_command_line_to },
 					{ 11.0f, 23.0f, path_command_line_to },
 					{ 3.0f, 7.0f, path_command_line_to },
@@ -328,7 +328,7 @@ namespace agge
 			test( AddingPathToSinkTranslateCloses )
 			{
 				// INIT
-				mocks::path::point input[] = {
+				mocks::path::Point input[] = {
 					{ 11.0f, 23.0f, path_command_line_to | path_flag_close },
 					{ 3.0f, 7.0f, path_command_line_to | path_flag_close },
 				};
@@ -339,7 +339,7 @@ namespace agge
 				add_path(s, p);
 
 				// ASSERT
-				mocks::path::point reference[] = {
+				mocks::path::Point reference[] = {
 					{ 11.0f, 23.0f, path_command_line_to },
 					{ 0.0f, 0.0f, path_flag_close },
 					{ 3.0f, 7.0f, path_command_line_to },
@@ -353,7 +353,7 @@ namespace agge
 			test( PathIteratorRewoundOnStart )
 			{
 				// INIT
-				mocks::path::point input[] = {
+				mocks::path::Point input[] = {
 					{ 10.0f, 13.0f, path_command_move_to },
 					{ 11.0f, 23.0f, path_command_line_to },
 					{ 3.0f, 7.0f, path_command_line_to },

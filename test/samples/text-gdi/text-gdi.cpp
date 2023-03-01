@@ -47,7 +47,7 @@ namespace demo
 				::SetTextAlign(ctx, TA_BASELINE | TA_LEFT);
 				for (layout::const_iterator i = _layout.begin(); i != _layout.end(); ++i)
 				{
-					vector_r d = i->offset;
+					Vector_r d = i->offset;
 
 					_glyph_indices.clear();
 
@@ -58,7 +58,7 @@ namespace demo
 					{
 						shared_ptr<void> hfont = create_font(j->font_->get_key());
 						dc::handle h = ctx.select(static_cast<HGDIOBJ>(hfont.get()));
-						vector_r dg = d;
+						Vector_r dg = d;
 
 						dg += j->offset;
 						for (positioned_glyphs_container_t::const_iterator k = j->begin(); k != j->end(); ++k)

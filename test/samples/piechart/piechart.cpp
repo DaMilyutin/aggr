@@ -16,9 +16,9 @@ using namespace std;
 namespace
 {
 	template <typename T>
-	rect<T> mkrect(T x1, T y1, T x2, T y2)
+	Rect<T> mkrect(T x1, T y1, T x2, T y2)
 	{
-		rect<T> r = { x1, y1, x2, y2 };
+		Rect<T> r = { x1, y1, x2, y2 };
 		return r;
 	}
 

@@ -105,10 +105,10 @@ namespace agge
 			test( AddingVectorToAPointShiftsIt )
 			{
 				// INIT
-				const point_r p1 = { -1.202f, 311.9f }, p2 = { 71.2f, -11.39f };
-				const point<int> p3 = { -9, 13 }, p4 = { 911, 1978 };
-				const vector_r v1 = { 0.7f, 51.7f }, v2 = { 7.7f, 5.7f };
-				const agge_vector<int> v3 = { 81, -171 }, v4 = { -7, 19 };
+				const Point_r p1 = { -1.202f, 311.9f }, p2 = { 71.2f, -11.39f };
+				const Point<int> p3 = { -9, 13 }, p4 = { 911, 1978 };
+				const Vector_r v1 = { 0.7f, 51.7f }, v2 = { 7.7f, 5.7f };
+				const Vector<int> v3 = { 81, -171 }, v4 = { -7, 19 };
 
 				// ACT / ASSERT
 				assert_equal(create_point(-1.202f + 0.7f, 311.9f + 51.7f), p1 + v1);
@@ -126,8 +126,8 @@ namespace agge
 			test( PointsSubtractionProducesVector )
 			{
 				// INIT
-				const point_r p1 = { -1.202f, 311.9f }, p2 = { 71.2f, -11.39f }, p3 = { 0.2f, 0.1f };
-				const point<int> p4 = { -9, 13 }, p5 = { 911, 1978 }, p6 = { 0, 0 };
+				const Point_r p1 = { -1.202f, 311.9f }, p2 = { 71.2f, -11.39f }, p3 = { 0.2f, 0.1f };
+				const Point<int> p4 = { -9, 13 }, p5 = { 911, 1978 }, p6 = { 0, 0 };
 
 				// ACT / ASSERT
 				assert_equal(create_vector(-72.402f, 323.29f), p1 - p2);

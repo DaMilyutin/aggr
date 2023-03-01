@@ -51,7 +51,7 @@ namespace agge
 		positioned_glyph &pg = _glyphs[static_cast<count_t>(_state.next++)];
 
 		pg.index = index;
-		pg.d.dx = extent /* TODO: ... * stepping */, pg.d.dy = real_t();
+		pg.d.x = extent /* TODO: ... * stepping */, pg.d.y = real_t();
 		_state.extent += extent;
 	}
 

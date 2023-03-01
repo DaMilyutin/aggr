@@ -98,14 +98,14 @@ namespace agge
 		{	return std::vector<T>(p, p + N);	}
 
 		template <typename T>
-		inline agge_vector<T> mkvector(T dx, T dy)
+		inline Vector<T> mkvector(T dx, T dy)
 		{
-			agge_vector<T> v = { dx, dy };
+			Vector<T> v = { dx, dy };
 			return v;
 		}
 
 		template <typename T>
-		inline bool is_on_segment(const point<T>& t, const point<T>& segment_a, const point<T>& segment_b)
+		inline bool is_on_segment(const Point<T>& t, const Point<T>& segment_a, const Point<T>& segment_b)
 		{
 			T xp = (t.x - segment_a.x) * (segment_a.y - segment_b.y) - (t.y - segment_a.y) * (segment_a.x - segment_b.x);
 

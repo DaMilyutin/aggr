@@ -21,10 +21,10 @@ namespace agge
 				// ACT
 				move_to(d, 1.1f, 17.0f);
 				line_to(d, 4.1f, 13.0f);
-				mocks::path::point result1[] = { vertex(d), vertex(d), vertex(d), };
+				mocks::path::Point result1[] = { vertex(d), vertex(d), vertex(d), };
 
 				// ASSERT
-				mocks::path::point reference1[] = {
+				mocks::path::Point reference1[] = {
 					{ 1.1f, 17.0f, path_command_move_to },
 					{ 4.1f, 13.0f, path_command_line_to },
 					{ 0.0f, 0.0f, path_command_stop },
@@ -37,10 +37,10 @@ namespace agge
 				move_to(d, 1.0f, 1.0f);
 				line_to(d, 2.5f, 3.0f);
 				line_to(d, 2.7f, 3.1f);
-				mocks::path::point result2[] = { vertex(d), vertex(d), vertex(d), vertex(d), };
+				mocks::path::Point result2[] = { vertex(d), vertex(d), vertex(d), vertex(d), };
 
 				// ASSERT
-				mocks::path::point reference2[] = {
+				mocks::path::Point reference2[] = {
 					{ 1.0f, 1.0f, path_command_move_to },
 					{ 2.5f, 3.0f, path_command_line_to },
 					{ 2.7f, 3.1f, path_command_line_to },
@@ -62,10 +62,10 @@ namespace agge
 				// ACT
 				move_to(d, 1.3f, 17.0f);
 				line_to(d, 5.8f, 11.0f);
-				mocks::path::point result1[] = { vertex(d), vertex(d), vertex(d), };
+				mocks::path::Point result1[] = { vertex(d), vertex(d), vertex(d), };
 
 				// ASSERT
-				mocks::path::point reference1[] = {
+				mocks::path::Point reference1[] = {
 					{ 1.3f, 17.0f, path_command_move_to },
 					{ 4.3f, 13.0f, path_command_line_to },
 					{ 0.0f, 0.0f, path_command_stop },
@@ -77,10 +77,10 @@ namespace agge
 				d.remove_all();
 				move_to(d, 1.0f, -1.0f);
 				line_to(d, 1.0f, 10.0f);
-				mocks::path::point result2[] = { vertex(d), vertex(d), vertex(d), };
+				mocks::path::Point result2[] = { vertex(d), vertex(d), vertex(d), };
 
 				// ASSERT
-				mocks::path::point reference2[] = {
+				mocks::path::Point reference2[] = {
 					{ 1.0f, -1.0f, path_command_move_to },
 					{ 1.0f, 4.0f, path_command_line_to },
 					{ 0.0f, 0.0f, path_command_stop },
@@ -96,10 +96,10 @@ namespace agge
 				d.remove_all();
 				move_to(d, 1.9f, 2.7f);
 				line_to(d, 3.9f, 4.7f);
-				mocks::path::point result3[] = { vertex(d), vertex(d), vertex(d), };
+				mocks::path::Point result3[] = { vertex(d), vertex(d), vertex(d), };
 
 				// ASSERT
-				mocks::path::point reference3[] = {
+				mocks::path::Point reference3[] = {
 					{ 1.9f, 2.7f, path_command_move_to },
 					{ 2.9f, 3.7f, path_command_line_to },
 					{ 0.0f, 0.0f, path_command_stop },
@@ -119,7 +119,7 @@ namespace agge
 				// ACT
 				move_to(d, 0.0f, 0.0f);
 				line_to(d, 44.99f, 0.0f);
-				mocks::path::point result1[] = {
+				mocks::path::Point result1[] = {
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
@@ -127,7 +127,7 @@ namespace agge
 				};
 
 				// ASSERT
-				mocks::path::point reference1[] = {
+				mocks::path::Point reference1[] = {
 					{ 0.0f, 0.0f, path_command_move_to },
 					{ 5.0f, 0.0f, path_command_line_to },
 					{ 15.0f, 0.0f, path_command_move_to },
@@ -147,14 +147,14 @@ namespace agge
 				// ACT (pattern end coincides with segment end)
 				move_to(d, 0.0f, 0.0f);
 				line_to(d, 24.0f, 0.0f);
-				mocks::path::point result2[] = {
+				mocks::path::Point result2[] = {
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
 					vertex(d),
 				};
 
 				// ASSERT
-				mocks::path::point reference2[] = {
+				mocks::path::Point reference2[] = {
 					{ 0.0f, 0.0f, path_command_move_to },
 					{ 5.0f, 0.0f, path_command_line_to },
 					{ 12.0f, 0.0f, path_command_move_to },
@@ -181,7 +181,7 @@ namespace agge
 				line_to(d, 12.0f, 0.0f);
 				line_to(d, 15.0f, 0.0f);
 
-				mocks::path::point result[] = {
+				mocks::path::Point result[] = {
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
@@ -189,7 +189,7 @@ namespace agge
 				};
 
 				// ASSERT
-				mocks::path::point reference[] = {
+				mocks::path::Point reference[] = {
 					{ 0.0f, 0.0f, path_command_move_to }, { 2.5f, 0.0f, path_command_line_to },
 					{ 6.5f, 0.0f, path_command_move_to }, { 9.0f, 0.0f, path_command_line_to },
 					{ 13.0f, 0.0f, path_command_move_to }, { 15.0f, 0.0f, path_command_line_to },
@@ -214,14 +214,14 @@ namespace agge
 				line_to(d, 0.0f, 6.0f);
 				line_to(d, 0.0f, 8.0f);
 
-				mocks::path::point result[] = {
+				mocks::path::Point result[] = {
 					vertex(d), vertex(d), vertex(d),
 					vertex(d), vertex(d), vertex(d),
 					vertex(d),
 				};
 
 				// ASSERT
-				mocks::path::point reference[] = {
+				mocks::path::Point reference[] = {
 					{ 0.0f, 0.0f, path_command_move_to }, { 0.0f, 2.0f, path_command_line_to }, { 0.0f, 3.0f, path_command_line_to },
 					{ 0.0f, 5.5f, path_command_move_to }, { 0.0f, 6.0f, path_command_line_to }, { 0.0f, 8.0f, path_command_line_to },
 					{ 0.0f, 0.0f, path_command_stop },
@@ -244,7 +244,7 @@ namespace agge
 				line_to(d, 5.5f, 2.0f);
 				line_to(d, 5.5f, 12.0f);
 
-				mocks::path::point result1[] = {
+				mocks::path::Point result1[] = {
 					vertex(d), vertex(d),
 					vertex(d), vertex(d), vertex(d),
 					vertex(d), vertex(d),
@@ -254,7 +254,7 @@ namespace agge
 				};
 
 				// ASSERT
-				mocks::path::point reference1[] = {
+				mocks::path::Point reference1[] = {
 					{ 1.0f, 2.0f, path_command_move_to }, { 4.0f, 2.0f, path_command_line_to },
 					{ 5.0f, 2.0f, path_command_move_to }, { 5.5f, 2.0f, path_command_line_to }, { 5.5f, 3.5f, path_command_line_to },
 					{ 5.5f, 4.0f, path_command_move_to }, { 5.5f, 7.0f, path_command_line_to },
@@ -280,7 +280,7 @@ namespace agge
 				line_to(d, 2.0f, -1.0f);
 				end_poly(d, true);
 
-				mocks::path::point result[] = {
+				mocks::path::Point result[] = {
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
 					vertex(d), vertex(d), vertex(d),
@@ -289,7 +289,7 @@ namespace agge
 				};
 
 				// ASSERT
-				mocks::path::point reference[] = {
+				mocks::path::Point reference[] = {
 					{ -2.0f, 2.0f, path_command_move_to }, { -2.0f, 0.0f, path_command_line_to },
 					{ -2.0f, -1.0f, path_command_move_to }, { 0.0f, -1.0f, path_command_line_to },
 					{ 1.0f, -1.0f, path_command_move_to }, { 2.0f, -1.0f, path_command_line_to }, { 1.2f, -0.4f, path_command_line_to },
@@ -314,7 +314,7 @@ namespace agge
 				move_to(d, 0.0f, 0.0f);
 				line_to(d, 6.0f, 0.0f);
 
-				mocks::path::point result1[] = {
+				mocks::path::Point result1[] = {
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
@@ -322,7 +322,7 @@ namespace agge
 				};
 
 				// ASSERT
-				mocks::path::point reference1[] = {
+				mocks::path::Point reference1[] = {
 					{ 0.0f, 0.0f, path_command_move_to }, { 1.7f, 0.0f, path_command_line_to },
 					{ 2.7f, 0.0f, path_command_move_to }, { 4.7f, 0.0f, path_command_line_to },
 					{ 5.7f, 0.0f, path_command_move_to }, { 6.0f, 0.0f, path_command_line_to },
@@ -341,14 +341,14 @@ namespace agge
 				line_to(d, 0.2f, 0.0f);
 				line_to(d, 3.5f, 0.0f);
 
-				mocks::path::point result2[] = {
+				mocks::path::Point result2[] = {
 					vertex(d), vertex(d), vertex(d),
 					vertex(d), vertex(d),
 					vertex(d),
 				};
 
 				// ASSERT
-				mocks::path::point reference2[] = {
+				mocks::path::Point reference2[] = {
 					{ 0.0f, 0.0f, path_command_move_to }, { 0.2f, 0.0f, path_command_line_to }, { 1.57f, 0.0f, path_command_line_to },
 					{ 2.57f, 0.0f, path_command_move_to }, { 3.5f, 0.0f, path_command_line_to },
 					{ 0.0f, 0.0f, path_command_stop },
@@ -371,14 +371,14 @@ namespace agge
 				move_to(d, 0.0f, 0.0f);
 				line_to(d, 6.0f, 0.0f);
 
-				mocks::path::point result1[] = {
+				mocks::path::Point result1[] = {
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
 					vertex(d),
 				};
 
 				// ASSERT
-				mocks::path::point reference1[] = {
+				mocks::path::Point reference1[] = {
 					{ 0.85f, 0.0f, path_command_move_to }, { 2.85f, 0.0f, path_command_line_to },
 					{ 3.85f, 0.0f, path_command_move_to }, { 5.85f, 0.0f, path_command_line_to },
 					{ 0.0f, 0.0f, path_command_stop },
@@ -403,7 +403,7 @@ namespace agge
 				move_to(d, 0.0f, 0.0f);
 				line_to(d, 9.5f, 0.0f);
 
-				mocks::path::point result[] = {
+				mocks::path::Point result[] = {
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
@@ -412,7 +412,7 @@ namespace agge
 				};
 
 				// ASSERT
-				mocks::path::point reference[] = {
+				mocks::path::Point reference[] = {
 					{ 0.0f, 0.0f, path_command_move_to }, { 2.0f, 0.0f, path_command_line_to },
 					{ 3.0f, 0.0f, path_command_move_to }, { 4.0f, 0.0f, path_command_line_to },
 					{ 7.0f, 0.0f, path_command_move_to }, { 7.5f, 0.0f, path_command_line_to },
@@ -439,7 +439,7 @@ namespace agge
 				move_to(d, 0.0f, 0.0f);
 				line_to(d, 9.5f, 0.0f);
 
-				mocks::path::point result1[] = {
+				mocks::path::Point result1[] = {
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
@@ -448,7 +448,7 @@ namespace agge
 				};
 
 				// ASSERT
-				mocks::path::point reference1[] = {
+				mocks::path::Point reference1[] = {
 					{ 0.0f, 0.0f, path_command_move_to }, { 1.7f, 0.0f, path_command_line_to },
 					{ 2.7f, 0.0f, path_command_move_to }, { 3.7f, 0.0f, path_command_line_to },
 					{ 7.2f, 0.0f, path_command_move_to }, { 7.7f, 0.0f, path_command_line_to },
@@ -467,7 +467,7 @@ namespace agge
 				move_to(d, 0.0f, 0.0f);
 				line_to(d, 9.5f, 0.0f);
 
-				mocks::path::point result2[] = {
+				mocks::path::Point result2[] = {
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
@@ -477,7 +477,7 @@ namespace agge
 				};
 
 				// ASSERT
-				mocks::path::point reference2[] = {
+				mocks::path::Point reference2[] = {
 					{ 0.0f, 0.0f, path_command_move_to }, { 0.25f, 0.0f, path_command_line_to },
 					{ 0.75f, 0.0f, path_command_move_to }, { 2.75f, 0.0f, path_command_line_to },
 					{ 3.75f, 0.0f, path_command_move_to }, { 4.75f, 0.0f, path_command_line_to },
@@ -497,7 +497,7 @@ namespace agge
 				move_to(d, 0.0f, 0.0f);
 				line_to(d, 9.5f, 0.0f);
 
-				mocks::path::point result3[] = {
+				mocks::path::Point result3[] = {
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
@@ -518,7 +518,7 @@ namespace agge
 				move_to(d, 0.0f, 0.0f);
 				line_to(d, 9.5f, 0.0f);
 
-				mocks::path::point result4[] = {
+				mocks::path::Point result4[] = {
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
 					vertex(d), vertex(d),
@@ -545,13 +545,13 @@ namespace agge
 				move_to(d, 0.0f, 0.0f);
 				line_to(d, 4.0f, 0.0f);
 
-				mocks::path::point result[] = {
+				mocks::path::Point result[] = {
 					vertex(d), vertex(d),
 					vertex(d),
 				};
 
 				// ASSERT
-				mocks::path::point reference[] = {
+				mocks::path::Point reference[] = {
 					{ 1.0f, 0.0f, path_command_move_to }, { 3.0f, 0.0f, path_command_line_to },
 					{ 0.0f, 0.0f, path_command_stop },
 				};

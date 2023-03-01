@@ -10,12 +10,12 @@ namespace truetype
 	struct segment
 	{
 		enum segment_type { line = 1, qspline = 2, cspline = 3 } type;
-		std::vector< agge::point<int> > points;
+		std::vector< agge::Point<int> > points;
 	};
 
 	struct poly
 	{
-		agge::point<int> start;
+		agge::Point<int> start;
 		std::vector<segment> segments;
 	};
 

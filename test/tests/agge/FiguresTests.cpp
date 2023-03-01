@@ -37,10 +37,10 @@ namespace agge
 				line l1(10.1f, 20.2f, 30.0f, 4.7f);
 
 				// ACT
-				mocks::path::point points1[] = { vertex(l1), vertex(l1), vertex(l1), vertex(l1), };
+				mocks::path::Point points1[] = { vertex(l1), vertex(l1), vertex(l1), vertex(l1), };
 
 				// ASSERT
-				mocks::path::point reference1[] = {
+				mocks::path::Point reference1[] = {
 					moveto(10.1f, 20.2f), lineto(30.0f, 4.7f), { 0.0f, 0.0f, path_command_end_poly }, stop(),
 				};
 
@@ -50,10 +50,10 @@ namespace agge
 				line l2(11.1f, 12.2f, 13.3f, 1.7f);
 
 				// ACT
-				mocks::path::point points2[] = { vertex(l2), vertex(l2), vertex(l2), vertex(l2), };
+				mocks::path::Point points2[] = { vertex(l2), vertex(l2), vertex(l2), vertex(l2), };
 
 				// ASSERT
-				mocks::path::point reference2[] = {
+				mocks::path::Point reference2[] = {
 					moveto(11.1f, 12.2f), lineto(13.3f, 1.7f), { 0.0f, 0.0f, path_command_end_poly }, stop(),
 				};
 
@@ -107,10 +107,10 @@ namespace agge
 				rectangle r1(10.1f, 20.2f, 30.0f, 4.7f);
 
 				// ACT
-				mocks::path::point points1[] = { vertex(r1), vertex(r1), vertex(r1), vertex(r1), vertex(r1), vertex(r1), };
+				mocks::path::Point points1[] = { vertex(r1), vertex(r1), vertex(r1), vertex(r1), vertex(r1), vertex(r1), };
 
 				// ASSERT
-				mocks::path::point reference1[] = {
+				mocks::path::Point reference1[] = {
 					moveto(10.1f, 20.2f), lineto(30.0f, 20.2f), lineto(30.0f, 4.7f), lineto(10.1f, 4.7f),
 					{ 0.0f, 0.0f, path_command_end_poly | path_flag_close }, stop(),
 				};
@@ -121,10 +121,10 @@ namespace agge
 				rectangle r2(11.1f, 12.2f, 13.3f, 1.7f);
 
 				// ACT
-				mocks::path::point points2[] = { vertex(r2), vertex(r2), vertex(r2), vertex(r2), vertex(r2), vertex(r2), };
+				mocks::path::Point points2[] = { vertex(r2), vertex(r2), vertex(r2), vertex(r2), vertex(r2), vertex(r2), };
 
 				// ASSERT
-				mocks::path::point reference2[] = {
+				mocks::path::Point reference2[] = {
 					moveto(11.1f, 12.2f), lineto(13.3f, 12.2f), lineto(13.3f, 1.7f), lineto(11.1f, 1.7f),
 					{ 0.0f, 0.0f, path_command_end_poly | path_flag_close }, stop(),
 				};
@@ -144,8 +144,8 @@ namespace agge
 				r.rewind(0);
 
 				// ASSERT
-				mocks::path::point points[] = { vertex(r), vertex(r), vertex(r), vertex(r), vertex(r), vertex(r), };
-				mocks::path::point reference[] = {
+				mocks::path::Point points[] = { vertex(r), vertex(r), vertex(r), vertex(r), vertex(r), vertex(r), };
+				mocks::path::Point reference[] = {
 					moveto(10.1f, 20.2f), lineto(30.0f, 20.2f), lineto(30.0f, 4.7f), lineto(10.1f, 4.7f),
 					{ 0.0f, 0.0f, path_command_end_poly | path_flag_close }, stop(),
 				};
@@ -184,7 +184,7 @@ namespace agge
 			{
 				// INIT
 				real_t x, y;
-				vector<point_r> points;
+				vector<Point_r> points;
 
 				// INIT / ACT
 				rounded_rectangle r1(10.0f, 20.0f, 30.0f, 35.0f, 5.0f);
@@ -194,7 +194,7 @@ namespace agge
 					points.push_back(create_point(x, y));
 
 				// ASSERT
-				vector<point_r> part;
+				vector<Point_r> part;
 				size_t part_size = points.size() / 4;
 
 				assert_equal(0u, points.size() % 4);

@@ -21,8 +21,8 @@ namespace
 	class unlimited_miter : public stroke::join
 	{
 	public:
-		virtual void calc(points &output, real_t w, const point_r &v0, real_t d01,
-			const point_r &v1, real_t d12, const point_r &v2) const
+		virtual void calc(points &output, real_t w, const Point_r &v0, real_t d01,
+			const Point_r &v1, real_t d12, const Point_r &v2) const
 		{
 			using namespace agge;
 

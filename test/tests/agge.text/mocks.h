@@ -105,7 +105,7 @@ namespace agge
 			class rasterizer
 			{
 			public:
-				typedef std::pair<const rasterizer * /*source*/, point<int> /*d*/> appended;
+				typedef std::pair<const rasterizer * /*source*/, Point<int> /*d*/> appended;
 
 			public:
 				rasterizer();

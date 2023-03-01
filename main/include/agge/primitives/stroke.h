@@ -6,7 +6,7 @@
 
 namespace agge
 {
-    typedef pod_vector<point_r> points;
+    typedef pod_vector<Point_r> points;
 
     class stroke: public pipeline::terminal<stroke>, vertex_sequence, noncopyable
     {
@@ -78,13 +78,13 @@ namespace agge
     struct stroke::cap
     {
         virtual ~cap() { }
-        virtual void calc(points& output, real_t w, const point_r& v0, real_t d, const point_r& v1) const = 0;
+        virtual void calc(points& output, real_t w, const Point_r& v0, real_t d, const Point_r& v1) const = 0;
     };
 
     struct stroke::join
     {
         virtual ~join() { }
-        virtual void calc(points& output, real_t w, const point_r& v0, real_t d01, const point_r& v1, real_t d12, const point_r& v2) const = 0;
+        virtual void calc(points& output, real_t w, const Point_r& v0, real_t d01, const Point_r& v1, real_t d12, const Point_r& v2) const = 0;
     };
 
 

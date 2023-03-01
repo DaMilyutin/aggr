@@ -20,12 +20,12 @@ namespace agge
 				qbezier b2 = agge::Interval(1.0f)/agge::qbezier_interp({-122.3f, 19.4f}, {1.0f, 1.0f}, {2.0f, 0.0f});
 
 				// ACT
-				mocks::path::point points1[] = { vertex(b1), };
-				mocks::path::point points2[] = { vertex(b2), };
+				mocks::path::Point points1[] = { vertex(b1), };
+				mocks::path::Point points2[] = { vertex(b2), };
 
 				// ACT / ASSERT
-				mocks::path::point reference1[] = { moveto(13.1f, -17.2f), };
-				mocks::path::point reference2[] = { moveto(-122.3f, 19.4f), };
+				mocks::path::Point reference1[] = { moveto(13.1f, -17.2f), };
+				mocks::path::Point reference2[] = { moveto(-122.3f, 19.4f), };
 
 				assert_equal(reference1, points1);
 				assert_equal(reference2, points2);
@@ -39,10 +39,10 @@ namespace agge
                                 /agge::qbezier_interp({0.0f, 0.0f}, {1.0f, 1.0f}, {2.0f, 0.0f});
 
 				// ACT
-				mocks::path::point points1[] = { vertex(b1), vertex(b1), vertex(b1), };
+				mocks::path::Point points1[] = { vertex(b1), vertex(b1), vertex(b1), };
 
 				// ASSERT
-				mocks::path::point reference1[] = { moveto(0.0f, 0.0f), lineto(2.0f, 0.0f), stop(), };
+				mocks::path::Point reference1[] = { moveto(0.0f, 0.0f), lineto(2.0f, 0.0f), stop(), };
 
 				assert_equal(reference1, points1);
 
@@ -51,10 +51,10 @@ namespace agge
                             /agge::qbezier_interp({10.0f, 11.0f}, {1.0f, 1.0f}, {13.0f, 17.0f});
 
 				// ACT
-				mocks::path::point points2[] = { vertex(b2), vertex(b2), vertex(b2), };
+				mocks::path::Point points2[] = { vertex(b2), vertex(b2), vertex(b2), };
 
 				// ASSERT
-				mocks::path::point reference2[] = { moveto(10.0f, 11.0f), lineto(13.0f, 17.0f), stop(), };
+				mocks::path::Point reference2[] = { moveto(10.0f, 11.0f), lineto(13.0f, 17.0f), stop(), };
 
 				assert_equal(reference2, points2);
 			}
@@ -92,14 +92,14 @@ namespace agge
 				qbezier b1 = agge::Interval(0.111f)/agge::qbezier_interp({-3.5f, 7.4f}, {1.0f, 2.0f}, {10.1f, 3.8f});
 
 				// ACT
-				mocks::path::point points1[] = {
+				mocks::path::Point points1[] = {
 					vertex(b1), vertex(b1), vertex(b1), vertex(b1), vertex(b1),
 					vertex(b1), vertex(b1), vertex(b1), vertex(b1), vertex(b1),
 					vertex(b1), vertex(b1),
 				};
 
 				// ASSERT
-				mocks::path::point reference1[] = {
+				mocks::path::Point reference1[] = {
 					moveto(-3.50000000f, 7.40000010f),
 					lineto(-2.44432354f, 6.28991079f),
 					lineto(-1.27529359f, 5.35724497f),
@@ -120,12 +120,12 @@ namespace agge
 				qbezier b2 = agge::Interval(0.3f)/agge::qbezier_interp({1.0f, 1.0f}, {0.0f, 0.0f}, {-1.0f, 1.0f});
 
 				// ACT
-				mocks::path::point points2[] = {
+				mocks::path::Point points2[] = {
 					vertex(b2), vertex(b2), vertex(b2), vertex(b2), vertex(b2), vertex(b2),
 				};
 
 				// ASSERT
-				mocks::path::point reference2[] = {
+				mocks::path::Point reference2[] = {
 					moveto(1.00000000f, 1.00000000f),
 					lineto(0.399999976f, 0.579999983f),
 					lineto(-0.200000033f, 0.519999981f),
@@ -149,8 +149,8 @@ namespace agge
 				b.rewind(0);
 
 				// ASSERT
-				mocks::path::point points[] = { vertex(b), vertex(b), };
-				mocks::path::point reference[] = { moveto(1.00000000f, 1.00000000f), lineto(0.399999976f, 0.579999983f), };
+				mocks::path::Point points[] = { vertex(b), vertex(b), };
+				mocks::path::Point reference[] = { moveto(1.00000000f, 1.00000000f), lineto(0.399999976f, 0.579999983f), };
 
 				assert_equal(reference, points);
 			}
@@ -166,12 +166,12 @@ namespace agge
 				cbezier b2 = agge::Interval(1.0f)/agge::cbezier_interp({-122.3f, 19.4f}, {1.0f, 1.0f}, {2.0f, 0.0f}, {5.0f, 5.0f});
 
 				// ACT
-				mocks::path::point points1[] = { vertex(b1), };
-				mocks::path::point points2[] = { vertex(b2), };
+				mocks::path::Point points1[] = { vertex(b1), };
+				mocks::path::Point points2[] = { vertex(b2), };
 
 				// ACT / ASSERT
-				mocks::path::point reference1[] = { moveto(13.1f, -17.2f), };
-				mocks::path::point reference2[] = { moveto(-122.3f, 19.4f), };
+				mocks::path::Point reference1[] = { moveto(13.1f, -17.2f), };
+				mocks::path::Point reference2[] = { moveto(-122.3f, 19.4f), };
 
 				assert_equal(reference1, points1);
 				assert_equal(reference2, points2);
@@ -209,14 +209,14 @@ namespace agge
 				cbezier c1 = agge::Interval(0.111f)/agge::cbezier_interp({-3.5f, 7.4f}, {1.0f, 2.0f}, {0.2f, 0.3f}, {10.1f, 3.8f});
 
 				// ACT
-				mocks::path::point points1[] = {
+				mocks::path::Point points1[] = {
 					vertex(c1), vertex(c1), vertex(c1), vertex(c1), vertex(c1),
 					vertex(c1), vertex(c1), vertex(c1), vertex(c1), vertex(c1),
 					vertex(c1), vertex(c1),
 				};
 
 				// ASSERT
-				mocks::path::point reference1[] = {
+				mocks::path::Point reference1[] = {
 					moveto(-3.50000000f, 7.40000010f),
 					lineto(-2.17552185f, 5.74061489f),
 					lineto(-1.11155891f, 4.36706400f),
@@ -237,10 +237,10 @@ namespace agge
 				cbezier c2 = agge::Interval(0.3f)/agge::cbezier_interp({1.0f, 1.0f}, {0.0f, 0.0f}, {0.8f, 0.7f}, {-1.0f, 1.0f});
 
 				// ACT
-				mocks::path::point points2[] = { vertex(c2), vertex(c2), vertex(c2), vertex(c2), vertex(c2), vertex(c2), };
+				mocks::path::Point points2[] = { vertex(c2), vertex(c2), vertex(c2), vertex(c2), vertex(c2), vertex(c2), };
 
 				// ASSERT
-				mocks::path::point reference2[] = {
+				mocks::path::Point reference2[] = {
 					moveto(1.00000000f, 1.00000000f),
 					lineto(0.467199981f, 0.502300024f),
 					lineto(0.193599969f, 0.582399964f),
@@ -264,8 +264,8 @@ namespace agge
 				c.rewind(0);
 
 				// ASSERT
-				mocks::path::point points[] = { vertex(c), vertex(c), };
-				mocks::path::point reference[] = { moveto(1.00000000f, 1.00000000f), lineto(0.467199981f, 0.502300024f), };
+				mocks::path::Point points[] = { vertex(c), vertex(c), };
+				mocks::path::Point reference[] = { moveto(1.00000000f, 1.00000000f), lineto(0.467199981f, 0.502300024f), };
 
 				assert_equal(reference, points);
 			}
@@ -283,16 +283,16 @@ namespace agge
 				arc a4(10.3f, 10.4f, 5.3f, 1.0f * pi, 1.2f * pi);
 
 				// ACT
-				mocks::path::point points1[] = { vertex(a1), };
-				mocks::path::point points2[] = { vertex(a2), };
-				mocks::path::point points3[] = { vertex(a3), };
-				mocks::path::point points4[] = { vertex(a4), };
+				mocks::path::Point points1[] = { vertex(a1), };
+				mocks::path::Point points2[] = { vertex(a2), };
+				mocks::path::Point points3[] = { vertex(a3), };
+				mocks::path::Point points4[] = { vertex(a4), };
 
 				// ACT / ASSERT
-				mocks::path::point reference1[] = { moveto(13.1f + 10.1f, -17.2f), };
-				mocks::path::point reference2[] = { moveto(-122.3f, 19.4f + 17.3f), };
-				mocks::path::point reference3[] = { moveto(-120.3f, 15.0f - 7.3f), };
-				mocks::path::point reference4[] = { moveto(10.3f - 5.3f, 10.4f), };
+				mocks::path::Point reference1[] = { moveto(13.1f + 10.1f, -17.2f), };
+				mocks::path::Point reference2[] = { moveto(-122.3f, 19.4f + 17.3f), };
+				mocks::path::Point reference3[] = { moveto(-120.3f, 15.0f - 7.3f), };
+				mocks::path::Point reference4[] = { moveto(10.3f - 5.3f, 10.4f), };
 
 				assert_equal(reference1, points1);
 				assert_equal(reference2, points2);
@@ -407,8 +407,8 @@ namespace agge
 				a.rewind(0);
 
 				// ASSERT
-				mocks::path::point points[] = { vertex(a), };
-				mocks::path::point reference[] = { moveto(13.1f + 10.1f * sqrtf(2) / 2.0f, -17.2f + 10.1f * sqrtf(2) / 2.0f), };
+				mocks::path::Point points[] = { vertex(a), };
+				mocks::path::Point reference[] = { moveto(13.1f + 10.1f * sqrtf(2) / 2.0f, -17.2f + 10.1f * sqrtf(2) / 2.0f), };
 
 				assert_equal(reference, points);
 			}

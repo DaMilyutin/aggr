@@ -45,7 +45,7 @@ namespace agge
 				void reset()
 				{	_window = create_rect(static_cast<T>(1), static_cast<T>(2), static_cast<T>(3), static_cast<T>(4));	}
 
-				void set(const rect<T> &window)
+				void set(const Rect<T> &window)
 				{	_window = window;	}
 
 				void move_to(T /*x*/, T /*y*/)
@@ -61,7 +61,7 @@ namespace agge
 				}
 
 			private:
-				rect<T> _window;
+				Rect<T> _window;
 			};
 
 			template <int k1 = 1, int k2 = 1>

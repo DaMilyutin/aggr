@@ -20,7 +20,7 @@ namespace agge
 		using vector_rasterizer::reset;
 
 		void reset_clipping();
-		void set_clipping(const rect<real_t> &window);
+		void set_clipping(const Rect<real_t> &window);
 
 		void move_to(real_t x, real_t y);
 		void line_to(real_t x, real_t y);
@@ -82,12 +82,12 @@ namespace agge
 	{	_clipper.reset();	}
 
 	template <typename ClipperT, typename ScalingT>
-	inline void rasterizer<ClipperT, ScalingT>::set_clipping(const rect<real_t> &window)
+	inline void rasterizer<ClipperT, ScalingT>::set_clipping(const Rect<real_t> &window)
 	{
-		rect<typename ClipperT::coord_type> translated;
+		Rect<typename ClipperT::coord_type> translated;
 
-		ScalingT::scale1(window.x1, window.y1, translated.x1, translated.y1);
-		ScalingT::scale1(window.x2, window.y2, translated.x2, translated.y2);
+		ScalingT::scale1(window.min.x, window.min.y, translated.min.x, translated.min.y);
+		ScalingT::scale1(window.max.x, window.max.y, translated.max.x, translated.max.y);
 		_clipper.set(translated);
 	}
 

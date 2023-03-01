@@ -8,7 +8,7 @@ namespace agge
 {
 	namespace caps
 	{
-		void butt::calc(points &output, real_t hw, const point_r &v0, real_t d, const point_r &v1) const
+		void butt::calc(points &output, real_t hw, const Point_r &v0, real_t d, const Point_r &v1) const
 		{
 			d = hw / d;
 
@@ -24,7 +24,7 @@ namespace agge
 			: _tip_extension(tip_extension)
 		{	}
 
-		void triangle::calc(points &output, real_t hw, const point_r &v0, real_t d, const point_r &v1) const
+		void triangle::calc(points &output, real_t hw, const Point_r &v0, real_t d, const Point_r &v1) const
 		{
 			d = hw / d;
 
@@ -37,7 +37,7 @@ namespace agge
 		}
 
 
-		void round::calc(points &output, real_t hw, const point_r &v0, real_t d, const point_r &v1) const
+		void round::calc(points &output, real_t hw, const Point_r &v0, real_t d, const Point_r &v1) const
 		{
 			d = hw / d;
 
@@ -55,7 +55,7 @@ namespace agge
             output.push_back(interp._b);
 			for (real_t t = step; t < 1.0f; t += step)
 			{
-				point_r p = interp.at(t);
+				Point_r p = interp.at(t);
 				output.push_back(p);
 			}
 			output.push_back(interp._e);
@@ -67,7 +67,7 @@ namespace agge
 
 			for (real_t t = step; t < 1.0f; t += step)
 			{
-				point_r p = interp.at(t);
+				Point_r p = interp.at(t);
 				output.push_back(p);
 			}
 			output.push_back(interp._e);
@@ -76,7 +76,7 @@ namespace agge
 
 	namespace joins
 	{
-		void bevel::calc(points &output, real_t hw, const point_r &v0, real_t d01, const point_r &v1, real_t d12, const point_r &v2) const
+		void bevel::calc(points &output, real_t hw, const Point_r &v0, real_t d01, const Point_r &v1, real_t d12, const Point_r &v2) const
 		{
 			d01 = hw / d01;
 			d12 = hw / d12;

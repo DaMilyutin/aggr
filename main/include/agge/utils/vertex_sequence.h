@@ -7,7 +7,7 @@ namespace agge
 {
 	struct vertex
 	{
-		point_r point;
+		Point_r Point;
 		real_t distance;
 	};
 
@@ -29,7 +29,7 @@ namespace agge
 		using pod_vector<vertex>::empty;
 
 	private:
-		static bool set_distance(vertex &v, const point_r &next);
+		static bool set_distance(vertex &v, const Point_r &next);
 	};
 
 	inline void vertex_sequence::move_to(real_t x, real_t y)
@@ -51,20 +51,20 @@ namespace agge
 		{
 			vertex &last = *(end() - 1);
 
-			if (set_distance(last, v.point))
+			if (set_distance(last, v.Point))
 				push_back(v);
 		}
 	}
 
 	inline void vertex_sequence::close_polygon()
 	{
-		if (!empty() && !set_distance(*(end() - 1), begin()->point))
+		if (!empty() && !set_distance(*(end() - 1), begin()->Point))
 			pop_back();
 	}
 
-	inline bool vertex_sequence::set_distance(vertex &v, const point_r &next)
+	inline bool vertex_sequence::set_distance(vertex &v, const Point_r &next)
 	{
-		v.distance = distance(v.point, next);
+		v.distance = distance(v.Point, next);
 		return v.distance > distance_epsilon;
 	}
 }
