@@ -37,6 +37,11 @@ namespace agge
             widen_x(p);
             widen_y(p);
         }
+
+        bool has(Point<T> const& p) const
+        {
+            return (min.x < p.x && p.x < max.x) && (min.y < p.y && p.y < max.y);
+        }
     };
 
     template <typename T>
