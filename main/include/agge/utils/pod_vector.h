@@ -1,7 +1,7 @@
 #pragma once
 
 #include <initializer_list>
-#include <agge/utils/minmax.h>
+#include <agge/math/minmax.h>
 #include <agge/types.h>
 
 namespace agge

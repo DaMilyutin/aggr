@@ -2,6 +2,7 @@
 
 #include <agge/utils/vertex_sequence.h>
 #include <agge/utils/static_any.h>
+#include <agge/utils/tools.h>
 #include <agge/primitives/pipeline.h>
 
 namespace agge

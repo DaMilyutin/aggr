@@ -1,6 +1,6 @@
 #include <agge/primitives/stroke.h>
 
-#include <agge/utils/math.h>
+#include <agge/math/math.h>
 #include <agge/primitives/path.h>
 #include <agge/primitives/stroke_features.h>
 

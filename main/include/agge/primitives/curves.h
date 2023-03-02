@@ -1,7 +1,7 @@
 #pragma once
 
 #include <agge/types.h>
-#include <agge/utils/bezier.h>
+#include <agge/math/bezier.h>
 #include <agge/primitives/pipeline.h>
 
 #include <utility>

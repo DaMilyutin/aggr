@@ -4,7 +4,7 @@
 #include "text_engine_base.h"
 
 #include <agge/config/config.h>
-#include <agge/utils/math.h>
+#include <agge/math/math.h>
 #include <limits>
 
 namespace agge

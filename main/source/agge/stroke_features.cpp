@@ -1,7 +1,7 @@
 #include <agge/primitives/stroke_features.h>
 
 #include <agge/primitives/curves.h>
-#include <agge/utils/math.h>
+#include <agge/math/math.h>
 #include <agge/utils/tools.h>
 
 namespace agge

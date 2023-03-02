@@ -1,7 +1,7 @@
 #pragma once
 
 #include <agge/pixel.h>
-#include <agge/utils/minmax.h>
+#include <agge/math/minmax.h>
 
 namespace agge
 {

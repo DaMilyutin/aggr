@@ -5,7 +5,7 @@
 #include "richtext.h"
 #include "tools.h"
 
-#include <agge/utils/math.h>
+#include <agge/math/math.h>
 #include <agge/utils/tools.h>
 #include <utfia/iterator.h>
 

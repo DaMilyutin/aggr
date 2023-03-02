@@ -1,7 +1,7 @@
 #include <agge/rendering/vector_rasterizer.h>
 
 #include <agge/config/config.h>
-#include <agge/utils/minmax.h>
+#include <agge/math/minmax.h>
 #include <agge/utils/precise_delta.h>
 
 namespace agge

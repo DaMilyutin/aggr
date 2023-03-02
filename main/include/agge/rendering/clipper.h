@@ -1,6 +1,6 @@
 #pragma once
 
-#include <agge/utils/math.h>
+#include <agge/math/math.h>
 #include <agge/types.h>
 
 namespace agge

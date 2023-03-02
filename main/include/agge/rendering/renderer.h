@@ -1,6 +1,6 @@
 #pragma once
 
-#include <agge/utils/minmax.h>
+#include <agge/math/minmax.h>
 #include <agge/rendering/scanline.h>
 #include <agge/utils/tools.h>
 

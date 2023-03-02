@@ -4,7 +4,7 @@
 #include <agge/primitives/pipeline.h>
 #include <agge/primitives/path.h>
 
-#include <agge/utils/bezier.h>
+#include <agge/math/bezier.h>
 
 namespace agge
 {

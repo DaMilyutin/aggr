@@ -2,7 +2,7 @@
 
 #include "handle.h"
 
-#include <agge/types.h>
+#include <agge/utils/tools.h>
 
 namespace agge
 {

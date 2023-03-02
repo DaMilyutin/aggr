@@ -5,6 +5,7 @@
 #include "shared_ptr.h"
 #include "types.h"
 
+#include <agge/utils/tools.h>
 #include <agge/config/config.h>
 #include <string>
 

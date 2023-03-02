@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math.h"
+#include <agge/math/math.h>
 #include "pod_vector.h"
 
 namespace agge

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <agge/config/config.h>
+#include <agge/utils/tools.h>
 #include <agge/pixel.h>
 
 #if defined(AGGE_PLATFORM_APPLE)
