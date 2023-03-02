@@ -13,6 +13,17 @@ namespace agge
             E under;
         };
 
+        template<typename P>
+        Enclosed<P> closed(PointGenerator<P>&& p)
+        {
+            return {FWD(p)._get_()};
+        }
+
+        template<typename P>
+        Enclosed<P const&> closed(PointGenerator<P> const& p)
+        {
+            return {p._get_()};
+        }
 
         template<typename R, typename P>
         R& operator<<(Rasterizer<R>& ras, Enclosed<P> const& points)
