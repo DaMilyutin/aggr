@@ -2,7 +2,7 @@
 
 #include <agge/types.h>
 #include <agge/math/bezier.h>
-#include <agge/primitives/pipeline.h>
+#include <agge/primitives/algebra/rules.h>
 
 #include <utility>
 
@@ -20,7 +20,7 @@ namespace agge
     };
 
     template<typename ACurve, typename AInterval = Interval>
-    class curve_generator: public pipeline::terminal<curve_generator<ACurve, AInterval>>
+    class curve_generator: public rules::PointGenerator<curve_generator<ACurve, AInterval>>
     {
     public:
         template<typename TC, typename TI>
@@ -53,37 +53,7 @@ namespace agge
         return cbezier(c, i);
     }
 
-    //class qbezier: public pipeline::terminal<qbezier>, public qbezier_interp
-    //{
-    //public:
-    //    qbezier(Point_r b, Point_r c, Point_r e, real_t step);
-
-    //    void rewind(unsigned id);
-    //    int vertex(real_t* x, real_t* y) { Point_r p; int flag = vertex(&p); *x = p.x; *y = p.y; return flag; };
-    //    int vertex(Point_r* p);
-
-    //private:
-    //    real_t _t, _step;
-    //    int _stage;
-    //};
-
-
-    //class cbezier: public pipeline::terminal<cbezier>, public cbezier_interp
-    //{
-    //public:
-    //    cbezier(Point_r b, Point_r c1, Point_r c2, Point_r e, real_t step);
-
-    //    void rewind(unsigned id);
-    //    int vertex(real_t* x, real_t* y) { Point_r p; int flag = vertex(&p); *x = p.x; *y = p.y; return flag; };
-    //    int vertex(Point_r* p);
-
-    //private:
-    //    real_t _t, _step;
-    //    int _stage;
-    //};
-
-
-    class arc: public pipeline::terminal<arc>
+    class arc: public rules::PointGenerator<arc>
     {
     public:
         arc(real_t cx, real_t cy, real_t r, real_t start, real_t end, real_t da = 0.05f);

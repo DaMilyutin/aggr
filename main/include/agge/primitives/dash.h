@@ -1,11 +1,11 @@
 #pragma once
 
 #include <agge/utils/vertex_sequence.h>
-#include <agge/primitives/pipeline.h>
+#include <agge/primitives/algebra/rules.h>
 
 namespace agge
 {
-    class dash: public pipeline::terminal<dash>, private vertex_sequence
+    class dash: public rules::PointGenerator<dash>, private vertex_sequence
     {
     public:
         dash();

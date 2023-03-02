@@ -1,7 +1,7 @@
 #pragma once
 
 #include <agge/types.h>
-#include <agge/primitives/pipeline.h>
+#include <agge/primitives/algebra/rules.h>
 #include <utility>
 
 namespace agge
@@ -22,7 +22,7 @@ namespace agge
 
 
     template <typename SourceT, typename GeneratorT>
-    class path_generator_adapter: public pipeline::terminal<path_generator_adapter<SourceT, GeneratorT>>
+    class path_generator_adapter: public rules::PointGenerator<path_generator_adapter<SourceT, GeneratorT>>
     {
     public:
         path_generator_adapter(const SourceT& source, GeneratorT& generator);
@@ -45,7 +45,7 @@ namespace agge
     };
 
 
-    class path_close: public pipeline::terminal<path_close>
+    class path_close: public rules::PointGenerator<path_close>
     {
     public:
         path_close();
@@ -59,7 +59,7 @@ namespace agge
 
 
     template <typename PathIterator1T, typename PathIterator2T = void>
-    class join: public pipeline::terminal<join<PathIterator1T, PathIterator2T>>
+    class join: public rules::PointGenerator<join<PathIterator1T, PathIterator2T>>
     {
     public:
         join(const PathIterator1T& lhs, const PathIterator2T& rhs);
@@ -73,7 +73,7 @@ namespace agge
     };
 
     template <typename PathIterator1T>
-    class join<PathIterator1T, void>: public pipeline::terminal<join<PathIterator1T, void>>
+    class join<PathIterator1T, void>: public rules::PointGenerator<join<PathIterator1T, void>>
     {
     public:
         join(const PathIterator1T& lhs);
@@ -86,16 +86,16 @@ namespace agge
     };
 
 
-    namespace pipeline //ADL
+    namespace rules //ADL
     {
         template <typename SourceT, typename GeneratorT>
-        path_generator_adapter<SourceT, GeneratorT> operator/(const terminal<SourceT>& source, terminal<GeneratorT>& generator)
+        path_generator_adapter<SourceT, GeneratorT> operator/(const PointGenerator<SourceT>& source, PointGenerator<GeneratorT>& generator)
         {
             return path_generator_adapter<SourceT, GeneratorT>(source._get_(), generator._get_());
         }
 
         template <typename SourceT, typename GeneratorT>
-        path_generator_adapter<SourceT, GeneratorT> operator/(terminal<SourceT>&& source, terminal<GeneratorT>& generator)
+        path_generator_adapter<SourceT, GeneratorT> operator/(PointGenerator<SourceT>&& source, PointGenerator<GeneratorT>& generator)
         {
             return path_generator_adapter<SourceT, GeneratorT>(std::move(source._get_()), generator._get_());
         }

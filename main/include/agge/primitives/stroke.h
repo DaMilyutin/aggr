@@ -3,13 +3,13 @@
 #include <agge/utils/vertex_sequence.h>
 #include <agge/utils/static_any.h>
 #include <agge/utils/tools.h>
-#include <agge/primitives/pipeline.h>
+#include <agge/primitives/algebra/rules.h>
 
 namespace agge
 {
     typedef pod_vector<Point_r> points;
 
-    class stroke: public pipeline::terminal<stroke>, vertex_sequence, noncopyable
+    class stroke: public rules::PointGenerator<stroke>, vertex_sequence, noncopyable
     {
     public:
         struct cap;
