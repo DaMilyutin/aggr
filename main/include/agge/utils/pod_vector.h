@@ -187,7 +187,7 @@ namespace agge
 	{
 		count_t size = this->size(), new_capacity = capacity();
 
-		new_capacity += agge_max(2 * by > new_capacity ? by : new_capacity / 2, 1u);
+		new_capacity += max(2 * by > new_capacity ? by : new_capacity / 2, 1u);
 
 		T *buffer = new T[new_capacity], *p = buffer;
 

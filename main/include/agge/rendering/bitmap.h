@@ -70,8 +70,8 @@ namespace agge
 		if (dest_y < 0)
 			height += dest_y, src_y -= dest_y, dest_y = 0;
 
-		width = agge_min(width, agge_min(src.width() - src_x, dest.width() - dest_x));
-		height = agge_min(height, agge_min(src.height() - src_y, dest.height() - dest_y));
+		width = min(width, min(src.width() - src_x, dest.width() - dest_x));
+		height = min(height, min(src.height() - src_y, dest.height() - dest_y));
 
 		for (count_t y = 0; y < height; ++y)
 		{

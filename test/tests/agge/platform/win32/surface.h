@@ -1,6 +1,7 @@
 #pragma once
 
 #include <agge/types.h>
+#include <agge/utils/tools.h>
 #include <string.h>
 
 struct HBITMAP__;

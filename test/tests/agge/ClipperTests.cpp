@@ -14,8 +14,8 @@ namespace agge
 			test( YClippingFlagsAreCalculatedAccordinglyToTheBox )
 			{
 				// INIT
-				rect<int> box1 = { 10, -100, 100, 1000 };
-				rect<real_t> box2 = { -10.3f, 5.2f, -3.1f, 17.7f };
+				Rect<int> box1 = { 10, -100, 100, 1000 };
+				Rect<real_t> box2 = { -10.3f, 5.2f, -3.1f, 17.7f };
 
 				// ACT / ASSERT
 				assert_equal(y1_clipped, clipping_y(-101, box1));
@@ -30,8 +30,8 @@ namespace agge
 			test( ClippingFlagsAreCalculatedAccordinglyToTheBox )
 			{
 				// INIT
-				rect<int> box1 = { 10, -100, 100, 1000 };
-				rect<real_t> box2 = { -10.3f, 5.2f, -3.1f, 17.7f };
+				Rect<int> box1 = { 10, -100, 100, 1000 };
+				Rect<real_t> box2 = { -10.3f, 5.2f, -3.1f, 17.7f };
 
 				// ACT / ASSERT
 				assert_equal(x1_clipped, clipping(9, 10, box1));
@@ -121,8 +121,8 @@ namespace agge
 				clipper<real_t> c2;
 				mocks::vector_rasterizer<int> r1;
 				mocks::vector_rasterizer<real_t> r2;
-				rect<int> b1 = { 120, 1002, 140, 1050 };
-				rect<real_t> b2 = { -30.0f, -25.5f, -10.0f, 0.0f };
+				Rect<int> b1 = { 120, 1002, 140, 1050 };
+				Rect<real_t> b2 = { -30.0f, -25.5f, -10.0f, 0.0f };
 
 				c1.set(b1);
 				c2.set(b2);

@@ -131,7 +131,7 @@ namespace agge
 		_sorted = 0;
 
 		// Untested: we use top metric of cells required to draw the longest line given the current bounds.
-		cells_container::iterator current = resize_by(_cells, 2 * agge_max(_max_x - _min_x, _max_y - _min_y) + 3) - 1;
+		cells_container::iterator current = resize_by(_cells, 2 * max(_max_x - _min_x, _max_y - _min_y) + 3) - 1;
 
 		if (ey2 == ey1)
 		{

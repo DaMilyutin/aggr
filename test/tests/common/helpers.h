@@ -72,5 +72,5 @@ namespace agge
 
 	template <typename T>
 	inline bool operator ==(const Vector<T> &lhs, const Vector<T> &rhs)
-	{	return tests::equal(lhs.dx, rhs.dx) && tests::equal(lhs.dy, rhs.dy);	}
+	{	return tests::equal(lhs.x, rhs.x) && tests::equal(lhs.y, rhs.y);	}
 }

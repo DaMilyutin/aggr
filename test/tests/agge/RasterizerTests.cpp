@@ -54,10 +54,10 @@ namespace agge
 				template <typename LinesSinkT>
 				void line_to(LinesSinkT &sink, T /*x*/, T /*y*/)
 				{
-					sink.line(_window.x1, _window.y1, _window.x1, _window.y2);
-					sink.line(_window.x1, _window.y2, _window.x2, _window.y2);
-					sink.line(_window.x2, _window.y2, _window.x2, _window.y1);
-					sink.line(_window.x2, _window.y1, _window.x1, _window.y1);
+					sink.line(_window.min.x, _window.min.y, _window.min.x, _window.max.y);
+					sink.line(_window.min.x, _window.max.y, _window.max.x, _window.max.y);
+					sink.line(_window.max.x, _window.max.y, _window.max.x, _window.min.y);
+					sink.line(_window.max.x, _window.min.y, _window.min.x, _window.min.y);
 				}
 
 			private:

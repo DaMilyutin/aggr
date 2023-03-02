@@ -17,10 +17,10 @@ namespace agge
 	}
 
 	template <typename T>
-	inline T agge_min(T lhs, T rhs)
+	inline T min(T lhs, T rhs)
 	{	return lhs < rhs ? lhs : rhs;	}
 
 	template <typename T>
-	inline T agge_max(T lhs, T rhs)
+	inline T max(T lhs, T rhs)
 	{	return lhs > rhs ? lhs : rhs;	}
 }

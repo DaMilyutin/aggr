@@ -41,8 +41,8 @@ namespace agge
 			{
 				dc memdc;
 
-				const count_t max_width = agge_max(width + _extra_pixels, _allocated_width);
-				const count_t max_height = agge_max(height, _allocated_height);
+				const count_t max_width = max(width + _extra_pixels, _allocated_width);
+				const count_t max_height = max(height, _allocated_height);
 				const count_t stride = calculate_stride(max_width);
 				void *memory = 0;
 				BITMAPINFO bi = { };

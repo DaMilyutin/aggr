@@ -3,7 +3,7 @@
 #include "assertex.h"
 #include "mocks.h"
 
-#include <agge/utils/math.h>
+#include <agge/math/math.h>
 #include <agge/primitives/path.h>
 
 #include <ut/test.h>

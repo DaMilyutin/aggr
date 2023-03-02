@@ -1,4 +1,4 @@
-#include <agge/utils/math.h>
+#include <agge/math/math.h>
 #include <agge/utils/memory.h>
 #include <agge/utils/tools.h>
 #include <agge/primitives/path.h>

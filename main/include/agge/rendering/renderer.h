@@ -157,12 +157,12 @@ namespace agge
 	template <typename BitmapT, typename BlenderT>
 	inline void fill(BitmapT &bitmap_, const rect_i &area, const BlenderT &blender)
 	{
-		const int x = agge_max(0, area.min.x);
-		const int width = agge_min<int>(bitmap_.width(), area.max.x) - x;
+		const int x = max(0, area.min.x);
+		const int width = min<int>(bitmap_.width(), area.max.x) - x;
 
 		if (width > 0)
 		{
-			for (int y = agge_max(0, area.min.y), limit_y = agge_min<int>(bitmap_.height(), area.max.y); y < limit_y; ++y)
+			for (int y = max(0, area.min.y), limit_y = min<int>(bitmap_.height(), area.max.y); y < limit_y; ++y)
 				blender(bitmap_.row_ptr(y) + x, x, y, width);
 		}
 	}

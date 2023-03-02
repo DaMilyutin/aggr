@@ -129,11 +129,11 @@ namespace agge
 						_cells.push_back(cells[i]);
 						for (int j = 0; j != cells[i].second - cells[i].first; ++j)
 						{
-							min_x = agge_min(min_x, (cells[i].first + j)->x);
-							max_x = agge_max(min_x, (cells[i].first + j)->x);
+							min_x = min(min_x, (cells[i].first + j)->x);
+							max_x = max(min_x, (cells[i].first + j)->x);
 						}
 					}
-					_width = agge_max(max_x - min_x, -1) + 1;
+					_width = max(max_x - min_x, -1) + 1;
 				}
 
 				scanline_cells operator [](int y) const
