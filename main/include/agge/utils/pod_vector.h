@@ -35,6 +35,17 @@ namespace agge
 		void assign(count_t size, const T &value);
 		void swap(pod_vector &other);
 
+        void assign(pod_vector const& other)
+        {
+            resize(other.size());
+            const_iterator i = other.begin();
+            iterator j = begin();
+            while(i != other.end())
+                *j++ = *i++;
+        }
+
+
+
 		const T *data() const;
 		bool empty() const;
 		count_t size() const;
