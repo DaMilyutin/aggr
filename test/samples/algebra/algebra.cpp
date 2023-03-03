@@ -26,12 +26,26 @@ namespace
     struct Chain: agge::rules::PointGenerator<Chain>, agge::pod_vector<Point_r>
     {};
 
+    Chain& operator+=(Chain& c, agge::Vector_r const& s)
+    {
+        for(auto& p: c)
+            p += s;
+        return c;
+    }
+
+    Chain& operator-=(Chain& c, agge::Vector_r const& s)
+    {
+        for(auto& p: c)
+            p -= s;
+        return c;
+    }
+
     class Algebra: public application
     {
     public:
         Algebra()
         {
-            agge::Point_r const cen = {500, 500};
+            agge::Point_r const cen = {800, 800};
 
             int const N = 9;
             int const k = 4;
@@ -44,6 +58,9 @@ namespace
                 chain2.push_back(cen + 250.f*agge::Vector_r{cosf(i), sinf(i)});
             for(int j = 0; j < 4; ++j, i += step)
                 chain3.push_back(cen + 300.f*agge::Vector_r{cosf(i), sinf(i)});
+
+            chain4.assign(chain2);
+            chain4 += agge::Vector_r{-400, -400};
         }
 
         virtual void draw(platform_bitmap& surface, timings&/*timings*/)
@@ -57,6 +74,13 @@ namespace
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
                 platform_blender_solid_color(color::make(255, 255, 255)), winding<>());
+
+            ras.reset();
+            ras << closed(chain4);
+            ras.sort();
+
+            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
+                platform_blender_solid_color(color::make(255, 0, 0)), winding<>());
         }
 
     private:
@@ -66,6 +90,7 @@ namespace
         Chain chain1;
         Chain chain2;
         Chain chain3;
+        Chain chain4;
     };
 }
 
