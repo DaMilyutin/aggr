@@ -64,6 +64,12 @@ namespace agge
     }
 
     template <typename CoordT>
+    inline const Point<CoordT>& operator -=(Point<CoordT>& lhs, const Vector<CoordT>& rhs)
+    {
+        return lhs.x -= rhs.x, lhs.y -= rhs.y, lhs;
+    }
+
+    template <typename CoordT>
     inline Point<CoordT> operator +(const Point<CoordT>& lhs, const Vector<CoordT>& rhs)
     {
         const Point<CoordT> result = {lhs.x + rhs.x, lhs.y + rhs.y};
