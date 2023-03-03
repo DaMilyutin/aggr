@@ -21,8 +21,9 @@ namespace agge
         pod_vector(std::initializer_list<T> other)
         {
             resize(agge::count_t(other.size()));
+            auto it = _begin;
             for(auto&& x: other)
-                *_end++ = x;
+                *it++ = x;
         }
 
 		~pod_vector();
