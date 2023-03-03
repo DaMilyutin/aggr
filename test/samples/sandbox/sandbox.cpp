@@ -1,7 +1,7 @@
 #include <agge/rendering/clipper.h>
 #include <agge/primitives/dash.h>
 #include <agge/rendering/filling_rules.h>
-#include <agge/utils/math.h>
+#include <agge/math/math.h>
 #include <agge/rendering/rasterizer.h>
 #include <agge/rendering/renderer.h>
 #include <agge/primitives/stroke.h>

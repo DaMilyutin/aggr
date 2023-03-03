@@ -15,9 +15,9 @@ namespace agge
             auto e = the_points.end();
             if(b == e)
                 return the_ras;
-            the_ras.move_to(b->x, b->y);
+            the_ras.move_to(*b);
             for(++b; b != e; ++b)
-                the_ras.line_to(b->x, b->y);
+                the_ras.line_to(*b);
             return the_ras;
         }
     }

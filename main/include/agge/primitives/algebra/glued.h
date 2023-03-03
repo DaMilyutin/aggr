@@ -38,7 +38,7 @@ namespace agge
             auto b = the_points.begin();
             auto e = the_points.end();
             for(; b != e; ++b)
-                the_ras.line_to(b->x, b->y);
+                the_ras.line_to(*b);
             return the_ras;
         }
     }

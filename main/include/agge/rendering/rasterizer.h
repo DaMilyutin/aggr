@@ -25,6 +25,12 @@ namespace agge
 
 		void move_to(real_t x, real_t y);
 		void line_to(real_t x, real_t y);
+
+
+        void move_to(Point_r const& p) { move_to(p.x, p.y); }
+        void line_to(Point_r const& p) { line_to(p.x, p.y); }
+
+
 		void close_polygon();
 
 		void append(const rasterizer &other, int dx, int dy);
