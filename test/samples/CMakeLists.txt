@@ -15,6 +15,7 @@ if (WIN32 OR APPLE OR ANDROID)
 		add_executable_with_links(lines lines/lines.cpp)
 
 		add_executable_with_links(piechart piechart/piechart.cpp)
+        add_executable_with_links(algebra algebra/algebra.cpp)
 		add_executable_with_links(rasterizer rasterizer/rasterizer.cpp)
 		add_executable_with_links(sandbox sandbox/sandbox.cpp)
 		add_executable_with_links(text "text/text.cpp;arial-1000.fnt")

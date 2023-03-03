@@ -1,6 +1,7 @@
 #pragma once
 
 #include <agge/math/math.h>
+#include <agge/primitives/algebra/rules.h>
 #include "vector_rasterizer.h"
 
 namespace agge
@@ -10,7 +11,7 @@ namespace agge
 
 
 	template < typename ClipperT, typename ScalingT = scaling<typename ClipperT::coord_type> >
-	class rasterizer : private vector_rasterizer
+	class rasterizer: public rules::Rasterizer<rasterizer<ClipperT, ScalingT>>, private vector_rasterizer
 	{
 	public:
 		using vector_rasterizer::_1_shift;

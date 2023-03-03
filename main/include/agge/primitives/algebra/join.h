@@ -1,14 +1,22 @@
 #pragma once
 
 #include <agge/primitives/algebra/rules.h>
+#include <agge/primitives/algebra/glued.h>
+#include <agge/primitives/algebra/algebra.h>
 
 namespace agge
 {
     namespace rules
     {
         template<typename P1, typename P2>
-        struct Joined: PointGenerator<Joined<P1, P2>, false>
+        struct Joined: PointGenerator<Joined<P1, P2>>
         {
+            template<typename T1, typename T2>
+            Joined(T1&& l1, T2&& l2)
+                : p1(FWD(l1))
+                , p2(FWD(l2))
+            {}
+
             P1 p1;
             P2 p2;
         };
@@ -41,8 +49,7 @@ namespace agge
         R& operator<<(Rasterizer<R>& ras, Joined<P1, P2> const& points)
         {
             R& the_ras = ras._get_();
-            return the_ras << points.p1 << points.p2;
+            return the_ras << points.p1 << glued(points.p2);
         }
-
     }
 }

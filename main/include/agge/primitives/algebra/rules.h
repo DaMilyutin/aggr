@@ -17,8 +17,8 @@ namespace agge
             E      &&  _get_()      && { return static_cast<E&&>(*this); }
         };
 
-        template<typename E, bool closed = false>
-        struct PointGenerator: terminal<PointGenerator<E, closed>>
+        template<typename E>
+        struct PointGenerator: terminal<E>
         {
             //class const_iterator;
             //class const_sentinel;
@@ -28,11 +28,11 @@ namespace agge
         };
 
         template<typename E>
-        struct Rasterizer: terminal<Rasterizer<E>> // Concept
+        struct Rasterizer: terminal<E> // Concept
         {};
 
         template<typename E>
-        struct Decorator: terminal<Rasterizer<E>> // Concept
+        struct Decorator: terminal<E> // Concept
         {};
     }
 }
