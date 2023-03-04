@@ -6,6 +6,7 @@
 #include <agge/primitives/curves.h>
 #include <agge/primitives/dash.h>
 #include <agge/primitives/figures.h>
+#include <agge/primitives/polyline.h>
 #include <agge/primitives/path.h>
 #include <agge/primitives/stroke.h>
 #include <agge/primitives/stroke_features.h>
@@ -72,12 +73,20 @@ namespace
 			line_style.set_join(joins::bevel());
 			knot(320.0f*scale, 100.0f*scale, scale);
 
-			line_style.width(1.0f*scale);
-			line_style.set_cap(caps::butt());
+			line_style.width(10.0f*scale);
+			line_style.set_cap(caps::round());
 			dash_style.dash_start(0.5f*scale);
-			dash_style.add_dash(1.0f*scale, 1.0f*scale);
+			dash_style.add_dash(15.0f*scale, 15.0f*scale);
 
-			add_path(ras, line(19.5f*scale, 300.5f*scale, 319.5f*scale, 300.5f*scale)/dash_style/line_style);
+
+            polyline polyline1;
+            polyline1.clear();
+            polyline1.move_to(19.5f*scale, 300.5f*scale);
+            polyline1.line_to(319.5f*scale, 300.5f*scale);
+            polyline1.line_to(319.5f*scale, 330.5f*scale);
+
+			add_path(ras, polyline_adaptor(polyline1)/line_style);
+            //dash_style
 
 			ras.sort();
 
