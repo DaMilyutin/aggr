@@ -5,9 +5,7 @@
 
 #include <samples/common/shell.h>
 
-#include <agge/primitives/algebra/algebra.h>
-#include <agge/primitives/algebra/join.h>
-#include <agge/primitives/algebra/closed.h>
+#include <palgebra/algebra.h>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -50,8 +48,8 @@ namespace
             int const N = 9;
             int const k = 4;
 
-            double const step = k*2*M_PI/N;
-            agge::real_t i = -M_PI/2;
+            float const step = float(k*2*M_PI/N);
+            agge::real_t i = float(-M_PI/2);
             for(int j = 0; j < 2; ++j, i += step)
                 chain1.push_back(cen + 200.f*agge::Vector_r{cosf(i), sinf(i)});
             for(int j = 0; j < 3; ++j, i += step)

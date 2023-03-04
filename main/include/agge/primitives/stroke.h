@@ -3,7 +3,7 @@
 #include <agge/utils/vertex_sequence.h>
 #include <agge/utils/static_any.h>
 #include <agge/utils/tools.h>
-#include <agge/primitives/algebra/rules.h>
+#include <palgebra/algebra/rules.h>
 
 namespace agge
 {

@@ -1,6 +1,9 @@
 #pragma once
 
-#include <agge/primitives/algebra/rules.h>
+#include <palgebra/algebra/rules.h>
+#include <palgebra/algebra/join.h>
+#include <palgebra/algebra/concat.h>
+#include <palgebra/algebra/closed.h>
 
 namespace agge
 {

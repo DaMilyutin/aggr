@@ -45,7 +45,8 @@ namespace agge
                 *j++ = *i++;
         }
 
-
+        T const& front() const { return *_begin;     }
+        T const& back()  const { return *(_end - 1); }
 
 		const T *data() const;
 		bool empty() const;

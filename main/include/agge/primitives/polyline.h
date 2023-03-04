@@ -2,7 +2,7 @@
 
 #include <agge/types.h>
 #include <agge/primitives/path.h>
-#include <agge/primitives/algebra/rules.h>
+#include <palgebra/algebra/rules.h>
 
 #include <vector>
 

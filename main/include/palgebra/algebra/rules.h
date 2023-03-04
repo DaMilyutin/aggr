@@ -34,5 +34,9 @@ namespace agge
         template<typename E>
         struct Decorator: terminal<E> // Concept
         {};
+
+        template<typename E>
+        struct Mediator: terminal<E> // Concept
+        {};
     }
 }

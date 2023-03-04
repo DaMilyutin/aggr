@@ -1,37 +1,36 @@
 #pragma once
 
-#include <agge/primitives/algebra/rules.h>
-#include <agge/primitives/algebra/algebra.h>
-
+#include <palgebra/algebra/rules.h>
 
 namespace agge
 {
     namespace rules
     {
         template<typename E>
-        struct Glued: PointGenerator<Glued<E>>
+        struct Concat: PointGenerator<Concat<E>>
         {
             template<typename T1>
-            Glued(T1&& p)
+            Concat(T1&& p)
                 : under(FWD(p))
             {}
             E under;
         };
 
         template<typename P>
-        Glued<P> glued(PointGenerator<P>&& p)
+        Concat<P> concat(PointGenerator<P>&& p)
         {
             return {FWD(p)._get_()};
         }
 
         template<typename P>
-        Glued<P const&> glued(PointGenerator<P> const& p)
+        Concat<P const&> concat(PointGenerator<P> const& p)
         {
             return p._get_();
         }
 
+
         template<typename R, typename P>
-        R& operator<<(Rasterizer<R>& ras, Glued<P> const& points)
+        R& operator<<(Rasterizer<R>& ras, Concat<P> const& points)
         {
             R& the_ras = ras._get_();
             P const& the_points = points.under;

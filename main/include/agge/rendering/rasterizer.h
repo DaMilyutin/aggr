@@ -1,7 +1,7 @@
 #pragma once
 
 #include <agge/math/math.h>
-#include <agge/primitives/algebra/rules.h>
+#include <palgebra/algebra/rules.h>
 #include "vector_rasterizer.h"
 
 namespace agge

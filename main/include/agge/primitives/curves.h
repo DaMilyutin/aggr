@@ -2,7 +2,7 @@
 
 #include <agge/types.h>
 #include <agge/math/bezier.h>
-#include <agge/primitives/algebra/rules.h>
+#include <palgebra/algebra/rules.h>
 
 #include <utility>
 
