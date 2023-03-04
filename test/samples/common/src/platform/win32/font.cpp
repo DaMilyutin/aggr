@@ -129,7 +129,7 @@ glyph::outline_ptr font_accessor::load_glyph(agge::glyph_index_t index, glyph::g
 				case TT_PRIM_QSPLINE:
 					for (WORD i = 0; i < curve->cpfx - 1; ++i)
 					{
-						POINTFX pnt_b = curve->apfx[i]; // B is always the current Point
+						POINTFX pnt_b = curve->apfx[i]; // B is always the current point
 						POINTFX pnt_c = curve->apfx[i + 1];
 
 						if (i < curve->cpfx - 2) // If not on last spline, compute C

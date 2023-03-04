@@ -727,7 +727,7 @@ namespace agge
 				vector_rasterizer vr;
 
 				// ACT
-				vr.line(0, 0, 1535, 3); // dx = 6 * 256 - 1 (to compensate floating Point rounding)
+				vr.line(0, 0, 1535, 3); // dx = 6 * 256 - 1 (to compensate floating point rounding)
 
 				// ASSERT
 				const vector_rasterizer::cell reference1[] = {
@@ -742,7 +742,7 @@ namespace agge
 				vr.reset();
 
 				// ACT
-				vr.line(-256, 256, 2815, 259); // dx = 12 * 256 - 1 (to compensate floating Point rounding)
+				vr.line(-256, 256, 2815, 259); // dx = 12 * 256 - 1 (to compensate floating point rounding)
 
 				// ASSERT
 				const vector_rasterizer::cell reference2[] = {

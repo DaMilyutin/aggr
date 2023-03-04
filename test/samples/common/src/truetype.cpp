@@ -88,7 +88,7 @@ namespace truetype
 							case segment::qspline:
 								for (size_t i = 0, count = seg->points.size(); i != count - 1; ++i)
 								{
-									const Point<int> &pnt_b = seg->points[i]; // B is always the current Point
+									const Point<int> &pnt_b = seg->points[i]; // B is always the current point
 									Point<int> pnt_c = seg->points[i + 1];
 
 									if (i < count - 2) // If not on last spline, compute C
