@@ -54,9 +54,9 @@ namespace
             float const step = float(k*2*M_PI/N);
             agge::real_t i = float(-M_PI/2);
             for(int j = 0; j < 2; ++j, i += step)
-                chain1.push_back(cen + 200.f*agge::Vector_r{cosf(i), sinf(i)});
+                chain1.push_back(cen + 300.f*agge::Vector_r{cosf(i), sinf(i)});
             for(int j = 0; j < 3; ++j, i += step)
-                chain2.push_back(cen + 250.f*agge::Vector_r{cosf(i), sinf(i)});
+                chain2.push_back(cen + 300.f*agge::Vector_r{cosf(i), sinf(i)});
             for(int j = 0; j < 4; ++j, i += step)
                 chain3.push_back(cen + 300.f*agge::Vector_r{cosf(i), sinf(i)});
 
@@ -102,11 +102,22 @@ namespace
                 platform_blender_solid_color(color::make(255, 0, 0)), winding<>());
 
             ras.reset();
-            ras << closed((chain1 + chain2 + chain3)/agge::decorators::OrthoShift(-20.f));
+            ras << closed(chain1/agge::decorators::OrthoShift(40.f)
+                          + chain2/agge::decorators::OrthoShift(40.f)
+                          + chain3/agge::decorators::OrthoShift(40.f));
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
                 platform_blender_solid_color(color::make(255, 255, 255)), winding<>());
+
+            ras.reset();
+            ras << closed(chain1
+                + chain2
+                + chain3);
+            ras.sort();
+
+            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
+                platform_blender_solid_color(color::make(0, 255, 0)), winding<>());
 
         }
 
