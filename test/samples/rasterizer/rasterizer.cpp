@@ -16,7 +16,7 @@ namespace
         return r;
     }
 
-    class Algebra: public application
+    class Rasterizer: public application
     {
     private:
         virtual void draw(platform_bitmap& surface, timings&/*timings*/)
