@@ -19,52 +19,25 @@ namespace agge
         public:
             static constexpr real_t error = 1.0f;
 
-            Arc(Point_r start, Vector_r inc, Vector_r rot, count_t count)
-                : start_(start), inc_(inc), rot_(rot), count_(count)
-            {}
+            struct Natural
+            {
+                Point_r center;
+                real_t  radius;
+                real_t  angle1;
+                real_t  angle2;
+            };
 
             Arc(Point_r cen, real_t radius, real_t a1, real_t a2)
+                : natural{cen, radius, a1, a2}
             {
-                real_t const angle = a2 - a1;
+                real_t const angle = natural.angle2 - natural.angle1;
                 real_t const granularity = optimal_step(radius);
-                count_ = count_t(angle*radius/granularity);
-                if(count_ == 0)
-                    return;
-                real_t const astep = angle/count_;
-                rot_.x = cosf(astep);
-                rot_.y = sinf(astep);
-                real_t const inc_norm = 2.0f*radius*sinf(0.5f*astep);
-                a1 -= astep*0.5f;
-                //if(angle < 0) a1 += agge::pi;
-                Vector_r v1 = {-sinf(a1), cosf(a1)};
-                inc_ = v1*inc_norm;
-                start_.x = cen.x + v1.y*radius;
-                start_.y = cen.y - v1.x*radius;
-                ++count_;
+                count_ = count_t(fabsf(angle*radius)/granularity);
             }
 
             Arc(Point_r cen, real_t radius, real_t a1, real_t a2, count_t count)
-                : count_(count)
-            {
-                if(count == 0)
-                    return;
-                start_.x = cen.x + cosf(a1)*radius;
-                start_.y = cen.y + sinf(a1)*radius;
-
-                real_t const angle = a2 - a1;
-                real_t const astep = angle/count;
-                rot_.x = cosf(astep);
-                rot_.y = sinf(astep);
-
-                real_t half_astep = 0.5f*astep;
-                real_t const inc_norm = 2.0f*radius*sinf(half_astep);
-                a1 += half_astep + agge::pi*0.5f;
-                if(angle < 0) a1 += agge::pi;
-                Vector_r v1 = {cosf(a1), sinf(a1)};
-                inc_ = v1*inc_norm;
-
-                ++count_;
-            }
+                : natural{cen, radius, a1, a2}, count_(count)
+            {}
 
             struct Sentinel
             {};
@@ -74,37 +47,70 @@ namespace agge
             class Iterator
             {
             public:
-                Iterator(Arc const& a)
-                    : curr(a.start_), inc(a.inc_), rot(a.rot_), count(a.count_)
-                {}
+                Iterator(Natural const& n, count_t count)
+                    : count_(count+1)
+                {
+                    real_t const angle = n.angle2 - n.angle1;
+                    real_t const astep = angle/count;
+                    rot_.x = cosf(astep);
+                    rot_.y = sinf(astep);
+                    real_t const inc_norm = 2.0f*n.radius*sinf(0.5f*astep);
+                    real_t a1 = n.angle1 + astep*0.5f;
+                    //if(angle < 0) a1 += agge::pi;
+                    Vector_r v1 = {-sinf(a1), cosf(a1)};
+                    inc_ = v1*inc_norm;
+                    curr_.x = n.center.x + cosf(n.angle1)*n.radius;
+                    curr_.y = n.center.y + sinf(n.angle1)*n.radius;
+                }
 
-                Point_r const& operator*() const { return curr; }
+                Point_r const& operator*() const { return curr_; }
 
                 Iterator& operator++()
                 {
-                    --count;
-                    curr += inc;
-                    inc = multiply(inc, rot);
+                    --count_;
+                    curr_ += inc_;
+                    inc_ = multiply(inc_, rot_);
                     return *this;
                 }
 
-                bool operator==(Sentinel) const { return count == 0; }
-                bool operator!=(Sentinel) const { return count != 0; }
+                bool operator==(Sentinel) const { return count_ == 0; }
+                bool operator!=(Sentinel) const { return count_ != 0; }
 
             private:
-                Point_r  curr;
-                Vector_r inc;
-                Vector_r const rot;
-                count_t  count;
+                Point_r  curr_;
+                Vector_r inc_;
+                Vector_r rot_;
+                count_t  count_;
             };
 
-            Iterator begin() const { return Iterator(*this); }
+            Arc& dropEnds()
+            {
+                if(count_ > 1)
+                {
+                    count_ -= 2;
+                    real_t const astep = (natural.angle2 - natural.angle1)/count_;
+                    natural.angle1 += astep;
+                    natural.angle2 -= astep;
+                }
+                return *this;
+            }
+
+            Arc& reverse()
+            {
+                if(count_ > 1)
+                {
+                    real_t const tmp = natural.angle1;
+                    natural.angle1 = natural.angle2;
+                    natural.angle2 = tmp;
+                }
+                return *this;
+            }
+
+            Iterator begin() const { return Iterator(natural, count_); }
             Sentinel end()   const { return {}; }
 
         private:
-            Point_r  start_;
-            Vector_r inc_;
-            Vector_r rot_;
+            Natural  natural;
             int      count_ = 0;
         };
 

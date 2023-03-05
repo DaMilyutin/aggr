@@ -47,7 +47,7 @@ namespace agge
         R& operator<<(Consumer<R>& ras, Joined<P1, P2> const& points)
         {
             R& the_ras = ras._get_();
-            return the_ras << points.p1 << concat(points.p2);
+            return the_ras << points.p1 << points.p2;
         }
     }
 }

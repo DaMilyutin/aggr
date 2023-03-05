@@ -4,63 +4,69 @@
 
 namespace agge
 {
-
-    class Path
+    struct Distance
     {
-    public:
-        Path() = default;
-        Path(Path const&) = default;
-        Path(Path&&) = default;
+        real_t distance = 0.0f;
 
-        Path(pod_vector<Point_r>&& p): point_(std::move(p))
-        {
-            fillDistances();
-        }
-
-        Path(pod_vector<Point_r> const& p): point_(p)
-        {
-            fillDistances();
-        }
-
-        pod_vector<Point_r> const& points()    const { return point_; }
-        pod_vector<real_t> const&  distances() const { return distance_; }
-
-        void clear() { point_.clear(); distance_.clear(); }
-        void push_back(Point_r p)
-        {
-            if(distance_.empty())
-                distance_.push_back(0.0f);
-            else
-                distance_.push_back(distance(p, point_.back()));
-            point_.push_back(p);
-        }
-
-    private:
-        void fillDistances()
-        {
-            distance_.resize(point_.size());
-            if(distance_.size() == 0)
-                return;
-            for(agge::count_t i = 1; i < point_.size(); ++i)
-                distance_[i] = distance(point_[i-1],point_[i]);
-        }
-
-        pod_vector<Point_r> point_;
-        pod_vector<real_t>  distance_;
+        static Distance from(Vector_r v) { return Distance{norm(v)}; }
     };
 
-    struct PathFeeder: rules::Consumer<PathFeeder>
+    struct DistanceDirection
     {
-        Path& path;
+        real_t distance  = 0.0f;
+        real_t direction = 0.0f;
 
-        void move_to(Point_r const& p)
+        static DistanceDirection from(Vector_r v) { return DistanceDirection{norm(v), atan2(v.y, v.x)}; }
+    };
+
+    using Path = pod_vector<Point_r>;
+
+    template<typename E = Distance>
+    class PathAnnotation
+    {
+    public:
+        PathAnnotation() = default;
+        PathAnnotation(PathAnnotation const&) = default;
+        PathAnnotation(PathAnnotation&&) = default;
+
+        PathAnnotation(Path const& p)
         {
+            data.resize(p.size());
+            if(data.size() == 0)
+                return;
+            data[0] = E{};
+            for(agge::count_t i = 1; i < p.size(); ++i)
+                data[i] = E::from(p[i] - p[i-1]);
+        }
+
+        void clear()               { data.clear(); }
+        void push_back(E e)        { data.push_back(e); }
+        void push_back(Vector_r v) { data.push_back(E::from(v)); }
+
+        pod_vector<E> data;
+    };
+
+    template<typename E>
+    struct PathAnnotationFeeder: rules::Consumer<PathAnnotationFeeder<E>>
+    {
+        PathAnnotationFeeder(Path& p, PathAnnotation<E>& a): path(p), annotation(a) {}
+
+        pod_vector<Point_r>& path;
+        PathAnnotation<E>&   annotation;
+
+        void move_to(Point_r p)
+        {
+            annotation.clear();
+            annotation.push_back(E{});
             path.clear();
             path.push_back(p);
         }
 
-        void line_to(Point_r const& p)
+        void line_to(Point_r p)
         {
+            if(path.empty())
+                return move_to(p);
+            annotation.push_back(p - path.back());
             path.push_back(p);
         }
     };

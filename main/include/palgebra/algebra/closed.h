@@ -32,7 +32,7 @@ namespace agge
         R& operator<<(Consumer<R>& ras, Closed<P> const& points)
         {
             R& the_ras = ras._get_();
-            the_ras << points.under;
+            the_ras << start(points.under);
             the_ras.close_polygon();
             return the_ras;
         }

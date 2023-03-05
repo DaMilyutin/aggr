@@ -6,27 +6,26 @@
 namespace agge
 {
     template<typename Stored>
-    struct Mediator: public rules::Mediator<agge::Mediator<Stored>>
+    struct Stored: public rules::Mediator<agge::Stored<Stored>>
     {
         template<typename S>
-        Mediator(S&& s): stored(FWD(s)) {}
+        Stored(S&& s): stored(FWD(s)) {}
 
         Stored stored;
     };
 
-
     template<typename S>
-    Mediator<S&> stored(S& s) {
-        return Mediator<S&>(s);
+    Stored<S&> stored(S& s) {
+        return Stored<S&>(s);
     }
 
     template<typename S>
-    Mediator<S> stored(S&& s) {
-        return Mediator<S>(s);
+    Stored<S> stored(S&& s) {
+        return Stored<S>(s);
     }
 
     template<typename S>
-    Mediator<S> stored() {
-        return Mediator<S>();
+    Stored<S> stored() {
+        return Stored<S>();
     }
 }
