@@ -5,13 +5,13 @@
 
 namespace agge
 {
-    template<typename Stored>
-    struct Stored: public rules::Mediator<agge::Stored<Stored>>
+    template<typename S>
+    struct Stored: public rules::Mediator<Stored<S>>
     {
         template<typename S>
         Stored(S&& s): stored(FWD(s)) {}
 
-        Stored stored;
+        S stored;
     };
 
     template<typename S>

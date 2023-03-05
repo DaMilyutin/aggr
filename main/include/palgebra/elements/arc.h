@@ -39,15 +39,15 @@ namespace agge
                 : natural{cen, radius, a1, a2}, count_(count)
             {}
 
-            struct Sentinel
+            struct sentinel
             {};
 
-            friend class Iterator;
+            friend class const_iterator;
 
-            class Iterator
+            class const_iterator
             {
             public:
-                Iterator(Natural const& n, count_t count)
+                const_iterator(Natural const& n, count_t count)
                     : count_(count+1)
                 {
                     real_t const angle = n.angle2 - n.angle1;
@@ -65,7 +65,7 @@ namespace agge
 
                 Point_r const& operator*() const { return curr_; }
 
-                Iterator& operator++()
+                const_iterator& operator++()
                 {
                     --count_;
                     curr_ += inc_;
@@ -73,8 +73,8 @@ namespace agge
                     return *this;
                 }
 
-                bool operator==(Sentinel) const { return count_ == 0; }
-                bool operator!=(Sentinel) const { return count_ != 0; }
+                bool operator==(sentinel) const { return count_ == 0; }
+                bool operator!=(sentinel) const { return count_ != 0; }
 
             private:
                 Point_r  curr_;
@@ -106,8 +106,8 @@ namespace agge
                 return *this;
             }
 
-            Iterator begin() const { return Iterator(natural, count_); }
-            Sentinel end()   const { return {}; }
+            const_iterator begin() const { return const_iterator(natural, count_); }
+            sentinel end()   const { return {}; }
 
         private:
             Natural  natural;

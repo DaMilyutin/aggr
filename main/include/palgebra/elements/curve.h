@@ -18,40 +18,41 @@ namespace agge
                 : interp_(i), count_(count)
             {}
 
-            struct Sentinel
+            struct sentinel
             {};
 
-            friend class Iterator;
+            friend class const_iterator;
 
-            class Iterator
+            class const_iterator
             {
             public:
-                Iterator(Curve const& c)
+                const_iterator(Curve const& c)
                     : interp_(c.interp_), step_(1.0f/(c.count_)), count_(c.count_)
                 {}
 
                 Point_r operator*() const { return interp_.at(t_); }
 
-                Iterator& operator++()
+                const_iterator& operator++()
                 {
                     --count_;
                     t_ += step_;
                     return *this;
                 }
 
-                bool operator==(Sentinel) const { return count_ == 0; }
-                bool operator!=(Sentinel) const { return count_ != 0; }
+                bool operator==(sentinel) const { return count_ == 0; }
+                bool operator!=(sentinel) const { return count_ != 0; }
 
             private:
                 Interp const& interp_;
-                real_t       t_     = 0.0f;
-                real_t const step_  = 0.1f;
-                count_t      count_ = 10;
+                real_t        t_     = 0.0f;
+                real_t const  step_  = 0.1f;
+                count_t       count_ = 10;
             };
 
-            Iterator begin() const { return Iterator(*this); }
-            Sentinel end()   const { return {}; }
+            const_iterator begin() const { return const_iterator(*this); }
+            sentinel       end()   const { return {}; }
 
+            count_t size() const { return count_ + 1; }
         private:
             Interp  interp_;
             count_t count_;

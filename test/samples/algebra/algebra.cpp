@@ -6,9 +6,8 @@
 #include <samples/common/shell.h>
 
 #include <palgebra/algebra.h>
-#include <palgebra/elements/arc.h>
-#include <palgebra/elements/curve.h>
-#include <palgebra/elements/vertex.h>
+#include <palgebra/elements.h>
+#include <palgebra/decorators.h>
 
 
 #define _USE_MATH_DEFINES
@@ -94,7 +93,7 @@ namespace
 
             ras.reset();
             ras << closed(agge::elements::Vertex(agge::Point_r{1000, 500})
-                        + agge::elements::Arc(agge::Point_r{1000, 500}, 100.f, -agge::pi/2, agge::pi, 6));
+                        + agge::elements::Arc(agge::Point_r{1000, 500}, 100.f, -agge::pi/2, agge::pi, 6)/agge::decorators::OrthoShift(40.f));
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
@@ -102,14 +101,12 @@ namespace
 
 
             ras.reset();
-            ras << closed(agge::elements::Vertex(agge::Point_r{1000, 1200})
+            ras << closed(agge::elements::Segment(agge::Point_r{1000, 1000}, agge::Point_r{1000, 1200})
                 + agge::elements::Curve(agge::qbezier_interp(Point_r{900, 1000}, Point_r{1000, 800}, Point_r{1100, 1000}), 100));
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
                 platform_blender_solid_color(color::make(255, 0, 0)), winding<>());
-
-
         }
 
     private:
