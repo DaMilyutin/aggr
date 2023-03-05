@@ -44,7 +44,7 @@ namespace agge
         }
 
         template<typename R, typename P1, typename P2>
-        R& operator<<(Rasterizer<R>& ras, Joined<P1, P2> const& points)
+        R& operator<<(Consumer<R>& ras, Joined<P1, P2> const& points)
         {
             R& the_ras = ras._get_();
             return the_ras << points.p1 << concat(points.p2);

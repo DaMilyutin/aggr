@@ -11,7 +11,7 @@ namespace agge
 
 
 	template < typename ClipperT, typename ScalingT = scaling<typename ClipperT::coord_type> >
-	class rasterizer: public rules::Rasterizer<rasterizer<ClipperT, ScalingT>>, private vector_rasterizer
+	class rasterizer: public rules::Consumer<rasterizer<ClipperT, ScalingT>>, private vector_rasterizer
 	{
 	public:
 		using vector_rasterizer::_1_shift;

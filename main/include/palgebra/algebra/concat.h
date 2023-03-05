@@ -30,7 +30,7 @@ namespace agge
 
 
         template<typename R, typename P>
-        R& operator<<(Rasterizer<R>& ras, Concat<P> const& points)
+        R& operator<<(Consumer<R>& ras, Concat<P> const& points)
         {
             R& the_ras = ras._get_();
             P const& the_points = points.under;

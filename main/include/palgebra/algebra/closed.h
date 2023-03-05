@@ -29,7 +29,7 @@ namespace agge
         }
 
         template<typename R, typename P>
-        R& operator<<(Rasterizer<R>& ras, Closed<P> const& points)
+        R& operator<<(Consumer<R>& ras, Closed<P> const& points)
         {
             R& the_ras = ras._get_();
             the_ras << points.under;

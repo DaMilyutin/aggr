@@ -28,7 +28,7 @@ namespace agge
         };
 
         template<typename E>
-        struct Rasterizer: terminal<E> // Concept
+        struct Consumer: terminal<E> // Concept for rasterizer or points accumulator
         {};
 
         template<typename E>
