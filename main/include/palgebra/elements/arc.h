@@ -11,13 +11,13 @@ namespace agge
 
         class Arc: public rules::PointGenerator<Arc>
         {
-            static inline real_t optimal_step(real_t radius)
+            static inline real_t optimal_step(real_t radius, real_t error)
             {
                 real_t const x = (1 - error / radius);
                 return acosf(2.0f*x*x  - 1);
             }
         public:
-            static constexpr real_t error = 1.0f;
+            static constexpr real_t default_error = 1.0f;
 
             struct Natural
             {
@@ -27,15 +27,15 @@ namespace agge
                 real_t  angle2;
             };
 
-            Arc(Point_r cen, real_t radius, real_t a1, real_t a2)
+            Arc(Point_r cen, real_t radius, real_t a1, real_t a2, real_t error = default_error)
                 : natural{cen, radius, a1, a2}
             {
                 real_t const angle = natural.angle2 - natural.angle1;
-                real_t const granularity = optimal_step(radius);
+                real_t const granularity = optimal_step(radius, error);
                 count_ = count_t(fabsf(angle*radius)/granularity);
             }
 
-            Arc(Point_r cen, real_t radius, real_t a1, real_t a2, count_t count)
+            Arc(count_t count, Point_r cen, real_t radius, real_t a1, real_t a2)
                 : natural{cen, radius, a1, a2}, count_(count)
             {}
 

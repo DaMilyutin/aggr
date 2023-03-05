@@ -93,7 +93,7 @@ namespace
 
             ras.reset();
             ras << closed(agge::elements::Vertex(agge::Point_r{1000, 500})
-                        + agge::elements::Arc(agge::Point_r{1000, 500}, 100.f, -agge::pi/2, agge::pi, 6)/agge::decorators::OrthoShift(40.f));
+                        + agge::elements::Arc(6, agge::Point_r{1000, 500}, 100.f, -agge::pi/2, agge::pi)/agge::decorators::OrthoShift(40.f));
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
