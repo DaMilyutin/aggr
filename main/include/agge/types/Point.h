@@ -58,6 +58,24 @@ namespace agge
     }
 
     template <typename CoordT>
+    inline Vector<CoordT> multiply(Vector<CoordT> const& lhs, const Vector<CoordT>& rhs)
+    {
+        Vector<CoordT> v;
+        v.x = lhs.x*rhs.x - lhs.y*rhs.y;
+        v.y = lhs.x*rhs.y + lhs.y*rhs.x;
+        return v;
+    }
+
+    template <typename CoordT>
+    inline Vector<CoordT> dotcross(Vector<CoordT> const& lhs, const Vector<CoordT>& rhs)
+    {
+        Vector<CoordT> v;
+        v.x = lhs.x*rhs.x + lhs.y*rhs.y;
+        v.y = lhs.x*rhs.y - lhs.y*rhs.x;
+        return v;
+    }
+
+    template <typename CoordT>
     inline const Point<CoordT>& operator +=(Point<CoordT>& lhs, const Vector<CoordT>& rhs)
     {
         return lhs.x += rhs.x, lhs.y += rhs.y, lhs;
