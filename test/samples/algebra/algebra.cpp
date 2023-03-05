@@ -70,13 +70,6 @@ namespace
                 platform_blender_solid_color(color::make(0, 50, 100)));
 
             ras.reset();
-            ras << closed(chain1 + chain2 + chain3);
-            ras.sort();
-
-            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-                platform_blender_solid_color(color::make(255, 255, 255)), winding<>());
-
-            ras.reset();
             ras << closed(chain4);
             ras.sort();
 
@@ -93,7 +86,7 @@ namespace
 
             ras.reset();
             ras << closed(agge::elements::Vertex(agge::Point_r{1000, 500})
-                        + agge::elements::Arc(6, agge::Point_r{1000, 500}, 100.f, -agge::pi/2, agge::pi)/agge::decorators::OrthoShift(40.f));
+                        + agge::elements::Arc(6, agge::Point_r{1000, 500}, 100.f, -agge::pi/2, agge::pi));
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
@@ -107,6 +100,14 @@ namespace
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
                 platform_blender_solid_color(color::make(255, 0, 0)), winding<>());
+
+            ras.reset();
+            ras << closed((chain1 + chain2 + chain3)/agge::decorators::OrthoShift(-20.f));
+            ras.sort();
+
+            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
+                platform_blender_solid_color(color::make(255, 255, 255)), winding<>());
+
         }
 
     private:

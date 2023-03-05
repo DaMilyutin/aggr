@@ -36,5 +36,14 @@ namespace agge
             the_ras.close_polygon();
             return the_ras;
         }
+
+        template<typename R, typename P>
+        R& operator<<(Consumer<R>& ras, Closed<P const&> const& points)
+        {
+            R& the_ras = ras._get_();
+            the_ras << start(points.under);
+            the_ras.close_polygon();
+            return the_ras;
+        }
     }
 }
