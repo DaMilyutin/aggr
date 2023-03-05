@@ -6,6 +6,10 @@
 #include <samples/common/shell.h>
 
 #include <palgebra/algebra.h>
+#include <palgebra/elements/arc.h>
+#include <palgebra/elements/curve.h>
+#include <palgebra/elements/vertex.h>
+
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -79,6 +83,33 @@ namespace
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
                 platform_blender_solid_color(color::make(255, 0, 0)), winding<>());
+
+            ras.reset();
+            ras << closed(agge::elements::Arc(agge::Point_r{500, 500}, 50.f, -agge::pi, agge::pi));
+            ras.sort();
+
+            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
+                platform_blender_solid_color(color::make(200, 0, 255)), winding<>());
+
+
+            ras.reset();
+            ras << closed(agge::elements::Vertex(agge::Point_r{1000, 500})
+                        + agge::elements::Arc(agge::Point_r{1000, 500}, 100.f, -agge::pi/2, agge::pi, 6));
+            ras.sort();
+
+            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
+                platform_blender_solid_color(color::make(255, 255, 0)), winding<>());
+
+
+            ras.reset();
+            ras << closed(agge::elements::Vertex(agge::Point_r{1000, 1200})
+                + agge::elements::Curve(agge::qbezier_interp(Point_r{900, 1000}, Point_r{1000, 800}, Point_r{1100, 1000}), 100));
+            ras.sort();
+
+            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
+                platform_blender_solid_color(color::make(255, 0, 0)), winding<>());
+
+
         }
 
     private:
