@@ -19,6 +19,27 @@ namespace agge
         T y;
     };
 
+    template<typename PV>
+    struct coord_type;
+
+    template<typename T>
+    struct coord_type<Point<T>>
+    {
+        typedef T type;
+    };
+
+    template<typename T>
+    struct coord_type<Vector<T>>
+    {
+        typedef T type;
+    };
+
+    template<typename PV>
+    using coord_type_t = typename coord_type<PV>::type;
+
+    template<typename P, typename X>
+    constexpr auto as_coord_cast(X x) { return static_cast<coord_type_t<P>>(x); }
+
     typedef Point<real_t>  Point_r;
     typedef Vector<int>    Vector_i;
     typedef Vector<real_t> Vector_r;
