@@ -6,7 +6,7 @@ namespace agge
     namespace rules
     {
         template<typename R, typename P>
-        R& operator<<(Consumer<R>& ras, PointGenerator<P> const& points)
+        R& operator<<(Sink<R>& ras, Yield<P> const& points)
         {
             R& the_ras = ras._get_();
             P const& the_points = points._get_();

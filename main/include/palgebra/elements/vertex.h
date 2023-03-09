@@ -9,7 +9,7 @@ namespace agge
         // point generators for
         //  intermediary points
 
-        class Vertex: public rules::PointGenerator<Vertex>
+        class Vertex: public rules::Yield<Vertex>
         {
         public:
             static constexpr real_t granularity = 5.0f;
@@ -18,6 +18,20 @@ namespace agge
                 : point(p)
             {}
 
+            struct const_iterator
+            {
+                Point_r const* point = 0;
+
+                const_iterator& operator++() { point = 0; return *this; }
+                Point_r const& operator*() const { return *point; }
+
+                bool operator == (const_iterator rhs) const { return point == rhs.point; }
+                bool operator != (const_iterator rhs) const { return point != rhs.point; }
+            };
+
+            const_iterator begin() const { return {&point}; }
+            const_iterator end()   const { return {0}; }
+
             Point_r point;
         };
     }
@@ -25,7 +39,7 @@ namespace agge
     namespace rules
     {
         template<typename R>
-        R& operator<<(Consumer<R>& ras, elements::Vertex const& v)
+        R& operator<<(Sink<R>& ras, elements::Vertex const& v)
         {
             R& the_ras = ras._get_();
             the_ras.line_to(v.point);
@@ -33,7 +47,7 @@ namespace agge
         }
 
         template<typename R>
-        R& operator<<(Consumer<R>& ras, rules::Start<elements::Vertex> const& v)
+        R& operator<<(Sink<R>& ras, rules::Start<elements::Vertex> const& v)
         {
             R& the_ras = ras._get_();
             the_ras.move_to(v.under.point);
@@ -41,7 +55,7 @@ namespace agge
         }
 
         template<typename R>
-        R& operator<<(Consumer<R>& ras, rules::Start<elements::Vertex const&> const& v)
+        R& operator<<(Sink<R>& ras, rules::Start<elements::Vertex const&> const& v)
         {
             R& the_ras = ras._get_();
             the_ras.move_to(v.under.point);

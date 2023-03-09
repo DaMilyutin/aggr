@@ -20,7 +20,7 @@ namespace agge
     };
 
     template<typename ACurve, typename AInterval = Interval>
-    class curve_generator: public rules::PointGenerator<curve_generator<ACurve, AInterval>>
+    class curve_generator: public rules::Yield<curve_generator<ACurve, AInterval>>
     {
     public:
         template<typename TC, typename TI>
@@ -53,7 +53,7 @@ namespace agge
         return cbezier(c, i);
     }
 
-    class arc: public rules::PointGenerator<arc>
+    class arc: public rules::Yield<arc>
     {
     public:
         arc(real_t cx, real_t cy, real_t r, real_t start, real_t end, real_t da = 0.05f);

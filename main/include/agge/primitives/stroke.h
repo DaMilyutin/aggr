@@ -9,7 +9,7 @@ namespace agge
 {
     typedef pod_vector<Point_r> points;
 
-    class stroke: public rules::PointGenerator<stroke>, vertex_sequence, noncopyable
+    class stroke: public rules::Yield<stroke>, vertex_sequence, noncopyable
     {
     public:
         struct cap;

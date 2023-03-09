@@ -5,7 +5,7 @@
 
 namespace agge
 {
-    class dash: public rules::PointGenerator<dash>, private vertex_sequence
+    class dash: public rules::Yield<dash>, private vertex_sequence
     {
     public:
         dash();

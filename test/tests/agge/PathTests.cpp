@@ -14,7 +14,7 @@ namespace agge
 	{
 		namespace
 		{
-			class passthrough_generator : public agge::rules::PointGenerator<passthrough_generator>, public mocks::path
+			class passthrough_generator : public agge::rules::Yield<passthrough_generator>, public mocks::path
 			{
 			public:
 				passthrough_generator()

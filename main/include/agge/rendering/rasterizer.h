@@ -11,7 +11,7 @@ namespace agge
 
 
 	template < typename ClipperT, typename ScalingT = scaling<typename ClipperT::coord_type> >
-	class rasterizer: public rules::Consumer<rasterizer<ClipperT, ScalingT>>, private vector_rasterizer
+	class rasterizer: public rules::Sink<rasterizer<ClipperT, ScalingT>>, private vector_rasterizer
 	{
 	public:
 		using vector_rasterizer::_1_shift;
@@ -30,6 +30,8 @@ namespace agge
         void move_to(Point_r const& p) { move_to(p.x, p.y); }
         void line_to(Point_r const& p) { line_to(p.x, p.y); }
 
+        // Sink
+        bool consume(Point_r const& p) { line_to(p.x, p.y); return true; }
 
 		void close_polygon();
 

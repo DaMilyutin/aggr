@@ -1,9 +1,7 @@
 #pragma once
 
 #include <palgebra/algebra/algebra.h>
-#include <palgebra/algebra/decorated.h>
 #include <palgebra/algebra/start.h>
-#include <palgebra/mediators/stored.h>
 #include <palgebra/mediators/Path.h>
 
 #include <palgebra/elements/Segment.h>
@@ -20,21 +18,21 @@ namespace agge
 
             real_t offset = 0.0f;
 
-            elements::Segment from(elements::Segment s, real_t length) const
+            elements::Segment operator()(elements::Segment s, real_t length) const
             {
                 real_t const scale = offset/length;
-                Vector_r const o{(s.end.y - s.start.y)*scale, -(s.end.x - s.start.x)*scale};
-                s.start += o;
-                s.end += o;
+                Vector_r const o{(s.data[1].y - s.data[0].y)*scale, -(s.data[1].x - s.data[0].x)*scale};
+                s.data[0] += o;
+                s.data[1] += o;
                 return s;
             }
 
-            elements::Segment from(elements::Segment s) const
+            elements::Segment operator()(elements::Segment s) const
             {
-                real_t const scale = offset/distance(s.start, s.end);
-                Vector_r const o{(s.end.y - s.start.y)*scale, -(s.end.x - s.start.x)*scale};
-                s.start += o;
-                s.end += o;
+                real_t const scale = offset/distance(s.data[0], s.data[1]);
+                Vector_r const o{(s.data[1].y - s.data[0].y)*scale, -(s.data[1].x - s.data[0].x)*scale};
+                s.data[0] += o;
+                s.data[1] += o;
                 return s;
             }
         };
@@ -44,7 +42,7 @@ namespace agge
     namespace rules
     {
         //template<typename R, typename E>
-        //R& operator<<(Consumer<R>& ras, rules::Decorated<rules::Decorated<P, Stored<>>
+        //R& operator<<(Sink<R>& ras, rules::Decorated<rules::Decorated<P, Stored<>>
         //                                               , decorators::OrthoShift> const& v)
         //{
         //    R& the_ras = ras._get_();
@@ -64,7 +62,7 @@ namespace agge
 
 
         template<typename R, typename P>
-        R& operator<<(Consumer<R>& ras, rules::Decorated<P, decorators::OrthoShift> const& v)
+        R& operator<<(Sink<R>& ras, rules::YieldLink<P, decorators::OrthoShift> const& v)
         {
             R& the_ras = ras._get_();
             P const& the_points = v.points;
@@ -84,7 +82,7 @@ namespace agge
         }
 
         template<typename R, typename P>
-        R& operator<<(Consumer<R>& ras, rules::Decorated<rules::Start<P> const&, decorators::OrthoShift> const& v)
+        R& operator<<(Sink<R>& ras, rules::YieldLink<rules::Start<P> const&, decorators::OrthoShift> const& v)
         {
             R& the_ras = ras._get_();
             P const& the_points = v.points;
@@ -110,7 +108,7 @@ namespace agge
         }
 
         template<typename R, typename P>
-        R& operator<<(Consumer<R>& ras, rules::Start<rules::Decorated<P, decorators::OrthoShift> const&> const& v)
+        R& operator<<(Sink<R>& ras, rules::Start<rules::YieldLink<P, decorators::OrthoShift> const&> const& v)
         {
             R& the_ras = ras._get_();
             auto const& decorator = v.under.decorator;

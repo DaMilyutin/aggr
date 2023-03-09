@@ -11,7 +11,7 @@ namespace agge
         //  intermediary points
 
         template<typename Interp>
-        class Curve: public rules::PointGenerator<Curve<Interp>>
+        class Curve: public rules::Yield<Curve<Interp>>
         {
         public:
             Curve(Interp i, count_t count)

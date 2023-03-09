@@ -12,7 +12,7 @@ namespace agge
         {
             real_t distance = 0.0f;
 
-            static Distance from(Vector_r v) { return Distance{norm(v)}; }
+            static Distance from(Vector_r const& v) { return Distance{norm(v)}; }
         };
 
         struct DistanceDirection
@@ -20,7 +20,7 @@ namespace agge
             real_t distance = 0.0f;
             real_t direction = 0.0f;
 
-            static DistanceDirection from(Vector_r v) { return DistanceDirection{norm(v), atan2(v.y, v.x)}; }
+            static DistanceDirection from(Vector_r const& v) { return DistanceDirection{norm(v), atan2(v.y, v.x)}; }
         };
 
         template<typename S, typename A>

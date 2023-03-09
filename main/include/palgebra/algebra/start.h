@@ -8,7 +8,7 @@ namespace agge
     namespace rules
     {
         template<typename E>
-        struct Start: PointGenerator<Start<E>>
+        struct Start: Yield<Start<E>>
         {
             template<typename T1>
             Start(T1&& p)
@@ -18,20 +18,19 @@ namespace agge
         };
 
         template<typename P>
-        Start<P> start(PointGenerator<P>&& p)
+        Start<P> start(Yield<P>&& p)
         {
             return {FWD(p)._get_()};
         }
 
         template<typename P>
-        Start<P const&> start(PointGenerator<P> const& p)
+        Start<P const&> start(Yield<P> const& p)
         {
             return p._get_();
         }
 
-
         template<typename R, typename P>
-        R& operator<<(Consumer<R>& ras, Start<P> const& points)
+        R& operator<<(Sink<R>& ras, Start<P> const& points)
         {
             R& the_ras = ras._get_();
             P const& the_points = points.under;
@@ -46,17 +45,17 @@ namespace agge
         }
 
         template<typename R, typename P1, typename P2>
-        R& operator<<(Consumer<R>& ras, Start<Joined<P1, P2>> const& points)
+        R& operator<<(Sink<R>& ras, Start<Joined<P1, P2>> const& points)
         {
             R& the_ras = ras._get_();
-            return the_ras << start(points.under.p1) << points.under.p2;
+            return the_ras << start(points.under.y1) << points.under.y2;
         }
 
         template<typename R, typename P1, typename P2>
-        R& operator<<(Consumer<R>& ras, Start<Joined<P1, P2> const&> const& points)
+        R& operator<<(Sink<R>& ras, Start<Joined<P1, P2> const&> const& points)
         {
             R& the_ras = ras._get_();
-            return the_ras << start(points.under.p1) << points.under.p2;
+            return the_ras << start(points.under.y1) << points.under.y2;
         }
     }
 }

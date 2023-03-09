@@ -24,8 +24,11 @@ namespace
         return r;
     }
 
-    struct Chain: agge::rules::PointGenerator<Chain>, agge::pod_vector<Point_r>
-    {};
+    struct Chain: agge::rules::Yield<Chain>, agge::pod_vector<Point_r>
+    {
+        using agge::pod_vector<Point_r>::begin;
+        using agge::pod_vector<Point_r>::end;
+    };
 
     Chain& operator+=(Chain& c, agge::Vector_r const& s)
     {
@@ -101,14 +104,14 @@ namespace
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
                 platform_blender_solid_color(color::make(255, 0, 0)), winding<>());
 
-            ras.reset();
-            ras << closed(chain1/agge::decorators::OrthoShift(40.f)
-                          + chain2/agge::decorators::OrthoShift(40.f)
-                          + chain3/agge::decorators::OrthoShift(40.f));
-            ras.sort();
+            //ras.reset();
+            //ras << closed(chain1/agge::decorators::OrthoShift(40.f)
+            //              + chain2/agge::decorators::OrthoShift(40.f)
+            //              + chain3/agge::decorators::OrthoShift(40.f));
+            //ras.sort();
 
-            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-                platform_blender_solid_color(color::make(255, 255, 255)), winding<>());
+            //ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
+            //    platform_blender_solid_color(color::make(255, 255, 255)), winding<>());
 
             ras.reset();
             ras << closed(chain1

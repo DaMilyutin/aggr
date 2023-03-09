@@ -7,7 +7,7 @@ namespace agge
     namespace rules
     {
         template<typename E>
-        struct Reversed: PointGenerator<Reversed<E>>
+        struct Reversed: Yield<Reversed<E>>
         {
             template<typename T1>
             Reversed(T1&& p)
@@ -17,19 +17,19 @@ namespace agge
         };
 
         template<typename P>
-        Reversed<P> reversed(PointGenerator<P>&& p)
+        Reversed<P> reversed(Yield<P>&& p)
         {
             return {FWD(p)._get_()};
         }
 
         template<typename P>
-        Reversed<P const&> reversed(PointGenerator<P> const& p)
+        Reversed<P const&> reversed(Yield<P> const& p)
         {
             return p._get_();
         }
 
         template<typename R, typename P>
-        R& operator<<(Consumer<R>& ras, Reversed<P> const& points)
+        R& operator<<(Sink<R>& ras, Reversed<P> const& points)
         {
             R& the_ras = ras._get_();
             P const& the_points = points.under;

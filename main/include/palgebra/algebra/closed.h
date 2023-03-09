@@ -7,7 +7,7 @@ namespace agge
     namespace rules
     {
         template<typename E>
-        struct Closed: PointGenerator<Closed<E>>
+        struct Closed: Yield<Closed<E>>
         {
             template<typename T1>
             Closed(T1&& p)
@@ -17,19 +17,19 @@ namespace agge
         };
 
         template<typename P>
-        Closed<P> closed(PointGenerator<P>&& p)
+        Closed<P> closed(Yield<P>&& p)
         {
             return {FWD(p)._get_()};
         }
 
         template<typename P>
-        Closed<P const&> closed(PointGenerator<P> const& p)
+        Closed<P const&> closed(Yield<P> const& p)
         {
             return p._get_();
         }
 
         template<typename R, typename P>
-        R& operator<<(Consumer<R>& ras, Closed<P> const& points)
+        R& operator<<(Sink<R>& ras, Closed<P> const& points)
         {
             R& the_ras = ras._get_();
             the_ras << start(points.under);
@@ -38,7 +38,7 @@ namespace agge
         }
 
         template<typename R, typename P>
-        R& operator<<(Consumer<R>& ras, Closed<P const&> const& points)
+        R& operator<<(Sink<R>& ras, Closed<P const&> const& points)
         {
             R& the_ras = ras._get_();
             the_ras << start(points.under);

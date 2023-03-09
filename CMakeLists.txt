@@ -44,6 +44,12 @@ if (NOT TARGET utfia)
 	add_subdirectory(libraries/utfia)
 endif()
 
+
+if (NOT TARGET ylems)
+    option(YLEMS_NO_TESTS "No tests for ylems" ON)
+    add_subdirectory(libraries/ylems)
+endif()
+
 add_subdirectory(main/source/agge)
 add_subdirectory(main/source/agge.text)
 if (NOT AGGE_NO_EXTENSIONS AND (NOT MSVC_VERSION OR (MSVC_VERSION GREATER_EQUAL 1600)))

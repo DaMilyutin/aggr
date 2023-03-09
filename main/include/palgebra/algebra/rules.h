@@ -1,42 +1,30 @@
 #pragma once
-
-#include <utility>
-#include <type_traits>
-
-#define FWD(a) std::forward<decltype(a)>(a)
+#include <ylems/rules.h>
+#include <ylems/categories.h>
+#include <ylems/elements/yield.h>
+#include <ylems/rules/algebra.h>
 
 namespace agge
 {
     namespace rules
     {
         template<typename E>
-        struct terminal
-        {
-            E       &  _get_()       & { return static_cast<E        &>(*this); }
-            E const &  _get_() const & { return static_cast<E const  &>(*this); }
-            E      &&  _get_()      && { return static_cast<E&&>(*this); }
-        };
+        struct terminal: ylems::rules::_terminal_<E> {};
 
-        template<typename E>
-        struct PointGenerator: terminal<E>
-        {
-            //class const_iterator;
-            //class const_sentinel;
+        template<typename Y>    using Yield = ylems::rules::Yield<terminal, Y>;
 
-            //const_iterator begin() const;
-            //const_sentinel end() const;
-        };
+        template<typename Y, typename L>
+                                using YieldLink = ylems::rules::YieldLink<terminal, Y, L>;
 
-        template<typename E>
-        struct Consumer: terminal<E> // Concept for rasterizer or points accumulator
-        {};
+        template<typename L>    using Link  = ylems::rules::Link<terminal, L>;
+        template<typename S>    using Sink  = ylems::rules::Sink<terminal, S>;
 
-        template<typename E>
-        struct Decorator: terminal<E> // Concept
-        {};
+        template<typename D>
+        struct Decorator: ylems::categories::Transform<terminal, D> {};
 
-        template<typename E>
-        struct Mediator: terminal<E> // Concept
-        {};
+        YLEMS_MELD_OPERATION(terminal, operator/)
+
+        YLEMS_MELD_RANGE_OPERATION(terminal, operator/)
     }
 }
+

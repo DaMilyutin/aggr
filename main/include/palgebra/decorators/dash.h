@@ -4,7 +4,7 @@
 
 namespace agge
 {
-    class Dash: public rules::PointGenerator<Dash>, private vertex_sequence
+    class Dash: public rules::Yield<Dash>, private vertex_sequence
     {
     public:
         Dash& dash_start(real_t offset)

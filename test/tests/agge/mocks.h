@@ -22,7 +22,7 @@ namespace agge
 				int cover;
 			};
 
-			class path: agge::rules::PointGenerator<path>
+			class path: agge::rules::Yield<path>
 			{
 			public:
 				struct Point

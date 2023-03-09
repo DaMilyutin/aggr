@@ -13,3 +13,6 @@
 [submodule "libraries/system_events"]
 	path = libraries/system_events
 	url = https://github.com/DaMilyutin/system_events.git
+[submodule "libraries/ylems"]
+	path = libraries/ylems
+	url = https://github.com/DaMilyutin/ylems.git

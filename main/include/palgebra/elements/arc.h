@@ -9,7 +9,7 @@ namespace agge
         // point generators for
         //  intermediary points
 
-        class Arc: public rules::PointGenerator<Arc>
+        class Arc: public rules::Yield<Arc>
         {
             static inline real_t optimal_step(real_t radius, real_t error)
             {
@@ -26,6 +26,9 @@ namespace agge
                 real_t  angle1;
                 real_t  angle2;
             };
+
+            Arc(Arc &&) = default;
+            Arc(Arc const&) = default;
 
             Arc(Point_r cen, real_t radius, real_t a1, real_t a2, real_t error = default_error)
                 : natural{cen, radius, a1, a2}

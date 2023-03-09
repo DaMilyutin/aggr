@@ -5,5 +5,4 @@
 #include "algebra/start.h"
 #include "algebra/join.h"
 #include "algebra/closed.h"
-#include "algebra/decorated.h"
 

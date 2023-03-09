@@ -8,7 +8,7 @@
 
 namespace agge
 {
-    class line: public rules::PointGenerator<line>
+    class line: public rules::Yield<line>
     {
     public:
         line(real_t x1, real_t y1, real_t x2, real_t y2);
@@ -23,7 +23,7 @@ namespace agge
     };
 
 
-    class rectangle: public rules::PointGenerator<rectangle>
+    class rectangle: public rules::Yield<rectangle>
     {
     public:
         rectangle(real_t x1, real_t y1, real_t x2, real_t y2);
@@ -38,7 +38,7 @@ namespace agge
     };
 
 
-    class rounded_rectangle: public rules::PointGenerator<rounded_rectangle>
+    class rounded_rectangle: public rules::Yield<rounded_rectangle>
     {
     public:
         rounded_rectangle(real_t x1, real_t y1, real_t x2, real_t y2, real_t rx, real_t ry = 0.0f);
