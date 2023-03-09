@@ -1,7 +1,7 @@
 #pragma once
 
 #include <palgebra/algebra/rules.h>
-#include <palgebra/algebra/elements.h>
+#include <palgebra/algebra/adapted.h>
 
 namespace agge
 {

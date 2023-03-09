@@ -20,7 +20,10 @@ namespace agge
         template<typename S>    using Sink  = ylems::rules::Sink<terminal, S>;
 
         template<typename D>
-        struct Decorator: ylems::categories::Transform<terminal, D> {};
+        using Transform = ylems::categories::Transform<terminal, D>;
+
+        template<typename D>
+        struct Decorator: public Transform<D> {};
 
         YLEMS_MELD_OPERATION(terminal, operator/)
 
