@@ -98,7 +98,7 @@ namespace
 
             ras.reset();
             ras << closed(agge::elements::Segment(agge::Point_r{1000, 1000}, agge::Point_r{1000, 1200})
-                + agge::elements::Curve(agge::qbezier_interp(Point_r{900, 1000}, Point_r{1000, 800}, Point_r{1100, 1000}), 100));
+                        + agge::linspace(0.f, 1.f, 100)/agge::elements::Bezier<2>(Point_r{900, 1000}, Point_r{1000, 800}, Point_r{1100, 1000}) );
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
