@@ -1,6 +1,7 @@
 #pragma once
 
 #include <palgebra/algebra/algebra.h>
+#include <palgebra/algebra/adapted.h>
 #include <palgebra/algebra/start.h>
 #include <palgebra/mediators/Path.h>
 
@@ -35,6 +36,23 @@ namespace agge
                 s.data[1] += o;
                 return s;
             }
+
+            template<size_t N>
+            elements::Segment operator()(ylems::elements::CycleBuffer<Point_r, N> const& b) const
+            {
+                elements::Segment s{b.back(1), b.back(0)};
+                return (*this)(s);
+            }
+
+            template<typename S, size_t N>
+            bool feed(rules::Sink<S>& sink, ylems::elements::CycleBuffer<Point_r, N> const& b) const
+            {
+                real_t const scale = offset/distance(b.back(1), b.back(0));
+                Vector_r const o{(b.back(0).y - b.back(1).y)*scale, -(b.back(0).x - b.back(1).x)*scale};
+                auto& the_sink = sink._get_();
+                the_sink << b.back(1) + o << b.back(0) + o;
+                return true;
+            }
         };
     }
 
@@ -46,46 +64,37 @@ namespace agge
         //                                               , decorators::OrthoShift> const& v)
         //{
         //    R& the_ras = ras._get_();
-        //    P const& the_points = v.points;
-        //    if(the_points.size() <= 1)
+        //    P const& the_gen = v.points;
+        //    if(the_gen.size() <= 1)
         //        return the_ras;
 
-        //    PathAnnotation<Distance> anno(the_points);
-        //    auto c = the_points.begin();
+        //    PathAnnotation<Distance> anno(the_gen);
+        //    auto c = the_gen.begin();
         //    auto n = c+1;
-        //    auto e = the_points.end();
+        //    auto e = the_gen.end();
         //    auto l = anno.data.begin() + 1;
         //    for(; n != e; ++c, ++n, ++l)
         //        the_ras << v.decorator.from(elements::Segment{*c, *n}, *l);
         //    return the_ras;
         //}
 
-
         template<typename R, typename P>
-        R& operator<<(Sink<R>& ras, rules::YieldLink<P, decorators::OrthoShift> const& v)
+        R& operator<<(Sink<R>& ras, YieldLink<P const&, decorators::OrthoShift const&> const& v)
         {
             R& the_ras = ras._get_();
-            P const& the_points = v.points;
-
-            auto b = the_points.begin();
-            auto e = the_points.end();
-            if(b == e)
-                return the_ras;
-            Point_r p;
-            Point_r c = *b;
-            for(p = c, ++b; b != e; p = c, ++b)
-            {
-                c = *b;
-                the_ras << v.decorator.from(elements::Segment{p, c});
-            }
+            P const& the_gen = v.yield;
+            auto b = the_gen.begin();
+            auto e = the_gen.end();
+            for(;b != e; ++b)
+                the_ras << v.link(*b);
             return the_ras;
         }
 
         template<typename R, typename P>
-        R& operator<<(Sink<R>& ras, rules::YieldLink<rules::Start<P> const&, decorators::OrthoShift> const& v)
+        R& operator<<(Sink<R>& ras, YieldLink<rules::Start<P> const&, decorators::OrthoShift const&> const& v)
         {
             R& the_ras = ras._get_();
-            P const& the_points = v.points;
+            P const& the_points = v.yield.under;
 
             auto b = the_points.begin();
             auto e = the_points.end();
@@ -97,22 +106,22 @@ namespace agge
             if(b == e)
                 return the_ras;
             c = *b;
-            the_ras << start(v.decorator.from(elements::Segment{p, c}));
+            the_ras << start(v.link(elements::Segment{p, c}));
             for(p = c, ++b; b != e; p = c, ++b)
             {
                 c = *b;
-                the_ras << v.decorator.from(elements::Segment{p, c});
+                the_ras << v.link(elements::Segment{p, c});
             }
 
             return the_ras;
         }
 
         template<typename R, typename P>
-        R& operator<<(Sink<R>& ras, rules::Start<rules::YieldLink<P, decorators::OrthoShift> const&> const& v)
+        R& operator<<(Sink<R>& ras, rules::Start<rules::YieldLink<P const&, decorators::OrthoShift const&> const&> const& v)
         {
             R& the_ras = ras._get_();
-            auto const& decorator = v.under.decorator;
-            P const& the_points = v.under.points;
+            auto const& decorator = v.under.link;
+            P const& the_points = v.under.yield;
 
             auto b = the_points.begin();
             auto e = the_points.end();
@@ -125,14 +134,28 @@ namespace agge
                 return the_ras;
             p = c;
             c = *b;
-            the_ras << start(decorator.from(elements::Segment{p, c}));
+            the_ras << start(decorator(elements::Segment{p, c}));
             for(p = c, ++b; b != e; p = c, ++b)
             {
                 c = *b;
-                the_ras << decorator.from(elements::Segment{p, c});
+                the_ras << decorator(elements::Segment{p, c});
             }
 
             return the_ras;
+        }
+
+        template<typename R, typename P>
+        R& operator<<(Sink<R>& ras, rules::Start<rules::YieldLink<P const&, decorators::OrthoShift> const&> v)
+        {
+            auto c = v.under.as_const();
+            return ras << start(c);
+        }
+
+
+        template<typename R, typename P>
+        R& operator<<(Sink<R>& ras, YieldLink<P, decorators::OrthoShift> const& v)
+        {
+            return ras << v.as_const();
         }
 
 

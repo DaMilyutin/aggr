@@ -104,10 +104,30 @@ namespace
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
                 platform_blender_solid_color(color::make(255, 0, 0)), winding<>());
 
+
+            ras.reset();
+
+            chain1/agge::decorators::OrthoShift(40.f);
+
+            ras << closed((chain1 + chain2 + chain3)/agge::memoize<agge::Point_r, 3>()
+                            /agge::drop(1)
+                            /agge::decorators::OrthoShift(40.f));
+            ras.sort();
+
+            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
+                platform_blender_solid_color(color::make(155, 155, 155)), winding<>());
+
             //ras.reset();
-            //ras << closed(chain1/agge::decorators::OrthoShift(40.f)
-            //              + chain2/agge::decorators::OrthoShift(40.f)
-            //              + chain3/agge::decorators::OrthoShift(40.f));
+
+            //ras << closed(chain1/agge::memoize<agge::Point_r, 3>()
+            //                    /agge::drop(1)
+            //                    /agge::decorators::OrthoShift(40.f)  //
+            //            + chain2/agge::memoize<agge::Point_r, 3>()
+            //                    /agge::drop(1)
+            //                    /agge::decorators::OrthoShift(40.f)
+            //            + chain3/agge::memoize<agge::Point_r, 3>()
+            //                    /agge::drop(1)
+            //                    /agge::decorators::OrthoShift(40.f));
             //ras.sort();
 
             //ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,

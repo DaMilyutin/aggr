@@ -15,22 +15,6 @@ namespace agge
                 : under(FWD(p))
             {}
             E under;
-
-            template<typename R>
-            bool send_to(Sink<R>& ras) const
-            {
-                R& the_ras = ras._get_();
-                E const& the_points = under;
-                auto b = the_points.begin();
-                auto e = the_points.end();
-                if(b == e)
-                    return false;
-                the_ras.move_to(*b);
-                for(++b; b != e; ++b)
-                    the_ras.line_to(*b);
-                return true;
-            }
-
         };
 
         template<typename P>
@@ -45,30 +29,47 @@ namespace agge
             return p._get_();
         }
 
+        Start<Point_r const&> start(Point_r const& p)
+        {
+            return {p};
+        }
+
+        template<typename E, typename R>
+        bool starting(E const& the_points, Sink<R>& ras)
+        {
+            R& the_ras = ras._get_();
+            auto b = the_points.begin();
+            auto e = the_points.end();
+            if(b == e)
+                return false;
+            the_ras << start(*b);
+            for(++b; b != e; ++b)
+                the_ras << *b;
+            return true;
+        }
+
+        template<typename R, typename P1, typename P2>
+        bool starting(Joined<P1, P2> const& points, Sink<R>& ras)
+        {
+            if(!starting(points.y1, ras))        // if we couldn't start on y1
+                return starting(points.y2, ras); //   we just try to start on y2
+            ras << points.y2; // if we started on y1 we just continue on y2
+            return true;
+        }
+
         template<typename R, typename P>
         R& operator<<(Sink<R>& ras, Start<P> const& points)
         {
-            points.send_to(ras);
+            starting(points.under, ras);
             return ras._get_();
         }
 
-        template<typename R, typename P1, typename P2>
-        R& operator<<(Sink<R>& ras, Start<Joined<P1, P2> const&> const& points)
-        {
-            if(start(points.under.y1).send_to(ras))     // if we started on y1
-                return ras << points.under.y2;          //   we just continue on y2
-            else                                        // if we couldn't start on y1
-                return ras << start(points.under.y2);   //   we just try to start on y2
-        }
-
-        template<typename R, typename P1, typename P2>
-        R& operator<<(Sink<R>& ras, Start<Joined<P1, P2>> const& points)
+        template<typename R>
+        R& operator<<(Sink<R>& ras, Start<Point_r const&> const& p)
         {
             R& the_ras = ras._get_();
-            auto const& the_points = points.under;
-            return the_ras << start(the_points);
+            the_ras.move_to(p.under);
+            return ras._get_();
         }
-
-
     }
 }
