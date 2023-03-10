@@ -98,23 +98,23 @@ namespace
 
             ras.reset();
             ras << closed(agge::elements::Segment(agge::Point_r{1000, 1000}, agge::Point_r{1000, 1200})
-                        + agge::linspace(0.f, 1.f, 100)/agge::elements::Bezier<2>(Point_r{900, 1000}, Point_r{1000, 800}, Point_r{1100, 1000}) );
+                        + agge::linspace(-0.5f, 1.f, 100)/agge::elements::Bezier<2>(Point_r{900, 1000}, Point_r{1000, 800}, Point_r{1100, 1000}) );
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
                 platform_blender_solid_color(color::make(255, 0, 0)), winding<>());
 
 
-            ras.reset();
+            //ras.reset();
 
-            ras << closed(chain1 + chain2 + chain3)/agge::memoize<agge::Point_r, 3>()
-                            /agge::drop(1)
-                            /agge::decorators::OrthoShift(40.f);
-            //ras.close_polygon();
-            ras.sort();
+            //ras << closed(chain1 + chain2 + chain3)/agge::memoize<agge::Point_r, 3>()
+            //                /agge::drop(1)
+            //                /agge::decorators::OrthoShift(40.f);
+            ////ras.close_polygon();
+            //ras.sort();
 
-            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-                platform_blender_solid_color(color::make(155, 155, 155)), winding<>());
+            //ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
+            //    platform_blender_solid_color(color::make(155, 155, 155)), winding<>());
 
             //ras.reset();
 
