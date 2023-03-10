@@ -23,6 +23,8 @@ namespace agge
 
         template<typename    Y>          auto yield(Y&& y) { return ylems::elements::yield<terminal>(FWD(y)); }
         template<typename... T>          auto zip(T&&... f) { return ylems::elements::zip<terminal>(FWD(f)...); }
+        template<typename    Y>          auto as_range(Y&& y) { return ylems::elements::as_range<terminal>(FWD(y)); }
+        template<typename B, typename E> auto as_range(B b, E e) { return ylems::elements::as_range<terminal>(b, e); }
 
         template<typename F>             auto filter(F&& f) { return ylems::elements::filter<terminal>(FWD(f)); }
         template<typename I>             auto take(I i) { return ylems::elements::take<terminal>(i); }
@@ -43,6 +45,7 @@ namespace agge
     using rules::yield;
     using rules::zip;
     using rules::join;
+    using rules::as_range;
 
     using rules::filter;
     using rules::take;
@@ -52,5 +55,4 @@ namespace agge
     using rules::transform_or;
 
     using rules::memoize;
-
 }
