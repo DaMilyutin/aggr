@@ -44,3 +44,20 @@ namespace agge
 
     }
 }
+
+namespace ylems
+{
+    namespace rules
+    {
+        template<typename P, typename S>
+        struct Transfuser<agge::rules::Closed<P>, S>
+        {
+            static bool transfuse(agge::rules::Closed<P> const& points, S& ras)
+            {
+                std::optional<agge::Point_r> start = agge::rules::starting(points.under, ras);
+                if(start) ras.consume(*start);
+                return true;
+            }
+        };
+    }
+}
