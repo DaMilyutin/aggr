@@ -50,8 +50,8 @@ namespace agge
                 real_t const scale = offset/distance(b.back(1), b.back(0));
                 Vector_r const o{(b.back(0).y - b.back(1).y)*scale, -(b.back(0).x - b.back(1).x)*scale};
                 auto& the_sink = sink._get_();
-                the_sink << b.back(1) + o << b.back(0) + o;
-                return true;
+                return the_sink.consume(b.back(1) + o)
+                    && the_sink.consume(b.back(0) + o);
             }
         };
     }
