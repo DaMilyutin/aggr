@@ -34,12 +34,13 @@ namespace agge
             return {p._get_()};
         }
 
-        template<typename P, typename S>
-        bool transfuse(Closed<P> const& points, S& the_ras)
+        template<typename R, typename P>
+        R& operator<<(Sink<R>& ras, Closed<P> const& points)
         {
-            std::optional<Point_r> s = starting(points.under, the_ras);
-            if(s) the_ras.consume(*s);
-            return true;
+            auto start = starting(points.under, ras);
+            if(start) ras._get_().consume(*start);
+            return ras._get_();
         }
+
     }
 }
