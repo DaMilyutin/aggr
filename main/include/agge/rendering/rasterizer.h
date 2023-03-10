@@ -31,8 +31,8 @@ namespace agge
         void line_to(Point_r const& p) { line_to(p.x, p.y); }
 
         // Sink
+        rasterizer& operator<<(Point_r const& p) { line_to(p.x, p.y); return *this; }
         bool consume(Point_r const& p) { line_to(p.x, p.y); return true; }
-
 		void close_polygon();
 
 		void append(const rasterizer &other, int dx, int dy);
