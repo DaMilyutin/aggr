@@ -11,7 +11,7 @@ namespace agge
 {
     namespace decorators
     {
-        struct OrthoShift: rules::Decorator<OrthoShift>
+        struct OrthoShift: rules::TransformOr<OrthoShift>
         {
             OrthoShift(real_t off)
                 : offset(off)
@@ -19,40 +19,61 @@ namespace agge
 
             real_t offset = 0.0f;
 
-            elements::Segment operator()(elements::Segment s, real_t length) const
+            //elements::Segment operator()(elements::Segment s, real_t length) const
+            //{
+            //    real_t const scale = offset/length;
+            //    Vector_r const o{(s.data[1].y - s.data[0].y)*scale, -(s.data[1].x - s.data[0].x)*scale};
+            //    s.data[0] += o;
+            //    s.data[1] += o;
+            //    return s;
+            //}
+
+            //elements::Segment operator()(elements::Segment s) const
+            //{
+            //    real_t const scale = offset/distance(s.data[0], s.data[1]);
+            //    Vector_r const o{(s.data[1].y - s.data[0].y)*scale, -(s.data[1].x - s.data[0].x)*scale};
+            //    s.data[0] += o;
+            //    s.data[1] += o;
+            //    return s;
+            //}
+
+            //template<size_t N>
+            //elements::Segment operator()(ylems::elements::CycleBuffer<Point_r, N> const& b) const
+            //{
+            //    elements::Segment s{b.back(1), b.back(0)};
+            //    return (*this)(s);
+            //}
+
+            template<typename S>
+            bool feed(S& the_sink, Point_r const& p) const
             {
-                real_t const scale = offset/length;
-                Vector_r const o{(s.data[1].y - s.data[0].y)*scale, -(s.data[1].x - s.data[0].x)*scale};
-                s.data[0] += o;
-                s.data[1] += o;
-                return s;
+                buffer.push_back(p);
+                if(buffer.size() < 2)
+                    return false;
+                real_t const scale = offset/distance(buffer.back(1), buffer.back(0));
+                Vector_r const o{(buffer.back(0).y - buffer.back(1).y)*scale, -(buffer.back(0).x - buffer.back(1).x)*scale};
+                if(start)
+                {
+                    start = false;
+                    return the_sink.consume(agge::rules::start(buffer.back(1) + o))
+                        && the_sink.consume(buffer.back(0) + o);
+                }
+                return the_sink.consume(buffer.back(1) + o)
+                    && the_sink.consume(buffer.back(0) + o);
             }
 
-            elements::Segment operator()(elements::Segment s) const
+            template<typename S>
+            bool feed(S&, rules::Start<Point_r const&> const& p) const
             {
-                real_t const scale = offset/distance(s.data[0], s.data[1]);
-                Vector_r const o{(s.data[1].y - s.data[0].y)*scale, -(s.data[1].x - s.data[0].x)*scale};
-                s.data[0] += o;
-                s.data[1] += o;
-                return s;
+                buffer.clear();
+                buffer.push_back(p.under);
+                start = true;
+                return true;
             }
 
-            template<size_t N>
-            elements::Segment operator()(ylems::elements::CycleBuffer<Point_r, N> const& b) const
-            {
-                elements::Segment s{b.back(1), b.back(0)};
-                return (*this)(s);
-            }
 
-            template<typename S, size_t N>
-            bool feed(rules::Sink<S>& sink, ylems::elements::CycleBuffer<Point_r, N> const& b) const
-            {
-                real_t const scale = offset/distance(b.back(1), b.back(0));
-                Vector_r const o{(b.back(0).y - b.back(1).y)*scale, -(b.back(0).x - b.back(1).x)*scale};
-                auto& the_sink = sink._get_();
-                return the_sink.consume(b.back(1) + o)
-                    && the_sink.consume(b.back(0) + o);
-            }
+            ylems::elements::CycleBuffer<Point_r, 2> mutable buffer;
+            bool                                     mutable start = false;
         };
     }
 
