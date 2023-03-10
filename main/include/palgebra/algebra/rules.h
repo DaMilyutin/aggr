@@ -23,6 +23,9 @@ namespace agge
         using Transform = ylems::categories::Transform<terminal, D>;
 
         template<typename D>
+        using TransformOr = ylems::categories::TransformOr<terminal, D>;
+
+        template<typename D>
         struct Decorator: public Transform<D> {};
 
         YLEMS_MELD_OPERATION(terminal, operator/)
