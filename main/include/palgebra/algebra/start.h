@@ -8,14 +8,14 @@ namespace agge
 {
     namespace rules
     {
-        template<typename E>
-        struct Start: Yield<Start<E>>
+        template<typename P>
+        struct Start: Yield<Start<P>>
         {
-            template<typename T1>
-            Start(T1&& p)
+            template<typename T>
+            Start(T&& p)
                 : under(FWD(p))
             {}
-            E under;
+            P under;
         };
 
         template<typename P>
@@ -36,14 +36,14 @@ namespace agge
         }
 
         template<typename L, typename S>
-        Point_r starting(Point_r const& point, Sink<LinkSink<L, S>>& ls)
+        Point_r const& starting(Point_r const& point, Sink<LinkSink<L, S>>& ls)
         {
             ls._get_().consume(point);
             return point;
         }
 
         template<typename R>
-        Point_r starting(Point_r const& point, Sink<R>& ras)
+        Point_r const& starting(Point_r const& point, Sink<R>& ras)
         {
             ras._get_().move_to(point);
             return point;
@@ -58,9 +58,10 @@ namespace agge
             std::optional<Point_r> ret;
             if(b == e)
                 return ret;
-            ret = starting(*b, ras);
-            for(++b; b != e; ++b)
-                the_ras.consume(*b);
+            ret = *b;
+            the_ras.consume( start(*ret) );
+            ++b;
+            transfuse(as_range(b, e), the_ras);
             return ret;
         }
 
