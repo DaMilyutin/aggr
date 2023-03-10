@@ -30,12 +30,5 @@ namespace agge
         {
             return {p1._get_(), p2._get_()};
         }
-
-        template<typename R, typename P1, typename P2>
-        R& operator<<(Sink<R>& ras, Joined<P1, P2> const& points)
-        {
-            R& the_ras = ras._get_();
-            return the_ras << points.p1 << points.p2;
-        }
     }
 }

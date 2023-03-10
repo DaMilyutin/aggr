@@ -2,6 +2,7 @@
 
 #include <palgebra/algebra/rules.h>
 #include <palgebra/algebra/join.h>
+#include <optional>
 
 namespace agge
 {
@@ -34,27 +35,43 @@ namespace agge
             return {p};
         }
 
+        template<typename L, typename S>
+        Point_r starting(Point_r const& point, Sink<LinkSink<L, S>>& ls)
+        {
+            ls._get_().consume(point);
+            return point;
+        }
+
+        template<typename R>
+        Point_r starting(Point_r const& point, Sink<R>& ras)
+        {
+            ras._get_().move_to(point);
+            return point;
+        }
+
         template<typename E, typename R>
-        bool starting(E const& the_points, Sink<R>& ras)
+        std::optional<Point_r> starting(E const& the_points, Sink<R>& ras)
         {
             R& the_ras = ras._get_();
             auto b = the_points.begin();
             auto e = the_points.end();
+            std::optional<Point_r> ret;
             if(b == e)
-                return false;
-            the_ras << start(*b);
+                return ret;
+            ret = starting(*b, ras);
             for(++b; b != e; ++b)
-                the_ras << *b;
-            return true;
+                the_ras.consume(*b);
+            return ret;
         }
 
         template<typename R, typename P1, typename P2>
-        bool starting(Joined<P1, P2> const& points, Sink<R>& ras)
+        std::optional<Point_r> starting(Joined<P1, P2> const& points, Sink<R>& ras)
         {
-            if(!starting(points.y1, ras))        // if we couldn't start on y1
+            std::optional<Point_r> ret = starting(points.y1, ras);
+            if(!ret)        // if we couldn't start on y1
                 return starting(points.y2, ras); //   we just try to start on y2
             ras << points.y2; // if we started on y1 we just continue on y2
-            return true;
+            return ret;
         }
 
         template<typename R, typename P>
@@ -69,7 +86,7 @@ namespace agge
         {
             R& the_ras = ras._get_();
             the_ras.move_to(p.under);
-            return ras._get_();
+            return the_ras;
         }
     }
 }

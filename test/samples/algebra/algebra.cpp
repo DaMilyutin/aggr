@@ -107,11 +107,10 @@ namespace
 
             ras.reset();
 
-            chain1/agge::decorators::OrthoShift(40.f);
-
-            ras << closed((chain1 + chain2 + chain3)/agge::memoize<agge::Point_r, 3>()
+            ras << closed(chain1 + chain2 + chain3)/agge::memoize<agge::Point_r, 3>()
                             /agge::drop(1)
-                            /agge::decorators::OrthoShift(40.f));
+                            /agge::decorators::OrthoShift(40.f);
+            //ras.close_polygon();
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,

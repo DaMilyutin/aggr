@@ -78,85 +78,86 @@ namespace agge
         //    return the_ras;
         //}
 
-        template<typename R, typename P>
-        R& operator<<(Sink<R>& ras, YieldLink<P const&, decorators::OrthoShift const&> const& v)
-        {
-            R& the_ras = ras._get_();
-            P const& the_gen = v.yield;
-            auto b = the_gen.begin();
-            auto e = the_gen.end();
-            for(;b != e; ++b)
-                the_ras << v.link(*b);
-            return the_ras;
-        }
+        //template<typename R, typename P>
+        //R& operator<<(Sink<R>& ras, YieldLink<P const&, decorators::OrthoShift const&> const& v)
+        //{
+        //    R& the_ras = ras._get_();
+        //    P const& the_gen = v.yield;
+        //    auto b = the_gen.begin();
+        //    auto e = the_gen.end();
+        //    for(;b != e; ++b)
+        //        the_ras << v.link(*b);
+        //    return the_ras;
+        //}
 
-        template<typename R, typename P>
-        R& operator<<(Sink<R>& ras, YieldLink<rules::Start<P> const&, decorators::OrthoShift const&> const& v)
-        {
-            R& the_ras = ras._get_();
-            P const& the_points = v.yield.under;
+        //template<typename R, typename P>
+        //R& operator<<(Sink<R>& ras, YieldLink<rules::Start<P> const&, decorators::OrthoShift const&> const& v)
+        //{
+        //    R& the_ras = ras._get_();
+        //    P const& the_points = v.yield.under;
 
-            auto b = the_points.begin();
-            auto e = the_points.end();
-            if(b == e)
-                return the_ras;
-            Point_r p;
-            Point_r c = *b;
-            ++b;
-            if(b == e)
-                return the_ras;
-            c = *b;
-            the_ras << start(v.link(elements::Segment{p, c}));
-            for(p = c, ++b; b != e; p = c, ++b)
-            {
-                c = *b;
-                the_ras << v.link(elements::Segment{p, c});
-            }
+        //    auto b = the_points.begin();
+        //    auto e = the_points.end();
+        //    if(b == e)
+        //        return the_ras;
+        //    Point_r p;
+        //    Point_r c = *b;
+        //    ++b;
+        //    if(b == e)
+        //        return the_ras;
+        //    c = *b;
+        //    the_ras << start(v.link(elements::Segment{p, c}));
+        //    for(p = c, ++b; b != e; p = c, ++b)
+        //    {
+        //        c = *b;
+        //        the_ras << v.link(elements::Segment{p, c});
+        //    }
 
-            return the_ras;
-        }
+        //    return the_ras;
+        //}
 
-        template<typename R, typename P>
-        R& operator<<(Sink<R>& ras, rules::Start<rules::YieldLink<P const&, decorators::OrthoShift const&> const&> const& v)
-        {
-            R& the_ras = ras._get_();
-            auto const& decorator = v.under.link;
-            P const& the_points = v.under.yield;
+        //template<typename R, typename P>
+        //R& operator<<(Sink<R>& ras, rules::Start<rules::YieldLink<P const&, decorators::OrthoShift const&> const&> const& v)
+        //{
+        //    R& the_ras = ras._get_();
+        //    auto const& decorator = v.under.link;
+        //    P const& the_points = v.under.yield;
 
-            auto b = the_points.begin();
-            auto e = the_points.end();
-            if(b == e)
-                return the_ras;
-            Point_r p;
-            Point_r c = *b;
-            ++b;
-            if(b == e)
-                return the_ras;
-            p = c;
-            c = *b;
-            the_ras << start(decorator(elements::Segment{p, c}));
-            for(p = c, ++b; b != e; p = c, ++b)
-            {
-                c = *b;
-                the_ras << decorator(elements::Segment{p, c});
-            }
+        //    auto b = the_points.begin();
+        //    auto e = the_points.end();
+        //    if(b == e)
+        //        return the_ras;
+        //    Point_r p;
+        //    Point_r c = *b;
+        //    ++b;
+        //    if(b == e)
+        //        return the_ras;
+        //    p = c;
+        //    c = *b;
+        //    the_ras << start(decorator(elements::Segment{p, c}));
+        //    for(p = c, ++b; b != e; p = c, ++b)
+        //    {
+        //        c = *b;
+        //        the_ras << decorator(elements::Segment{p, c});
+        //    }
 
-            return the_ras;
-        }
+        //    return the_ras;
+        //}
 
-        template<typename R, typename P>
-        R& operator<<(Sink<R>& ras, rules::Start<rules::YieldLink<P const&, decorators::OrthoShift> const&> v)
-        {
-            auto c = v.under.as_const();
-            return ras << start(c);
-        }
+        //template<typename R, typename P>
+        //R& operator<<(Sink<R>& ras, rules::Start<rules::YieldLink<P const&, decorators::OrthoShift> const&> v)
+        //{
+        //    auto c = v.under.as_const();
+        //    return ras << start(c);
+        //}
 
 
-        template<typename R, typename P>
-        R& operator<<(Sink<R>& ras, YieldLink<P, decorators::OrthoShift> const& v)
-        {
-            return ras << v.as_const();
-        }
+        //template<typename R, typename P>
+        //R& operator<<(Sink<R>& ras, YieldLink<P, decorators::OrthoShift> const& v)
+        //{
+        //    auto const& c = v.as_const();
+        //    return ras << c;
+        //}
 
 
     }

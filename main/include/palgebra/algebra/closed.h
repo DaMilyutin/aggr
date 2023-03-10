@@ -1,6 +1,8 @@
 #pragma once
 
 #include <palgebra/algebra/algebra.h>
+#include <palgebra/algebra/start.h>
+#include <palgebra/elements/Vertex.h>
 
 namespace agge
 {
@@ -14,6 +16,10 @@ namespace agge
                 : under(FWD(p))
             {}
             E under;
+
+            // stub
+            auto begin() const { return std::begin(under); }
+            auto end()   const { return std::end(under); }
         };
 
         template<typename P>
@@ -25,25 +31,15 @@ namespace agge
         template<typename P>
         Closed<P const&> closed(Yield<P> const& p)
         {
-            return p._get_();
+            return {p._get_()};
         }
 
-        template<typename R, typename P>
-        R& operator<<(Sink<R>& ras, Closed<P> const& points)
+        template<typename P, typename S>
+        bool transfuse(Closed<P> const& points, S& the_ras)
         {
-            R& the_ras = ras._get_();
-            the_ras << start(points.under);
-            the_ras.close_polygon();
-            return the_ras;
-        }
-
-        template<typename R, typename P>
-        R& operator<<(Sink<R>& ras, Closed<P const&> const& points)
-        {
-            R& the_ras = ras._get_();
-            the_ras << start(points.under);
-            the_ras.close_polygon();
-            return the_ras;
+            std::optional<Point_r> s = starting(points.under, the_ras);
+            if(s) the_ras.consume(*s);
+            return true;
         }
     }
 }

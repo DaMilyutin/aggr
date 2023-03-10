@@ -31,6 +31,13 @@ namespace agge
 
             Point_r point;
         };
+
+        template<typename S>
+        bool transfuse(Vertex const& v, S& the_ras)
+        {
+            the_ras << v.point;
+            return true;
+        }
     }
 
     namespace rules
@@ -39,8 +46,22 @@ namespace agge
         R& operator<<(Sink<R>& ras, elements::Vertex const& v)
         {
             R& the_ras = ras._get_();
-            the_ras.line_to(v.point);
+            the_ras.consume(v.point);
             return the_ras;
+        }
+
+        template<typename S>
+        bool transfuse(rules::Start<elements::Vertex const&> const& v, S& the_ras)
+        {
+            the_ras.move_to(v.under.point);
+            return true;
+        }
+
+        template<typename S>
+        bool transfuse(rules::Start<elements::Vertex> const& v, S& the_ras)
+        {
+            the_ras.move_to(v.under.point);
+            return true;
         }
 
         template<typename R>

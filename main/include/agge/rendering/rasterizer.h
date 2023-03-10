@@ -9,6 +9,15 @@ namespace agge
 	template <typename T>
 	struct scaling;
 
+    namespace rules
+    {
+        template<typename E>
+        struct Start;
+
+        template<> struct Start<Point_r>        { Point_r under; };
+        template<> struct Start<Point_r const&> { Point_r const& under; };
+    }
+
 
 	template < typename ClipperT, typename ScalingT = scaling<typename ClipperT::coord_type> >
 	class rasterizer: public rules::Sink<rasterizer<ClipperT, ScalingT>>, private vector_rasterizer
@@ -33,6 +42,10 @@ namespace agge
         // Sink
         rasterizer& operator<<(Point_r const& p) { line_to(p.x, p.y); return *this; }
         bool consume(Point_r const& p) { line_to(p.x, p.y); return true; }
+        bool consume(rules::Start<Point_r> const& p) { move_to(p.under.x, p.under.y); return true; }
+        bool consume(rules::Start<Point_r const&> const& p) { move_to(p.under.x, p.under.y); return true; }
+
+
 		void close_polygon();
 
 		void append(const rasterizer &other, int dx, int dy);
