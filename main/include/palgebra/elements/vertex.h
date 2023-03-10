@@ -6,9 +6,6 @@ namespace agge
 {
     namespace elements
     {
-        // point generators for
-        //  intermediary points
-
         class Vertex: public rules::Yield<Vertex>
         {
         public:
