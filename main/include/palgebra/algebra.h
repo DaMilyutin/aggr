@@ -6,3 +6,5 @@
 #include "algebra/join.h"
 #include "algebra/closed.h"
 
+#include "algorithms/segments.h"
+
