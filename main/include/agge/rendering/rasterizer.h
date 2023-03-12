@@ -20,7 +20,7 @@ namespace agge
 
 
 	template < typename ClipperT, typename ScalingT = scaling<typename ClipperT::coord_type> >
-	class rasterizer: public rules::Sink<rasterizer<ClipperT, ScalingT>>, private vector_rasterizer
+	class rasterizer: private vector_rasterizer
 	{
 	public:
 		using vector_rasterizer::_1_shift;
@@ -38,13 +38,6 @@ namespace agge
 
         void move_to(Point_r const& p) { move_to(p.x, p.y); }
         void line_to(Point_r const& p) { line_to(p.x, p.y); }
-
-        // Sink
-        rasterizer& operator<<(Point_r const& p) { line_to(p.x, p.y); return *this; }
-        bool consume(Point_r const& p) { line_to(p.x, p.y); return true; }
-        bool consume(rules::Start<Point_r> const& p) { move_to(p.under.x, p.under.y); return true; }
-        bool consume(rules::Start<Point_r const&> const& p) { move_to(p.under.x, p.under.y); return true; }
-
 
 		void close_polygon();
 
@@ -70,6 +63,41 @@ namespace agge
 	private:
 		friend ClipperT;
 	};
+
+    struct MoveToken{};
+
+    template<typename R>
+    class Rasterizer: public rules::Sink<Rasterizer<R>>
+    {
+    public:
+        Rasterizer(R& u): under(u) {}
+
+        void reset() { move_ = true; under.reset(); }
+
+        // Sink
+        Rasterizer& operator<<(Point_r const& p) { consume(p); return *this; }
+        Rasterizer& operator<<(MoveToken ) { move_ = true; return *this; }
+
+        Rasterizer& operator<<(rules::Start<Point_r> const& p)        { under.move_to(p.under); move_ = false;  return *this; }
+        Rasterizer& operator<<(rules::Start<Point_r const&> const& p) { under.move_to(p.under); move_ = false;  return *this; }
+
+        bool consume(Point_r const& p)
+        {
+            if(move_) { under.move_to(p); move_ = false; }
+            else { under.line_to(p); }
+            return true;
+        }
+        bool consume(rules::Start<Point_r> const& p) { under.move_to(p.under.x, p.under.y); move_ = false; return true; }
+        bool consume(rules::Start<Point_r const&> const& p) { under.move_to(p.under.x, p.under.y); move_ = false; return true; }
+
+        void close_polygon() { under.close_polygon(); }
+    private:
+        R&   under;
+        bool move_ = true;
+    };
+
+    template<typename R>
+    Rasterizer<R> wrap_rasterizer(R& ras) { return {ras}; }
 
 
 

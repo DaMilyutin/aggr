@@ -49,31 +49,14 @@ namespace agge
             {
                 buffer.push_back(p);
                 if(buffer.size() < 2)
-                    return false;
+                    return true;
                 real_t const scale = offset/distance(buffer.back(1), buffer.back(0));
                 Vector_r const o{(buffer.back(0).y - buffer.back(1).y)*scale, -(buffer.back(0).x - buffer.back(1).x)*scale};
-                if(start)
-                {
-                    start = false;
-                    return the_sink.consume(agge::rules::start(buffer.back(1) + o))
-                        && the_sink.consume(buffer.back(0) + o);
-                }
                 return the_sink.consume(buffer.back(1) + o)
                     && the_sink.consume(buffer.back(0) + o);
             }
 
-            template<typename S>
-            bool feed(S&, rules::Start<Point_r const&> const& p) const
-            {
-                buffer.clear();
-                buffer.push_back(p.under);
-                start = true;
-                return true;
-            }
-
-
             ylems::elements::CycleBuffer<Point_r, 2> mutable buffer;
-            bool                                     mutable start = false;
         };
     }
 

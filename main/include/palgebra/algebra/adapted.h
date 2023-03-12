@@ -25,6 +25,10 @@ namespace agge
         template<typename... T>          auto zip(T&&... f) { return ylems::elements::zip<terminal>(FWD(f)...); }
         template<typename    Y>          auto as_range(Y&& y) { return ylems::elements::as_range<terminal>(FWD(y)); }
         template<typename B, typename E> auto as_range(B b, E e) { return ylems::elements::as_range<terminal>(b, e); }
+        //template<typename    Y>             auto cycle(Y&& y) { return ylems::elements::cycle<terminal>(FWD(y)); }
+        //template<typename    Y, typename S> auto cycle(Y&& y, S&& s) { return ylems::elements::cycle<terminal>(FWD(y), FWD(s)); }
+        template<size_t N, typename Y>      auto cycle(Y&& y)        { return ylems::elements::cycle<terminal, N>(FWD(y)); }
+
 
         template<typename F>             auto filter(F&& f) { return ylems::elements::filter<terminal>(FWD(f)); }
         template<typename I>             auto take(I i) { return ylems::elements::take<terminal>(i); }
@@ -41,6 +45,7 @@ namespace agge
     using rules::iota;
     using rules::linspace;
     using rules::range;
+    using rules::cycle;
 
     using rules::yield;
     using rules::zip;

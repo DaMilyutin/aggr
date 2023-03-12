@@ -71,24 +71,26 @@ namespace
         {
             fill(surface, mkrect<int>(0, 0, surface.width(), surface.height()),
                 platform_blender_solid_color(color::make(0, 50, 100)));
+            auto wras = wrap_rasterizer(ras);
 
-            ras.reset();
-            ras << closed(chain4);
+
+            wras.reset();
+            wras << closed(chain4);
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
                 platform_blender_solid_color(color::make(255, 0, 0)), winding<>());
 
-            ras.reset();
-            ras << closed(agge::elements::Arc(agge::Point_r{500, 500}, 50.f, -agge::pi, agge::pi));
+            wras.reset();
+            wras << closed(agge::elements::Arc(agge::Point_r{500, 500}, 50.f, -agge::pi, agge::pi));
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
                 platform_blender_solid_color(color::make(200, 0, 255)), winding<>());
 
 
-            ras.reset();
-            ras << closed(agge::elements::Vertex(agge::Point_r{1000, 500})
+            wras.reset();
+            wras << closed(agge::elements::Vertex(agge::Point_r{1000, 500})
                         + agge::elements::Arc(6, agge::Point_r{1000, 500}, 100.f, -agge::pi/2, agge::pi));
             ras.sort();
 
@@ -96,8 +98,8 @@ namespace
                 platform_blender_solid_color(color::make(255, 255, 0)), winding<>());
 
 
-            ras.reset();
-            ras << closed(agge::elements::Segment(agge::Point_r{1000, 1000}, agge::Point_r{1000, 1200})
+            wras.reset();
+            wras << closed(agge::elements::Segment(agge::Point_r{1000, 1000}, agge::Point_r{1000, 1200})
                         + agge::linspace(-0.5f, 1.f, 100)/agge::elements::Bezier<2>(Point_r{900, 1000}, Point_r{1000, 800}, Point_r{1100, 1000}) );
             ras.sort();
 
@@ -105,9 +107,8 @@ namespace
                 platform_blender_solid_color(color::make(255, 0, 0)), winding<>());
 
 
-            ras.reset();
-
-            ras << closed(chain1 + chain2 + chain3)
+            wras.reset();
+            wras << closed(chain1 + chain2 + chain3)
                             /agge::decorators::OrthoShift(40.f);
             ras.sort();
 
@@ -116,7 +117,7 @@ namespace
 
             ras.reset();
 
-            //ras << closed(chain1/agge::memoize<agge::Point_r, 3>()
+            //wras << closed(chain1/agge::memoize<agge::Point_r, 3>()
             //                    /agge::drop(1)
             //                    /agge::decorators::OrthoShift(40.f)  //
             //            + chain2/agge::memoize<agge::Point_r, 3>()
@@ -130,10 +131,10 @@ namespace
             //ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
             //    platform_blender_solid_color(color::make(255, 255, 255)), winding<>());
 
-            ras.reset();
-            ras << closed(chain1
-                + chain2
-                + chain3);
+            wras.reset();
+            wras << closed(chain1
+                            + chain2
+                            + chain3);
             ras.sort();
 
             ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
