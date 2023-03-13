@@ -45,11 +45,6 @@ if (NOT TARGET utfia)
 endif()
 
 
-if (NOT TARGET ylems)
-    option(YLEMS_NO_TESTS "No tests for ylems" ON)
-    add_subdirectory(libraries/ylems)
-endif()
-
 if (NOT TARGET grace)
     option(GRACE_ENABLE_TESTS "No tests for ylems" OFF)
     add_subdirectory(libraries/grace)
