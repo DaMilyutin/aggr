@@ -2,7 +2,7 @@
 
 #include <agge/types.h>
 #include <agge/math/bezier.h>
-#include <palgebra/algebra/rules.h>
+#include <grace/algebra/rules.h>
 
 #include <utility>
 
@@ -20,7 +20,7 @@ namespace agge
     };
 
     template<typename ACurve, typename AInterval = Interval>
-    class curve_generator: public rules::Yield<curve_generator<ACurve, AInterval>>
+    class curve_generator: public grace::rules::Yield<curve_generator<ACurve, AInterval>>
     {
     public:
         template<typename TC, typename TI>
@@ -53,7 +53,7 @@ namespace agge
         return cbezier(c, i);
     }
 
-    class arc: public rules::Yield<arc>
+    class arc: public grace::rules::Yield<arc>
     {
     public:
         arc(real_t cx, real_t cy, real_t r, real_t start, real_t end, real_t da = 0.05f);

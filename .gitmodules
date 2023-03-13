@@ -16,3 +16,6 @@
 [submodule "libraries/ylems"]
 	path = libraries/ylems
 	url = https://github.com/DaMilyutin/ylems.git
+[submodule "libraries/grace"]
+	path = libraries/grace
+	url = https://github.com/DaMilyutin/grace.git

@@ -1,14 +1,14 @@
 #pragma once
 
 #include <agge/types.h>
-#include <palgebra/algebra/rules.h>
+#include <grace/algebra/rules.h>
 #include <agge/primitives/path.h>
 
 #include <agge/math/bezier.h>
 
 namespace agge
 {
-    class line: public rules::Yield<line>
+    class line: public grace::rules::Yield<line>
     {
     public:
         line(real_t x1, real_t y1, real_t x2, real_t y2);
@@ -23,7 +23,7 @@ namespace agge
     };
 
 
-    class rectangle: public rules::Yield<rectangle>
+    class rectangle: public grace::rules::Yield<rectangle>
     {
     public:
         rectangle(real_t x1, real_t y1, real_t x2, real_t y2);
@@ -38,7 +38,7 @@ namespace agge
     };
 
 
-    class rounded_rectangle: public rules::Yield<rounded_rectangle>
+    class rounded_rectangle: public grace::rules::Yield<rounded_rectangle>
     {
     public:
         rounded_rectangle(real_t x1, real_t y1, real_t x2, real_t y2, real_t rx, real_t ry = 0.0f);

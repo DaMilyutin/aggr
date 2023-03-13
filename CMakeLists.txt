@@ -50,6 +50,11 @@ if (NOT TARGET ylems)
     add_subdirectory(libraries/ylems)
 endif()
 
+if (NOT TARGET grace)
+    option(GRACE_ENABLE_TESTS "No tests for ylems" OFF)
+    add_subdirectory(libraries/grace)
+endif()
+
 add_subdirectory(main/source/agge)
 add_subdirectory(main/source/agge.text)
 if (NOT AGGE_NO_EXTENSIONS AND (NOT MSVC_VERSION OR (MSVC_VERSION GREATER_EQUAL 1600)))

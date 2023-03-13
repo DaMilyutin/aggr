@@ -2,7 +2,7 @@
 
 #include <agge/types.h>
 #include <agge/primitives/path.h>
-#include <palgebra/algebra/rules.h>
+#include <grace/algebra/rules.h>
 
 #include <vector>
 
@@ -81,7 +81,7 @@ namespace agge
     inline polyline& clear(polyline& p) { return p.clear(); }
     inline polyline& operator<<(polyline& p, polyline& (*f)(polyline&)) { return f(p); }
 
-    class polyline_adaptor: public rules::Yield<polyline_adaptor>
+    class polyline_adaptor: public grace::rules::Yield<polyline_adaptor>
     {
     public:
         polyline_adaptor(polyline const& path)

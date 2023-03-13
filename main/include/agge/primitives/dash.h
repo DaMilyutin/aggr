@@ -1,11 +1,11 @@
 #pragma once
 
 #include <agge/utils/vertex_sequence.h>
-#include <palgebra/algebra/rules.h>
+#include <grace/algebra/rules.h>
 
 namespace agge
 {
-    class dash: public rules::Yield<dash>, private vertex_sequence
+    class dash: public grace::rules::Yield<dash>, private vertex_sequence
     {
     public:
         dash();

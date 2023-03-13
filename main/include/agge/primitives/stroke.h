@@ -3,13 +3,13 @@
 #include <agge/utils/vertex_sequence.h>
 #include <agge/utils/static_any.h>
 #include <agge/utils/tools.h>
-#include <palgebra/algebra/rules.h>
+#include <grace/algebra/rules.h>
 
 namespace agge
 {
     typedef pod_vector<Point_r> points;
 
-    class stroke: public rules::Yield<stroke>, vertex_sequence, noncopyable
+    class stroke: public grace::rules::Yield<stroke>, vertex_sequence, noncopyable
     {
     public:
         struct cap;

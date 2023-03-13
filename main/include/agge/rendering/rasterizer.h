@@ -1,7 +1,9 @@
 #pragma once
 
 #include <agge/math/math.h>
-#include <palgebra/algebra/rules.h>
+#include <grace/algebra/rules.h>
+#include <grace/algebra/control.h>
+#include <grace/types/Point.h>
 #include "vector_rasterizer.h"
 
 namespace agge
@@ -64,10 +66,8 @@ namespace agge
 		friend ClipperT;
 	};
 
-    struct MoveToken{};
-
     template<typename R>
-    class Rasterizer: public rules::Sink<Rasterizer<R>>
+    class Rasterizer: public grace::rules::Sink<Rasterizer<R>>
     {
     public:
         Rasterizer(R& u): under(u) {}
@@ -76,19 +76,18 @@ namespace agge
 
         // Sink
         Rasterizer& operator<<(Point_r const& p) { consume(p); return *this; }
-        Rasterizer& operator<<(MoveToken ) { move_ = true; return *this; }
+        Rasterizer& operator<<(grace::rules::start_token) { move_ = true; return *this; }
+        Rasterizer& operator<<(grace::rules::close_token) { under.close_polygon(); return *this; }
 
-        Rasterizer& operator<<(rules::Start<Point_r> const& p)        { under.move_to(p.under); move_ = false;  return *this; }
-        Rasterizer& operator<<(rules::Start<Point_r const&> const& p) { under.move_to(p.under); move_ = false;  return *this; }
-
-        bool consume(Point_r const& p)
+        bool consume(grace::Point_r const& p)
         {
-            if(move_) { under.move_to(p); move_ = false; }
-            else { under.line_to(p); }
+            if(move_) move_to(p);
+            else      line_to(p);
             return true;
         }
-        bool consume(rules::Start<Point_r> const& p) { under.move_to(p.under.x, p.under.y); move_ = false; return true; }
-        bool consume(rules::Start<Point_r const&> const& p) { under.move_to(p.under.x, p.under.y); move_ = false; return true; }
+
+        void move_to(grace::Point_r const& p) { under.move_to(p.x, p.y); move_ = false; }
+        void line_to(grace::Point_r const& p) { under.line_to(p.x, p.y); }
 
         void close_polygon() { under.close_polygon(); }
     private:
