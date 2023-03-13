@@ -13,14 +13,12 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-using namespace agge;
-
 namespace
 {
     template <typename T>
-    Rect<T> mkrect(T x1, T y1, T x2, T y2)
+    agge::Rect<T> mkrect(T x1, T y1, T x2, T y2)
     {
-        Rect<T> r = {x1, y1, x2, y2};
+        agge::Rect<T> r = {x1, y1, x2, y2};
         return r;
     }
 
@@ -67,82 +65,56 @@ namespace
             chain4 += grace::Vector_r{-400, -400};
         }
 
-        virtual void draw(platform_bitmap& surface, timings&/*timings*/)
+        void render_color(agge::platform_bitmap& surface, agge::color color)
+        {
+            ras.sort();
+            ren(surface, agge::zero(), 0 /*no windowing*/, ras /*mask*/,
+                agge::platform_blender_solid_color(color), agge::winding<>());
+        }
+
+        virtual void draw(agge::platform_bitmap& surface, timings&/*timings*/)
         {
             fill(surface, mkrect<int>(0, 0, surface.width(), surface.height()),
-                platform_blender_solid_color(color::make(0, 50, 100)));
-            auto wras = wrap_rasterizer(ras);
+                agge::platform_blender_solid_color(agge::color::make(0, 50, 100)));
+            auto wras = agge::wrap_rasterizer(ras);
 
 
             wras.reset();
-            wras << grace::cycle<1>(chain4);
+            wras << cycle<1>(chain4);
             ras.sort();
-
-            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-                platform_blender_solid_color(color::make(255, 0, 0)), winding<>());
-
-            wras.reset();
-            wras << grace::cycle<1>(grace::elements::Arc(grace::Point_r{500, 500}, 50.f, -agge::pi, agge::pi));
-            ras.sort();
-
-            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-                platform_blender_solid_color(color::make(200, 0, 255)), winding<>());
+            render_color(surface, agge::color::make(255, 200, 100));
 
 
             wras.reset();
-            wras << grace::cycle<1>(grace::elements::Vertex(grace::Point_r{1000, 500})
+            wras << cycle<1>(grace::elements::Arc(grace::Point_r{500, 500}, 50.f, -agge::pi, agge::pi));
+            render_color(surface, agge::color::make(200, 0, 255));
+
+            wras.reset();
+            wras << cycle<1>(grace::elements::Vertex(grace::Point_r{1000, 500})
                                     + grace::elements::Arc(6, grace::Point_r{1000, 500}, 100.f, -agge::pi/2, agge::pi));
-            ras.sort();
-
-            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-                platform_blender_solid_color(color::make(255, 255, 0)), winding<>());
+            render_color(surface, agge::color::make(255, 255, 0));
 
 
             wras.reset();
-            wras << grace::cycle<1>(grace::elements::Segment(grace::Point_r{1000, 1000}, grace::Point_r{1000, 1200})
+            wras << cycle<1>(grace::elements::Segment(grace::Point_r{1000, 1000}, grace::Point_r{1000, 1200})
                         + grace::linspace(-0.5f, 1.f, 100)/grace::elements::Bezier<2>(grace::Point_r{900, 1000}, grace::Point_r{1000, 800}, grace::Point_r{1100, 1000}) );
-            ras.sort();
-
-            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-                platform_blender_solid_color(color::make(255, 0, 0)), winding<>());
+            render_color(surface, agge::color::make(255, 0, 0));
 
 
             wras.reset();
-            wras << grace::cycle<1>(chain1 + chain2 + chain3)
+            wras << cycle<1>(chain1 + chain2 + chain3)
+                            /grace::memoize<grace::Point_r, 3>()
                             /grace::decorators::OrthoShift(40.f);
-            ras.sort();
-
-            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-                platform_blender_solid_color(color::make(155, 155, 155)), winding<>());
-
-            ras.reset();
-
-            //wras << closed(chain1/agge::memoize<agge::Point_r, 3>()
-            //                    /agge::drop(1)
-            //                    /agge::decorators::OrthoShift(40.f)  //
-            //            + chain2/agge::memoize<agge::Point_r, 3>()
-            //                    /agge::drop(1)
-            //                    /agge::decorators::OrthoShift(40.f)
-            //            + chain3/agge::memoize<agge::Point_r, 3>()
-            //                    /agge::drop(1)
-            //                    /agge::decorators::OrthoShift(40.f));
-            //ras.sort();
-
-            //ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-            //    platform_blender_solid_color(color::make(255, 255, 255)), winding<>());
+            render_color(surface, agge::color::make(155, 155, 155));
 
             wras.reset();
             wras << grace::cycle<1>(chain1 + chain2 + chain3);
-            ras.sort();
-
-            ren(surface, zero(), 0 /*no windowing*/, ras /*mask*/,
-                platform_blender_solid_color(color::make(0, 255, 0)), winding<>());
-
+            render_color(surface, agge::color::make(0, 255, 0));
         }
 
     private:
-        rasterizer< clipper<int> > ras;
-        renderer ren;
+        agge::rasterizer<agge::clipper<int>> ras;
+        agge::renderer                       ren;
 
         Chain chain1;
         Chain chain2;
