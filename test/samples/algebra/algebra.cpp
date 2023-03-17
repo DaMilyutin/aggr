@@ -139,27 +139,26 @@ namespace
                 grace::Point_r last;
                 keeper.length_limit = length_limit;
                 keeper.clear();
-                while(true)
+                while(rng.iterator != rng.sentinel)
                 {
-                    while(rng.iterator != rng.sentinel && keeper.consume(*rng.iterator))
-                        ++rng.iterator;
+                    rng = rng/keeper;
                     if(keeper.path.size() < 2)
                         return;
-                    last = towards(keeper.path.back(), keeper.path[keeper.path.size()-2], keeper.length_limit);
+
+                    last = keeper.path.back();
+                    keeper.path.back() = towards(last, keeper.path[keeper.path.size()-2], keeper.length_limit);
 
                     wras << grace::as_range(keeper.path);
 
                     skipper.length_limit = gap_limit;
-                    skipper.clear();
-                    skipper.consume(last);
-                    if(skipper.consume(keeper.path.back()))
-                        while(rng.iterator != rng.sentinel && skipper.consume(*rng.iterator))
-                            ++rng.iterator;
-                    if(!skipper.last)
+                    if(skipper.start(keeper.path.back(), last))
+                        rng = rng/skipper;
+
+                    if(rng.iterator == rng.sentinel)
                         return;
                     keeper.length_limit = length_limit;
                     keeper.clear();
-                    keeper.consume(towards(*skipper.prev, *skipper.last, skipper.length_limit));
+                    keeper.consume(towards(skipper.prev, skipper.last, skipper.length_limit));
                 }
             }();
             wras.close_polygon();
