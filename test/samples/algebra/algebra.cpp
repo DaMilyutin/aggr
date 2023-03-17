@@ -63,6 +63,11 @@ namespace
 
             chain4.assign(chain2);
             chain4 += grace::Vector_r{-400, -400};
+
+            grace::elements::push_back(chain5) << (chain1 + chain2 + chain3);
+
+            chain5 += grace::Vector_r{400, 0};
+
         }
 
         void render_color(agge::platform_bitmap& surface, agge::color color)
@@ -110,6 +115,58 @@ namespace
             wras.reset();
             wras << grace::cycle<1>(chain1 + chain2 + chain3);
             render_color(surface, agge::color::make(0, 255, 0));
+
+
+            wras.reset();
+            wras << cycle<1>(chain1 + chain2 + chain3)
+                /grace::memoize<grace::Point_r, 3>()
+                /grace::decorators::OrthoShift(40.f);
+            render_color(surface, agge::color::make(155, 155, 155));
+
+            wras.reset();
+            wras << grace::cycle<1>(chain1 + chain2 + chain3);
+            render_color(surface, agge::color::make(0, 255, 0));
+
+            wras.reset();
+            [&]()
+            {
+                auto rng = as_range(grace::elements::Arc(grace::Point_r{1500, 1000}, 300.f, -agge::pi, agge::pi));
+                grace::elements::Keeper<void> keeper;
+                grace::elements::Skipper skipper;
+                grace::real_t const length_limit = 200;
+                grace::real_t const gap_limit = 200;
+
+                grace::Point_r last;
+                keeper.length_limit = length_limit;
+                keeper.clear();
+                while(rng.iterator != rng.sentinel)
+                {
+
+                    for(; rng.iterator != rng.sentinel; ++rng.iterator)
+                        if(!keeper.consume(*rng.iterator))
+                            break;
+                    if(keeper.path.size() < 2)
+                        return;
+                    last = towards(keeper.path.back(), keeper.path[keeper.path.size()-2], keeper.length_limit);
+
+                    wras << grace::as_range(keeper.path);
+
+                    skipper.length_limit = gap_limit;
+                    skipper.clear();
+                    skipper.consume(last);
+                    if(skipper.consume(keeper.path.back()))
+                        for(; rng.iterator != rng.sentinel; ++rng.iterator)
+                            if(!skipper.consume(*rng.iterator))
+                                break;
+                    if(!skipper.last)
+                        return;
+                    keeper.length_limit = length_limit;
+                    keeper.clear();
+                    keeper.consume(towards(*skipper.prev, *skipper.last, skipper.length_limit));
+                }
+            }();
+            wras.close_polygon();
+            render_color(surface, agge::color::make(0, 255, 255));
         }
 
     private:
@@ -120,6 +177,7 @@ namespace
         Chain chain2;
         Chain chain3;
         Chain chain4;
+        Chain chain5;
     };
 }
 
