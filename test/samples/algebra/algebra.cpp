@@ -133,18 +133,16 @@ namespace
                 auto rng = as_range(grace::elements::Arc(grace::Point_r{1500, 1000}, 300.f, -agge::pi, agge::pi));
                 grace::elements::Keeper<void> keeper;
                 grace::elements::Skipper skipper;
-                grace::real_t const length_limit = 200;
-                grace::real_t const gap_limit = 200;
+                grace::real_t const length_limit = 100;
+                grace::real_t const gap_limit = 300;
 
                 grace::Point_r last;
                 keeper.length_limit = length_limit;
                 keeper.clear();
-                while(rng.iterator != rng.sentinel)
+                while(true)
                 {
-
-                    for(; rng.iterator != rng.sentinel; ++rng.iterator)
-                        if(!keeper.consume(*rng.iterator))
-                            break;
+                    while(rng.iterator != rng.sentinel && keeper.consume(*rng.iterator))
+                        ++rng.iterator;
                     if(keeper.path.size() < 2)
                         return;
                     last = towards(keeper.path.back(), keeper.path[keeper.path.size()-2], keeper.length_limit);
@@ -155,9 +153,8 @@ namespace
                     skipper.clear();
                     skipper.consume(last);
                     if(skipper.consume(keeper.path.back()))
-                        for(; rng.iterator != rng.sentinel; ++rng.iterator)
-                            if(!skipper.consume(*rng.iterator))
-                                break;
+                        while(rng.iterator != rng.sentinel && skipper.consume(*rng.iterator))
+                            ++rng.iterator;
                     if(!skipper.last)
                         return;
                     keeper.length_limit = length_limit;
