@@ -127,15 +127,20 @@ namespace
             wras << grace::cycle<1>(chain1 + chain2 + chain3);
             render_color(surface, agge::color::make(0, 255, 0));
 
-            wras.reset();
             grace::elements::Dash dash;
             dash.reset();
             dash.add(100.f, 300.f).add(10.f, 300.f);
 
+            wras.reset();
             wras << grace::Point_r{1500, 1000} <<
                     grace::elements::Arc(grace::Point_r{1500, 1000}, 300.f, 0.f, 2.*agge::pi)/dash;
             wras.close_polygon();
             render_color(surface, agge::color::make(0, 255, 255));
+
+            wras.reset();
+            wras << grace::elements::Arc(grace::Point_r{1500, 1000}, 300.f, 0.f, 2.*agge::pi)/dash/grace::elements::Expanser(grace::extrudes::Ortho(20.f));
+            wras.close_polygon();
+            render_color(surface, agge::color::make(255, 0, 155));
         }
 
     private:
