@@ -128,8 +128,7 @@ namespace
             render_color(surface, agge::color::make(0, 255, 0));
 
             grace::elements::Dash dash;
-            dash.reset();
-            dash.add(100.f, 300.f).add(10.f, 300.f);
+            dash.reset().add(100.f, 300.f).add(10.f, 300.f);
 
             wras.reset();
             wras << grace::Point_r{1500, 1000} <<
@@ -137,8 +136,12 @@ namespace
             wras.close_polygon();
             render_color(surface, agge::color::make(0, 255, 255));
 
+
+            dash.reset().add(30.f, 10.f).add(10.f, 10.f);
             wras.reset();
-            wras << grace::elements::Arc(grace::Point_r{1500, 1000}, 300.f, 0.f, 2.*agge::pi)/dash/grace::elements::Expanser(grace::extrudes::Ortho(20.f));
+            wras << grace::linspace(0.f, 20.f*agge::pi, 1000)
+                    /grace::transform([](agge::real_t t) { return grace::Point_r{1000.f, 1000.f} + grace::Vector_r::polar(10.*t, t); })
+                    /dash/grace::elements::Expanser(grace::extrudes::Ortho(20.f));
             wras.close_polygon();
             render_color(surface, agge::color::make(255, 0, 155));
         }
