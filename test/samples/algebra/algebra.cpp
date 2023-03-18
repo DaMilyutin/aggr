@@ -137,8 +137,7 @@ namespace
                 grace::real_t const gap_limit = 300;
 
                 grace::Point_r last;
-                keeper.length_limit = length_limit;
-                keeper.clear();
+                keeper.reset(length_limit);
                 while(rng.iterator != rng.sentinel)
                 {
                     rng = rng/keeper;
@@ -150,14 +149,13 @@ namespace
 
                     wras << grace::as_range(keeper.path);
 
-                    skipper.length_limit = gap_limit;
+                    skipper.reset(gap_limit);
                     if(skipper.start(keeper.path.back(), last))
                         rng = rng/skipper;
 
                     if(rng.iterator == rng.sentinel)
                         return;
-                    keeper.length_limit = length_limit;
-                    keeper.clear();
+                    keeper.reset(length_limit);
                     keeper.consume(towards(skipper.prev, skipper.last, skipper.length_limit));
                 }
             }();
