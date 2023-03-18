@@ -86,6 +86,19 @@ namespace agge
             return true;
         }
 
+        bool consume(std::vector<grace::Point_r> const& p)
+        {
+            auto i = p.begin();
+            auto e = p.end();
+            if(i == e)
+                return true;
+            if(move_) move_to(*i);
+            else      line_to(*i);
+            while(++i != e)
+                line_to(*i);
+            return true;
+        }
+
         void move_to(grace::Point_r const& p) { under.move_to(p.x, p.y); move_ = false; }
         void line_to(grace::Point_r const& p) { under.line_to(p.x, p.y); }
 
