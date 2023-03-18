@@ -55,16 +55,16 @@ namespace
             float const step = float(k*2*M_PI/N);
             grace::real_t i = float(-M_PI/2);
             for(int j = 0; j < 2; ++j, i += step)
-                chain1.push_back(cen + 300.f*grace::Vector_r{cosf(i), sinf(i)});
+                chain1.push_back(cen + grace::Vector_r::polar(300.f,i));
             for(int j = 0; j < 3; ++j, i += step)
-                chain2.push_back(cen + 300.f*grace::Vector_r{cosf(i), sinf(i)});
+                chain2.push_back(cen + grace::Vector_r::polar(300.f, i));
             for(int j = 0; j < 4; ++j, i += step)
-                chain3.push_back(cen + 300.f*grace::Vector_r{cosf(i), sinf(i)});
+                chain3.push_back(cen + grace::Vector_r::polar(300.f, i));
 
             chain4.assign(chain2);
             chain4 += grace::Vector_r{-400, -400};
 
-            grace::elements::push_back(chain5) << (chain1 + chain2 + chain3);
+            push_back(chain5) << (chain1 + chain2 + chain3);
 
             chain5 += grace::Vector_r{400, 0};
 
