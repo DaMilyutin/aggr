@@ -128,37 +128,12 @@ namespace
             render_color(surface, agge::color::make(0, 255, 0));
 
             wras.reset();
-            [&]()
-            {
-                auto rng = as_range(grace::elements::Arc(grace::Point_r{1500, 1000}, 300.f, -agge::pi, agge::pi));
-                grace::elements::Keeper<void> keeper;
-                grace::elements::Skipper skipper;
-                grace::real_t const length_limit = 100;
-                grace::real_t const gap_limit = 300;
+            grace::elements::Dash dash;
+            dash.reset();
+            dash.add(100.f, 300.f).add(10.f, 300.f);
 
-                grace::Point_r last;
-                keeper.reset(length_limit);
-                while(rng.iterator != rng.sentinel)
-                {
-                    rng = rng/keeper;
-                    if(keeper.path.size() < 2)
-                        return;
-
-                    last = keeper.path.back();
-                    keeper.path.back() = towards(last, keeper.path[keeper.path.size()-2], keeper.length_limit);
-
-                    wras << grace::as_range(keeper.path);
-
-                    skipper.reset(gap_limit);
-                    if(skipper.start(keeper.path.back(), last))
-                        rng = rng/skipper;
-
-                    if(rng.iterator == rng.sentinel)
-                        return;
-                    keeper.reset(length_limit);
-                    keeper.consume(towards(skipper.prev, skipper.last, skipper.length_limit));
-                }
-            }();
+            wras << grace::Point_r{1500, 1000} <<
+                    grace::elements::Arc(grace::Point_r{1500, 1000}, 300.f, 0.f, 2.*agge::pi)/dash;
             wras.close_polygon();
             render_color(surface, agge::color::make(0, 255, 255));
         }
