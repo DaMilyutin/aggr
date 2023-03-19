@@ -64,10 +64,19 @@ namespace
             chain4.assign(chain2);
             chain4 += grace::Vector_r{-400, -400};
 
-            push_back(chain5) << (chain1 + chain2 + chain3);
+            //push_back(chain5) << (chain1 + chain2 + chain3);
+            //chain5 += grace::Vector_r{400, 0};
+            {
+                grace::Point_r p{500.f, 700.f};
+                grace::Vector_r dirs[] = {{0.f, -50.f},{150.f, 0.f}, {0.f, 50.f}, {150.f, 0.f},};
+                chain5.push_back(p);
+                for(int i = 0; i < 20; ++i)
+                {
+                    p += dirs[i%4];
+                    chain5.push_back(p);
+                }
 
-            chain5 += grace::Vector_r{400, 0};
-
+            }
         }
 
         void render_color(agge::platform_bitmap& surface, agge::color color)
@@ -132,18 +141,22 @@ namespace
 
             wras.reset();
             wras << grace::Point_r{1500, 1000} <<
-                    grace::elements::Arc(grace::Point_r{1500, 1000}, 300.f, 0.f, 2.*agge::pi)/dash;
+                    grace::elements::Arc(grace::Point_r{1500, 1000}, 300.f, 0.f, 2.f*agge::pi)/dash;
             wras.close_polygon();
             render_color(surface, agge::color::make(0, 255, 255));
 
 
-            dash.reset().add(30.f, 10.f).add(10.f, 10.f);
+            dash.reset().add(123.f, 60.f);
             wras.reset();
-            wras << grace::linspace(0.f, 20.f*agge::pi, 1000)
-                    /grace::transform([](agge::real_t t) { return grace::Point_r{1000.f, 1000.f} + grace::Vector_r::polar(10.*t, t); })
-                    /dash/grace::elements::Expanser(grace::extrudes::Ortho(20.f));
+            wras << grace::as_range(chain5)/dash/grace::elements::Expanser(grace::extrudes::Ortho(60.f));
             wras.close_polygon();
             render_color(surface, agge::color::make(255, 0, 155));
+
+
+            wras.reset();
+            wras << grace::as_range(chain5)/dash/grace::elements::Expanser(grace::extrudes::Ortho(1.f));
+            wras.close_polygon();
+            render_color(surface, agge::color::make(0, 0, 0));
         }
 
     private:
