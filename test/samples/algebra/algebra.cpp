@@ -22,10 +22,16 @@ namespace
         return r;
     }
 
-    struct Chain: grace::rules::Yield<Chain>, agge::pod_vector<grace::Point_r>
+    struct Chain: grace::rules::Yield<Chain>, std::vector<grace::Point_r>
     {
-        using agge::pod_vector<grace::Point_r>::begin;
-        using agge::pod_vector<grace::Point_r>::end;
+        void assign(std::vector<grace::Point_r> const& rhs)
+        {
+            this->clear();
+            this->resize(rhs.size());
+            size_t i = 0;
+            for(auto const& x : rhs)
+                at(i++) = x;
+        }
     };
 
     Chain& operator+=(Chain& c, grace::Vector_r const& s)
@@ -67,8 +73,12 @@ namespace
             //push_back(chain5) << (chain1 + chain2 + chain3);
             //chain5 += grace::Vector_r{400, 0};
             {
-                grace::Point_r p{500.f, 700.f};
-                grace::Vector_r dirs[] = {{0.f, -50.f},{150.f, 0.f}, {0.f, 50.f}, {150.f, 0.f},};
+                grace::Point_r p{100.f, 100.f};
+                //grace::Vector_r dirs[] = {{0.f, -50.f},{150.f, 0.f}, {0.f, 50.f}, {150.f, 0.f},};
+                grace::Vector_r dirs[] = {grace::Vector_r::polar(111.f, 0.f),
+                                          grace::Vector_r::polar(111.f, agge::pi/3),
+                                          grace::Vector_r::polar(111.f, 0.f),
+                                          grace::Vector_r::polar(111.f, agge::pi/3)};
                 chain5.push_back(p);
                 for(int i = 0; i < 20; ++i)
                 {
@@ -146,17 +156,25 @@ namespace
             render_color(surface, agge::color::make(0, 255, 255));
 
 
-            dash.reset().add(123.f, 60.f);
+            dash.reset().add(30.f, 20.f);
+
             wras.reset();
-            wras << grace::as_range(chain5)/dash/grace::elements::Expanser(grace::extrudes::Ortho(60.f));
+            wras << grace::as_range(chain5)/dash/grace::elements::Expanser(grace::extrudes::Ortho(40.f));
             wras.close_polygon();
             render_color(surface, agge::color::make(255, 0, 155));
 
+            wras.reset();
+            (grace::elements::Expanser(grace::extrudes::Ortho(4.f))/wras).consume(chain5);
+            wras.close_polygon();
+            render_color(surface, agge::color::make(100, 100, 100));
 
             wras.reset();
-            wras << grace::as_range(chain5)/dash/grace::elements::Expanser(grace::extrudes::Ortho(1.f));
+            wras << grace::as_range(chain5)/dash/grace::elements::Expanser(grace::extrudes::Ortho(2.f));
             wras.close_polygon();
-            render_color(surface, agge::color::make(0, 0, 0));
+            render_color(surface, agge::color::make(255, 255, 255));
+
+
+
         }
 
     private:
