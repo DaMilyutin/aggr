@@ -75,10 +75,10 @@ namespace
             {
                 grace::Point_r p{100.f, 100.f};
                 //grace::Vector_r dirs[] = {{0.f, -50.f},{150.f, 0.f}, {0.f, 50.f}, {150.f, 0.f},};
-                grace::Vector_r dirs[] = {grace::Vector_r::polar(111.f, 0.f),
-                                          grace::Vector_r::polar(111.f, agge::pi/3),
-                                          grace::Vector_r::polar(111.f, 0.f),
-                                          grace::Vector_r::polar(111.f, agge::pi/3)};
+                grace::Vector_r dirs[] = {grace::Vector_r::polar(211.f, 0.f),
+                                          grace::Vector_r::polar(211.f, agge::pi/2),
+                                          grace::Vector_r::polar(211.f, 0.f),
+                                          grace::Vector_r::polar(211.f, agge::pi/2)};
                 chain5.push_back(p);
                 for(int i = 0; i < 20; ++i)
                 {
@@ -156,7 +156,7 @@ namespace
             render_color(surface, agge::color::make(0, 255, 255));
 
 
-            dash.reset().add(30.f, 20.f);
+            dash.reset().add(100.f, 80.f);
 
             wras.reset();
             wras << grace::as_range(chain5)/dash/grace::elements::Expanser(grace::extrudes::Ortho(40.f));
