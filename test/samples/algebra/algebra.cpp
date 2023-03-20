@@ -73,12 +73,12 @@ namespace
             //push_back(chain5) << (chain1 + chain2 + chain3);
             //chain5 += grace::Vector_r{400, 0};
             {
-                grace::Point_r p{100.f, 100.f};
+                grace::Point_r p{100.f, 600.f};
                 //grace::Vector_r dirs[] = {{0.f, -50.f},{150.f, 0.f}, {0.f, 50.f}, {150.f, 0.f},};
                 grace::Vector_r dirs[] = {grace::Vector_r::polar(211.f, 0.f),
-                                          grace::Vector_r::polar(211.f, agge::pi/2),
+                                          grace::Vector_r::polar(211.f, 2*agge::pi/3),
                                           grace::Vector_r::polar(211.f, 0.f),
-                                          grace::Vector_r::polar(211.f, agge::pi/2)};
+                                          grace::Vector_r::polar(211.f, -agge::pi/2)};
                 chain5.push_back(p);
                 for(int i = 0; i < 20; ++i)
                 {
