@@ -156,20 +156,20 @@ namespace
             render_color(surface, agge::color::make(0, 255, 255));
 
 
-            dash.reset().add(100.f, 80.f);
+            dash.reset().add(300.f, 80.f);
 
             wras.reset();
-            wras << grace::as_range(chain5)/dash/grace::elements::Expanser(grace::extrudes::Ortho(40.f));
+            wras << grace::as_range(chain5)/dash/grace::elements::Stroker(grace::extrudes::Ortho(40.f)).with_cap(grace::elements::caps::Polygonal(2));
             wras.close_polygon();
             render_color(surface, agge::color::make(255, 0, 155));
 
             wras.reset();
-            (grace::elements::Expanser(grace::extrudes::Ortho(4.f))/wras).consume(chain5);
+            (grace::elements::Stroker(grace::extrudes::Ortho(10.f))/wras).consume(chain5);
             wras.close_polygon();
             render_color(surface, agge::color::make(100, 100, 100));
 
             wras.reset();
-            wras << grace::as_range(chain5)/dash/grace::elements::Expanser(grace::extrudes::Ortho(2.f));
+            wras << grace::as_range(chain5)/dash/grace::elements::Stroker(grace::extrudes::Ortho(8.f));
             wras.close_polygon();
             render_color(surface, agge::color::make(255, 255, 255));
 
