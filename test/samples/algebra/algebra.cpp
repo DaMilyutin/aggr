@@ -146,7 +146,7 @@ namespace
             wras << grace::cycle<1>(chain1 + chain2 + chain3);
             render_color(surface, agge::color::make(0, 255, 0));
 
-            grace::elements::Dash dash;
+            grace::decorators::Dash dash;
             dash.reset().add(100.f, 300.f).add(10.f, 300.f);
 
             wras.reset();
@@ -156,25 +156,25 @@ namespace
             render_color(surface, agge::color::make(0, 255, 255));
 
 
-            dash.reset().add(300.f, 80.f);
+            dash.reset().add(300.f, 180.f);
 
             wras.reset();
-            wras << grace::as_range(chain5)/dash/grace::elements::Stroker(grace::extrudes::Ortho(40.f)).with_cap(grace::elements::caps::Polygonal(2));
+            wras << grace::as_range(chain5)/dash
+                    /grace::decorators::Stroke().width(40.f)
+                            .cap(grace::decorators::caps::butt)
+                            .join(grace::decorators::joins::Polygonal(3));
             wras.close_polygon();
             render_color(surface, agge::color::make(255, 0, 155));
 
             wras.reset();
-            (grace::elements::Stroker(grace::extrudes::Ortho(10.f))/wras).consume(chain5);
+            (grace::elements::Stroker(10.f)/wras).consume(chain5);
             wras.close_polygon();
             render_color(surface, agge::color::make(100, 100, 100));
 
             wras.reset();
-            wras << grace::as_range(chain5)/dash/grace::elements::Stroker(grace::extrudes::Ortho(8.f));
+            wras << grace::as_range(chain5)/dash/grace::decorators::Stroke(8.f).join(grace::decorators::joins::round);
             wras.close_polygon();
             render_color(surface, agge::color::make(255, 255, 255));
-
-
-
         }
 
     private:
