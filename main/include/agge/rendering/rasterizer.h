@@ -76,6 +76,7 @@ namespace agge
 
         // Sink
         Rasterizer& operator<<(Point_r const& p) { consume(p); return *this; }
+        Rasterizer& operator<<(std::vector<grace::Point_r> const& p) { consume(p); return *this; }
         Rasterizer& operator<<(grace::rules::start_token) { move_ = true; return *this; }
         Rasterizer& operator<<(grace::rules::close_token) { under.close_polygon(); return *this; }
 
