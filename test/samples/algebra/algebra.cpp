@@ -85,6 +85,12 @@ namespace
                     p += dirs[i%4];
                     chain5.push_back(p);
                 }
+                //int const N = 4;
+                //for(int i = 0; i <= N; ++i)
+                //{
+                //    chain5.push_back(grace::Point_r{500, 500} + grace::Vector_r::polar(300, i*2*M_PI/N + M_PI/4));
+                //}
+
 
             }
         }
@@ -161,7 +167,7 @@ namespace
             wras.reset();
             wras << grace::as_range(chain5)/dash
                     /grace::decorators::FancyStroke().width(40.f)
-                            .head(grace::decorators::caps::Skew(0., 1.))
+                            .head(grace::decorators::caps::LArrowHead())
                             .tail(grace::decorators::caps::FlatArrowTail())
                             .left(grace::decorators::joins::round)
                             .right(grace::decorators::joins::miter);
