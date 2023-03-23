@@ -161,8 +161,8 @@ namespace
             wras.reset();
             wras << grace::as_range(chain5)/dash
                     /grace::decorators::FancyStroke().width(40.f)
-                            .head(grace::decorators::caps::ArrowHead())
-                            .tail(grace::decorators::caps::ArrowTail())
+                            .head(grace::decorators::caps::RArrowHead())
+                            .tail(grace::decorators::caps::RArrowHead())
                             .left(grace::decorators::joins::round)
                             .right(grace::decorators::joins::miter);
             wras.close_polygon();
