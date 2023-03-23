@@ -160,14 +160,16 @@ namespace
 
             wras.reset();
             wras << grace::as_range(chain5)/dash
-                    /grace::decorators::Stroke().width(40.f)
-                            .cap(grace::decorators::caps::butt)
-                            .join(grace::decorators::joins::Polygonal(3));
+                    /grace::decorators::FancyStroke().width(40.f)
+                            .head(grace::decorators::caps::ArrowHead())
+                            .tail(grace::decorators::caps::ArrowTail())
+                            .left(grace::decorators::joins::round)
+                            .right(grace::decorators::joins::miter);
             wras.close_polygon();
             render_color(surface, agge::color::make(255, 0, 155));
 
             wras.reset();
-            (grace::elements::Stroker(10.f)/wras).consume(chain5);
+            (grace::decorators::Stroke(12.f)/wras).consume(chain5);
             wras.close_polygon();
             render_color(surface, agge::color::make(100, 100, 100));
 
