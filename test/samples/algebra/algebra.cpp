@@ -80,9 +80,9 @@ namespace
                                           grace::Vector_r::polar(211.f, 0.f),
                                           grace::Vector_r::polar(211.f, -agge::pi/2)};
                 chain5.push_back(p);
-                for(int i = 0; i < 20; ++i)
+                for(int j = 0; j < 20; ++j)
                 {
-                    p += dirs[i%4];
+                    p += dirs[j%4];
                     chain5.push_back(p);
                 }
                 //int const N = 4;
