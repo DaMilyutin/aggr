@@ -77,8 +77,8 @@ namespace
                 //grace::Vector_r dirs[] = {{0.f, -50.f},{150.f, 0.f}, {0.f, 50.f}, {150.f, 0.f},};
                 grace::Vector_r dirs[] = {grace::Vector_r::polar(211.f, 0.f),
                                           grace::Vector_r::polar(211.f, 2*agge::pi/3),
-                                          grace::Vector_r::polar(211.f, 0.f),
-                                          grace::Vector_r::polar(211.f, -agge::pi/2)};
+                                          grace::Vector_r::polar(211.f, 0.1f),
+                                          grace::Vector_r::polar(211.f, -agge::pi*0.5f)};
                 chain5.push_back(p);
                 for(int j = 0; j < 20; ++j)
                 {
@@ -131,21 +131,28 @@ namespace
             render_color(surface, agge::color::make(255, 0, 0));
 
 
-            wras.reset();
-            wras << cycle<1>(chain1 + chain2 + chain3)
-                            /grace::memoize<grace::Point_r, 3>()
-                            /grace::decorators::OrthoShift(40.f);
-            render_color(surface, agge::color::make(155, 155, 155));
+            //wras.reset();
+            //wras << cycle<1>(chain1 + chain2 + chain3)
+            //                /grace::memoize<grace::Point_r, 3>()
+            //                /grace::decorators::OrthoShift(40.f);
+            //render_color(surface, agge::color::make(155, 155, 155));
+
+            //wras.reset();
+            //wras << grace::cycle<1>(chain1 + chain2 + chain3);
+            //render_color(surface, agge::color::make(0, 255, 0));
+
+
+            ///grace::memoize<grace::Point_r, 3>()
+            //    /grace::decorators::OrthoShift(40.f);
 
             wras.reset();
-            wras << grace::cycle<1>(chain1 + chain2 + chain3);
-            render_color(surface, agge::color::make(0, 255, 0));
 
+            Chain acc; grace::push_back(acc) << cycle<1>(chain1 + chain2 + chain3);
 
-            wras.reset();
-            wras << cycle<1>(chain1 + chain2 + chain3)
-                /grace::memoize<grace::Point_r, 3>()
-                /grace::decorators::OrthoShift(40.f);
+            (grace::decorators::Shift()
+                .offset(40.f).join(grace::decorators::joins::Polygonal(2))/wras).consume(acc);
+            wras << grace::rules::close;
+
             render_color(surface, agge::color::make(155, 155, 155));
 
             wras.reset();
