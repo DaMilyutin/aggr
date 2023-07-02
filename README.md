@@ -4,7 +4,10 @@ Anti-Grain Revolution
 
 This is playground based on Anti-Grain Evolution project and changed in quite revolutionary manner.
 
-Anti-Grain Evolution [![Build/Test](https://github.com/tyoma/agge/actions/workflows/cmake.yml/badge.svg?branch=master)](https://github.com/tyoma/agge/actions/workflows/cmake.yml)
+
+
+
+Below is readme from Anti-Grain Evolution [![Build/Test](https://github.com/tyoma/agge/actions/workflows/cmake.yml/badge.svg?branch=master)](https://github.com/tyoma/agge/actions/workflows/cmake.yml)
 ====
 
 This project is based on ideas found in Maxim (mcseem) Shemanarev's Anti-Grain Geometry library, but oriented towards maximizing performance and stability. This engine sits on top of vector rasterizer and renderer rewritten from scratch in test-first style.
