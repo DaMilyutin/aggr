@@ -16,7 +16,7 @@ namespace
         return r;
     }
 
-    class Rasterizer: public application
+    class RasterizerApp: public application
     {
     private:
         virtual void draw(platform_bitmap& surface, timings&/*timings*/)
@@ -74,5 +74,5 @@ namespace
 
 application* agge_create_application(services&/*s*/)
 {
-    return new Rasterizer;
+    return new RasterizerApp;
 }

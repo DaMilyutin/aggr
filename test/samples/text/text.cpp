@@ -43,10 +43,10 @@ namespace demo
 				agge::fill(surface, area, solid_color_brush(color::make(0, 50, 100)));
 				timings.clearing += stopwatch(counter);
 				_ddx += 0.2f;
-				dest.x1 += _ddx; dest.x2 -= _ddx;
+				dest.min.x += _ddx; dest.max.x -= _ddx;
 				_rasterizer.reset();
 			stopwatch(counter);
-				_layout.process(_text, limit::wrap(dest.x2), _text_engine);
+				_layout.process(_text, limit::wrap(dest.max.x), _text_engine);
 			double stroking = stopwatch(counter);
 				_text_engine.render(_rasterizer, _layout, align_near, align_near, dest);
 			double append = stopwatch(counter);

@@ -51,7 +51,7 @@ namespace demo
 
 					_glyph_indices.clear();
 
-					if (i->offset.dy > surface.height())
+					if (i->offset.y > surface.height())
 						break;
 
 					for (glyph_runs_container_t::const_iterator j = i->begin(); j != i->end(); ++j)
@@ -63,7 +63,7 @@ namespace demo
 						dg += j->offset;
 						for (positioned_glyphs_container_t::const_iterator k = j->begin(); k != j->end(); ++k)
 							_glyph_indices.push_back(static_cast<unsigned short>(k->index));
-						::ExtTextOut(ctx, static_cast<int>(dg.dx), static_cast<int>(dg.dy), ETO_GLYPH_INDEX /*| ETO_PDY*/, 0,
+						::ExtTextOut(ctx, static_cast<int>(dg.x), static_cast<int>(dg.y), ETO_GLYPH_INDEX /*| ETO_PDY*/, 0,
 							reinterpret_cast<LPCTSTR>(&_glyph_indices[0]), static_cast<UINT>(_glyph_indices.size()), 0);
 					}
 				}
