@@ -40,7 +40,15 @@ namespace
 			timings.clearing += stopwatch(counter);
 
 			for (vector<ball>::iterator i = _balls.begin(); i != _balls.end(); ++i)
-				move_and_bounce(*i, dt, static_cast<real_t>(surface.width()), static_cast<real_t>(surface.height()));
+				move_and_bounce_with_grav(*i, dt, static_cast<real_t>(surface.width()), static_cast<real_t>(surface.height()));
+
+			{
+				float R = std::hypot(static_cast<real_t>(surface.width()), static_cast<real_t>(surface.height())) / 10;
+				_rasterizer.reset();
+				add_path(_rasterizer, agg::ellipse(static_cast<real_t>(surface.width()) / 2, static_cast<real_t>(surface.height()) / 2, R, R));
+				_rasterizer.sort();
+				_renderer(surface, zero(), 0, _rasterizer, platform_blender_solid_color(agge::color{ 10, 10, 10, 100 }), winding<>());
+			}
 
 			for (vector<ball>::iterator i = _balls.begin(); i != _balls.end(); ++i)
 			{
