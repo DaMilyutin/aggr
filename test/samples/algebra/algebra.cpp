@@ -61,7 +61,7 @@ namespace
             float const step = float(k*2*M_PI/N);
             grace::real_t i = float(-M_PI/2);
             for(int j = 0; j < 2; ++j, i += step)
-                chain1.push_back(cen + grace::Vector_r::polar(300.f,i));
+                chain1.push_back(cen + grace::Vector_r::polar(300.f, i));
             for(int j = 0; j < 3; ++j, i += step)
                 chain2.push_back(cen + grace::Vector_r::polar(300.f, i));
             for(int j = 0; j < 4; ++j, i += step)
@@ -105,7 +105,7 @@ namespace
         virtual void draw(agge::platform_bitmap& surface, timings&/*timings*/)
         {
             fill(surface, mkrect<int>(0, 0, surface.width(), surface.height()),
-                agge::platform_blender_solid_color(agge::color::make(0, 50, 100)));
+                agge::platform_blender_solid_color(agge::color::make(0, 5, 10)));
             auto wras = agge::wrap_rasterizer(ras);
 
 
