@@ -5,8 +5,8 @@
 
 namespace agge
 {
-	arc::arc(real_t cx, real_t cy, real_t r, real_t start, real_t end, real_t /*da*/)
-		: _cx(cx), _cy(cy), _r(r), _start(start), _end(end), _step(end > start ? 0.05f : -0.05f)
+	arc::arc(real_t cx, real_t cy, real_t r, real_t start, real_t end, real_t da)
+		: _cx(cx), _cy(cy), _r(r), _start(start), _end(end), _step(end > start ? da : -da)
 	{	rewind(0);	}
 
 	void arc::rewind(unsigned /*id*/)
