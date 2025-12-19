@@ -114,20 +114,19 @@ namespace
             ras.sort();
             render_color(surface, agge::color::make(255, 200, 100));
 
-
             wras.reset();
             wras << cycle<1>(grace::elements::Arc(grace::Point_r{500, 500}, 50.f, -agge::pi, agge::pi));
             render_color(surface, agge::color::make(200, 0, 255));
 
             wras.reset();
-            wras << cycle<1>(grace::elements::Vertex(grace::Point_r{1000, 500})
-                                    + grace::elements::Arc(6, grace::Point_r{1000, 500}, 100.f, -agge::pi/2, agge::pi));
+            wras << cycle<1>(grace::elements::Vertex({1000, 500})
+                                    + grace::elements::Arc(6, {1000, 500}, 100.f, -agge::pi/2, agge::pi));
             render_color(surface, agge::color::make(255, 255, 0));
 
 
             wras.reset();
-            wras << cycle<1>(grace::elements::Segment(grace::Point_r{1000, 1000}, grace::Point_r{1000, 1200})
-                        + grace::linspace(-0.5f, 1.f, 100)/grace::elements::Bezier<2>(grace::Point_r{900, 1000}, grace::Point_r{1000, 800}, grace::Point_r{1100, 1000}) );
+            wras << cycle<1>(grace::elements::Segment({1000, 1000}, {1000, 1200})
+                        + grace::linspace(-0.5f, 1.f, 100)/grace::elements::Bezier<2>({900, 1000}, {1000, 800}, {1100, 1000}) );
             render_color(surface, agge::color::make(255, 0, 0));
 
 
@@ -148,9 +147,9 @@ namespace
             wras.reset();
 
             Chain acc; grace::push_back(acc) << cycle<1>(chain1 + chain2 + chain3);
-
-            (grace::decorators::Shift()
-                .offset(40.f).join(grace::decorators::joins::Polygonal(2))/wras).consume(acc);
+            wras << acc/grace::decorators::Transpose()
+                                .offset(40.f)
+                                .join(grace::decorators::joins::Polygonal(3));
             wras << grace::rules::close;
 
             render_color(surface, agge::color::make(155, 155, 155));
@@ -182,7 +181,7 @@ namespace
             render_color(surface, agge::color::make(255, 0, 155));
 
             wras.reset();
-            (grace::decorators::Stroke(12.f)/wras).consume(chain5);
+            wras << chain5 / grace::decorators::Stroke(12.f);
             wras.close_polygon();
             render_color(surface, agge::color::make(100, 100, 100));
 

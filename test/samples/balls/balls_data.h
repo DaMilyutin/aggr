@@ -84,7 +84,7 @@ inline void move_and_bounce_with_grav(ball& ball_, agge::real_t dt, agge::real_t
 	if (d - R < 0)
 	{
 		auto vr = (vx * dy - vy * dx)/d;
-		auto F = vr*0.1;
+		auto F = -vr*0.1;
 		vx += -vy * F * dt;
 		vy +=  vx * F * dt;
 	}
