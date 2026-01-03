@@ -131,26 +131,21 @@ namespace
             render_color(surface, agge::color::make(255, 0, 0));
 
 
-            //wras.reset();
-            //wras << cycle<1>(chain1 + chain2 + chain3)
-            //                /grace::memoize<grace::Point_r, 3>()
-            //                /grace::decorators::OrthoShift(40.f);
-            //render_color(surface, agge::color::make(155, 155, 155));
+            wras.reset();
+            wras << cycle<1>(chain1 + chain2 + chain3)
+                            /grace::memoize<grace::Point_r, 3>()
+                            /grace::decorators::OrthoShift(40.f);
+            render_color(surface, agge::color::make(155, 155, 155));
 
-            //wras.reset();
-            //wras << grace::cycle<1>(chain1 + chain2 + chain3);
-            //render_color(surface, agge::color::make(0, 255, 0));
-
-
-            ///grace::memoize<grace::Point_r, 3>()
-            //    /grace::decorators::OrthoShift(40.f);
+            wras.reset();
+            wras << grace::cycle<1>(chain1 + chain2 + chain3);
+            render_color(surface, agge::color::make(0, 255, 0));
 
             wras.reset();
 
             Chain acc; grace::push_back(acc) << cycle<1>(chain1 + chain2 + chain3);
 
-            (grace::decorators::Shift()
-                .offset(40.f).join(grace::decorators::joins::Polygonal(2))/wras).consume(acc);
+            wras << acc/(grace::decorators::Shift().offset(40.f).join(grace::decorators::joins::Polygonal(2)));
             wras << grace::rules::close;
 
             render_color(surface, agge::color::make(155, 155, 155));
@@ -182,7 +177,7 @@ namespace
             render_color(surface, agge::color::make(255, 0, 155));
 
             wras.reset();
-            (grace::decorators::Stroke(12.f)/wras).consume(chain5);
+            wras << chain5/grace::decorators::Stroke(12.f);
             wras.close_polygon();
             render_color(surface, agge::color::make(100, 100, 100));
 
