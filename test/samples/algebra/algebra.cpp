@@ -67,13 +67,10 @@ namespace
             for(int j = 0; j < 4; ++j, i += step)
                 chain3.push_back(cen + grace::Vector_r::polar(300.f, i));
 
-            chain4.assign(chain2);
-            chain4 += grace::Vector_r{-400, -400};
-
             //push_back(chain5) << (chain1 + chain2 + chain3);
             //chain5 += grace::Vector_r{400, 0};
             {
-                grace::Point_r p{100.f, 600.f};
+                auto p = grace::Point_r{100.f, 600.f} + grace::Vector_r{ 0., 550. };
                 //grace::Vector_r dirs[] = {{0.f, -50.f},{150.f, 0.f}, {0.f, 50.f}, {150.f, 0.f},};
                 grace::Vector_r dirs[] = {grace::Vector_r::polar(211.f, 0.f),
                                           grace::Vector_r::polar(211.f, 2*agge::pi/3),
@@ -107,84 +104,95 @@ namespace
             fill(surface, mkrect<int>(0, 0, surface.width(), surface.height()),
                 agge::platform_blender_solid_color(agge::color::make(0, 5, 10)));
             auto wras = agge::wrap_rasterizer(ras);
+            { // circle
+                wras.reset();
+                wras << cycle<1>(grace::elements::Arc(grace::Point_r{ 500, 500 }, 50.f, -agge::pi, agge::pi))
+                    / grace::decorators::Move(grace::Vector_r{ -400., -400. });
+                render_color(surface, agge::color::make(200, 0, 255));
+            }
+
+            { // triangle
+                wras.reset();
+                wras << cycle<1>(chain2)
+                    / grace::decorators::Move(grace::Vector_r{ -400., -500. });
+                ras.sort();
+                render_color(surface, agge::color::make(255, 200, 100));
+            }
+
+            { // octagon without sector
+                wras.reset();
+                wras << cycle<1>(grace::elements::Vertex(grace::Point_r{ 1000, 500 })
+                    + grace::elements::Arc(6, grace::Point_r{ 1000, 500 }, 100.f, -agge::pi / 2, agge::pi))
+                    / grace::decorators::Move(grace::Vector_r{ -400., -400. });
+                render_color(surface, agge::color::make(255, 255, 0));
+            }
+
+            { // parabola
+                wras.reset();
+                wras << cycle<1>(grace::elements::Segment(grace::Point_r{ 1000, 1000 }, grace::Point_r{ 1000, 1200 })
+                    + grace::linspace(-0.5f, 1.f, 100) / grace::elements::Bezier<2>(grace::Point_r{ 900, 1000 }, grace::Point_r{ 1000, 800 }, grace::Point_r{ 1100, 1000 }))
+                    / grace::decorators::Move(grace::Vector_r{ -100., -900. });
+                render_color(surface, agge::color::make(255, 0, 0));
+            }
+
+            { // star
+                wras.reset();
+                wras << cycle<1>(chain1 + chain2 + chain3)
+                    / grace::decorators::Move({ 100., -50. })
+                    / grace::memoize<grace::Point_r, 3>()
+                    / grace::decorators::OrthoShift(40.f);
+                render_color(surface, agge::color::make(155, 155, 155));
+
+                wras.reset();
+                wras << grace::cycle<1>(chain1 + chain2 + chain3) / grace::decorators::Move({ 100., -50. });
+                render_color(surface, agge::color::make(0, 255, 0));
+
+                // ??? no effect ???
+                //wras.reset();
+                //Chain acc; grace::push_back(acc) << cycle<1>(chain1 + chain2 + chain3);
+                //wras << acc / (grace::decorators::Shift().offset(40.f).join(grace::decorators::joins::Polygonal(2)));
+                //wras << grace::rules::close;
+                //render_color(surface, agge::color::make(155, 155, 155));
+            }
 
 
-            wras.reset();
-            wras << cycle<1>(chain4);
-            ras.sort();
-            render_color(surface, agge::color::make(255, 200, 100));
+            { // circle with cuts
+                grace::decorators::Dash dash;
+                dash.reset().add(100.f, 300.f).add(10.f, 300.f);
 
+                wras.reset();
+                wras << grace::Point_r{ 1500, 1000 } + grace::Vector_r{ 0., -550. } <<
+                    grace::elements::Arc(grace::Point_r{ 1500, 1000 }, 300.f, 0.f, 2.f * agge::pi)/ dash
+                    / grace::decorators::Move({ 0., -550. });
+                wras.close_polygon();
+                render_color(surface, agge::color::make(0, 255, 255));
+            }
 
-            wras.reset();
-            wras << cycle<1>(grace::elements::Arc(grace::Point_r{500, 500}, 50.f, -agge::pi, agge::pi));
-            render_color(surface, agge::color::make(200, 0, 255));
+            { // fancy error
+                grace::decorators::Dash dash;
+                dash.reset().add(300.f, 180.f);
 
-            wras.reset();
-            wras << cycle<1>(grace::elements::Vertex(grace::Point_r{1000, 500})
-                                    + grace::elements::Arc(6, grace::Point_r{1000, 500}, 100.f, -agge::pi/2, agge::pi));
-            render_color(surface, agge::color::make(255, 255, 0));
+                wras.reset();
+                wras << grace::as_range(chain5) / dash
+                    / grace::decorators::FancyStroke().width(40.f)
+                                                    .head(grace::decorators::caps::LArrowHead())
+                                                    .tail(grace::decorators::caps::FlatArrowTail())
+                                                    .left(grace::decorators::joins::round)
+                                                    .right(grace::decorators::joins::miter)
+                    ;
+                wras.close_polygon();
+                render_color(surface, agge::color::make(255, 0, 155));
 
+                wras.reset();
+                wras << chain5 / grace::decorators::Stroke(12.f);
+                wras.close_polygon();
+                render_color(surface, agge::color::make(100, 100, 100));
 
-            wras.reset();
-            wras << cycle<1>(grace::elements::Segment(grace::Point_r{1000, 1000}, grace::Point_r{1000, 1200})
-                        + grace::linspace(-0.5f, 1.f, 100)/grace::elements::Bezier<2>(grace::Point_r{900, 1000}, grace::Point_r{1000, 800}, grace::Point_r{1100, 1000}) );
-            render_color(surface, agge::color::make(255, 0, 0));
-
-
-            wras.reset();
-            wras << cycle<1>(chain1 + chain2 + chain3)
-                            /grace::memoize<grace::Point_r, 3>()
-                            /grace::decorators::OrthoShift(40.f);
-            render_color(surface, agge::color::make(155, 155, 155));
-
-            wras.reset();
-            wras << grace::cycle<1>(chain1 + chain2 + chain3);
-            render_color(surface, agge::color::make(0, 255, 0));
-
-            wras.reset();
-
-            Chain acc; grace::push_back(acc) << cycle<1>(chain1 + chain2 + chain3);
-
-            wras << acc/(grace::decorators::Shift().offset(40.f).join(grace::decorators::joins::Polygonal(2)));
-            wras << grace::rules::close;
-
-            render_color(surface, agge::color::make(155, 155, 155));
-
-            wras.reset();
-            wras << grace::cycle<1>(chain1 + chain2 + chain3);
-            render_color(surface, agge::color::make(0, 255, 0));
-
-            grace::decorators::Dash dash;
-            dash.reset().add(100.f, 300.f).add(10.f, 300.f);
-
-            wras.reset();
-            wras << grace::Point_r{1500, 1000} <<
-                    grace::elements::Arc(grace::Point_r{1500, 1000}, 300.f, 0.f, 2.f*agge::pi)/dash;
-            wras.close_polygon();
-            render_color(surface, agge::color::make(0, 255, 255));
-
-
-            dash.reset().add(300.f, 180.f);
-
-            wras.reset();
-            wras << grace::as_range(chain5)/dash
-                    /grace::decorators::FancyStroke().width(40.f)
-                            .head(grace::decorators::caps::LArrowHead())
-                            .tail(grace::decorators::caps::FlatArrowTail())
-                            .left(grace::decorators::joins::round)
-                            .right(grace::decorators::joins::miter);
-            wras.close_polygon();
-            render_color(surface, agge::color::make(255, 0, 155));
-
-            wras.reset();
-            wras << chain5/grace::decorators::Stroke(12.f);
-            wras.close_polygon();
-            render_color(surface, agge::color::make(100, 100, 100));
-
-            wras.reset();
-            wras << grace::as_range(chain5)/dash/grace::decorators::Stroke(8.f).join(grace::decorators::joins::round);
-            wras.close_polygon();
-            render_color(surface, agge::color::make(255, 255, 255));
+                wras.reset();
+                wras << grace::as_range(chain5) / dash / grace::decorators::Stroke(8.f).join(grace::decorators::joins::round);
+                wras.close_polygon();
+                render_color(surface, agge::color::make(255, 255, 255));
+            }
         }
 
     private:
@@ -194,7 +202,6 @@ namespace
         Chain chain1;
         Chain chain2;
         Chain chain3;
-        Chain chain4;
         Chain chain5;
     };
 }
